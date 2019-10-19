@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="pure-g">
+  <div class="pure-u-2-3">
+    <h2>What is {{ config.SITE_NAME }}?</h2>
+    <p>
+      {{ config.SITE_NAME }} is a marking website for thingies in your life. Marking is way more important than socializing.
+    </p>
+    <p>
+      You can mark the books you have read, the movies you have watched, the albums you have listened,
+      the games you have played, the places you have visited, etc. Check out how other users have played around with this site: <a href="/recent/">recent</a>.
+    </p>
+    <p>
+      It has no ads. It never adds third-party tracking. It doesn't store your search history. You pay 11$ per year to get rid of data harvesting from big companies.
+    </p>
+    <p>
+      It has as few images as possible to avoid you from being tracked by other websites. It secures your connections via HTTPS to avoid you from being tampered by malicious parties.
+    </p>
+    {% if not session.get('uid') %}
+    <div>
+      <a class="pure-button button-secondary" href="/signup/">
+        Sign up for 11$ / year
+      </a>
+    </div>
+    {% endif %}
+    <p>
+      The site is run by a one-person team. My name is <a href="https://github.com/soasme">Ju Lin</a>. I'm living in Auckland, NZ.
+    </p>
+    <p>
+      If you want to know more about this site, this <a href="{{ config.BLOG_URL }}">blog</a>
+      can provide you a lot of information.
+    </p>
+  </div>
+
+  <div class="pure-u-1-3">
+    {% if not session.get('uid') %}
+    <form method="post" action="/login/" id="login-form" class="pure-form pure-form-stacked">
+      <input type="text" id="username" name="username" placeholder="username"/>
+      <input type="password" id="password" name="password" placeholder="password" />
+      <div><input type="submit" value="Login" class="pure-button"/></div>
+    </form>
+
+    <div id="login-error">
+      <span class="pure-form-message">{{ error }}</span>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

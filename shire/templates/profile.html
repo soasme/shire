@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% import "widget_thing.html"  as wgtThing %}
+
+{% block title %}@{{ username }}'s things{% endblock %}
+
+{% block content %}
+<h3>@{{ username }}'s Things</h3>
+
+{# Display the number of things user has marked. #}
+{% if things_cnt == 0 %}
+<p>
+  {% if is_me %}You haven't{% else %}Ze hasn't{% endif %}
+  marked any thing so far.
+</p>
+{% else %}
+<p>
+  {% if is_me %}You have{% else %}Ze has{% endif %}
+  marked {{ things_cnt }} things so far.
+</p>
+{% endif %}
+
+{# Add a new thing? #}
+{% if is_me %}
+<div>
+  <form method="post" action="/mark/" class="pure-form">
+    <fieldset>
+      <select name="category" class="pure-input-1-8">
+        {% for cat in Category %}
+        <option>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+      <input name="title" class="pure-input-1-4" placeholder="title" autocomplete=off>
+      <input name="tags" class="pure-input-1-4" placeholder="tags" autocomplete=off>
+      <label for="shared">
+        <input name="shared" type="checkbox" checked=checked> Shared
+      </label>
+      <button type="submit" class="pure-button pure-button-primary">
+        Mark a new thing
+      </button>
+    </fieldset>
+  </form>
+  <div style="color: red;">
+    {{ mark_error }}
+  </div>
+</div>
+{% endif %}
+
+{# Display paginated things. #}
+<div class="pure-g">
+  {% for thing in things %}
+  <div class="pure-u-1 thing">
+    {{ wgtThing.render_thing(thing) }}
+    {% if is_me %}
+    <div class="thing-mgmt">
+      <a href="/things/{{ thing.id }}/update/">update</a>
+      <a class="delete" data-id="{{ thing.id }}">delete</a>
+      <a class="share" data-id="{{ thing.id }}">
+        {% if thing.shared %}unshare{% else %}share{% endif %}
+      </a>
+      <span id="thing-mgmt-error-{{ thing.id }}"></span>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{# Delete thing #}
+<script>
+(async () => {
+  var delButtons = document.querySelectorAll("div.thing-mgmt a.delete")
+  delButtons.forEach(async (del) => {
+    del.onclick = async (e) => {
+      var id = e.target.getAttribute('data-id')
+      var errEl = document.querySelector("#thing-mgmt-error-" + id)
+      try {
+        const res = await fetch('/v1/things/' + id + '/', {method: 'DELETE'})
+        const data = await res.json()
+        if (res.status != 200) {
+          errEl.innerHTML = data.code
+        } else {
+          window.location.reload()
+        }
+      } catch (error) {
+        errEl.innerHTML = error
+      }
+    }
+  })
+})();
+</script>
+
+{# Share or Unshare a thing #}
+<script>
+(async () => {
+  var shareButtons = document.querySelectorAll("div.thing-mgmt a.share")
+  shareButtons.forEach(async (share) => {
+    share.onclick = async (e) => {
+      var id = e.target.getAttribute('data-id')
+      var errEl = document.querySelector("#thing-mgmt-error-" + id)
+      try {
+        const res = await fetch('/v1/things/' + id + '/share/', {method: 'POST'})
+        const data = await res.json()
+        errEl.innerHTML = data.code
+        if (share.innerHTML == 'share') {
+          share.innerHTML = 'unshare'
+        } else {
+          share.innerHTML = 'share'
+        }
+      } catch (error) {
+        errEl.innerHTML = error
+      }
+    }
+  })
+})();
+</script>
+
+{% endblock %}

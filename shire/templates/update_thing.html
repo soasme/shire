@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Update{% endblock %}
+
+{% block content %}
+<h3>Update "{{ thing.title }}"</h3>
+
+<div>{{ error }}</div>
+
+<form method="post" class="pure-form pure-form-stacked">
+  <fieldset>
+    <select name="category" class="pure-input-1-8">
+      {% for cat in Category %}
+      <option {% if cat == thing.category %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="title">
+      Title
+      <input name="title" autocomplete=off value="{{ thing.title }}" class="pure-input-3-4">
+    </label>
+
+    <label for="tags">
+      Tags
+      <input name="tags" autocomplete=off value="{{ thing.tags | join(' ')}}" class="pure-input-3-4">
+    </label>
+
+    <label for="url">
+      URL
+      <input name="url" autocomplete=off value="{{ thing.url }}" class="pure-input-3-4"
+        placeholder="Replace the default duckduckgo search link">
+    </label>
+
+    <label for="shared">
+      Shared <input name="shared"
+                    type="checkbox"
+                    id="shared"
+                    {% if thing.shared %}checked=checked{% endif %}>
+    </label>
+
+    <label for="note">
+      Note
+      {% with note = thing.note %}
+      <textarea name="note" autocomplete=off rows=20
+                class="pure-input-3-4">{% if note %}{{ note.text }}{% endif %}</textarea>
+      {% endwith %}
+    </label>
+
+    <button type="submit" class="pure-button pure-button-primary">
+      Update
+    </button>
+  </fieldset>
+</form>
+{% endblock %}

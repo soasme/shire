@@ -1,0 +1,109 @@
+{%- macro render_thing(thing) -%}
+<div >
+  <div class="thing-content">
+
+    {% if thing.category == Category.book %}
+    <span><i class="fas fa-book"></i></span>
+    {% elif thing.category == Category.movie %}
+    <span><i class="fas fa-film"></i></span>
+    {% elif thing.category == Category.tvshow %}
+    <span><i class="fas fa-tv"></i></span>
+    {% elif thing.category == Category.album %}
+    <span><i class="fas fa-music"></i></span>
+    {% elif thing.category == Category.place %}
+    <span><i class="fas fa-map-marker-alt"></i></span>
+    {% elif thing.category == Category.game %}
+    <span><i class="fas fa-gamepad"></i></span>
+    {% elif thing.category == Category.event %}
+    <span><i class="fas fa-glass-cheers"></i></span>
+    {% endif %}
+
+    <span class="thing-username">
+      <a href="/u/{{ thing.user.username }}">{{ thing.user.username }}</a>
+    </span>
+
+    {% if thing.category == Category.book %}
+      {% if thing.progress == Progress.todo %}
+      wanted to read
+      {% elif thing.progress == Progress.doing %}
+      was reading
+      {% elif thing.progress == Progress.done %}
+      have read
+      {% endif %}
+    {% elif thing.category == Category.movie %}
+      {% if thing.progress == Progress.todo %}
+      wanted to watch
+      {% elif thing.progress == Progress.doing %}
+      was watching
+      {% elif thing.progress == Progress.done %}
+      have watched
+      {% endif %}
+    {% elif thing.category == Category.tvshow %}
+      {% if thing.progress == Progress.todo %}
+      wanted to watch
+      {% elif thing.progress == Progress.doing %}
+      was watching
+      {% elif thing.progress == Progress.done %}
+      have watched
+      {% endif %}
+    {% elif thing.category == Category.album %}
+      {% if thing.progress == Progress.todo %}
+      wanted to listen
+      {% elif thing.progress == Progress.doing %}
+      was listening
+      {% elif thing.progress == Progress.done %}
+      have listened
+      {% endif %}
+    {% elif thing.category == Category.place %}
+      {% if thing.progress == Progress.todo %}
+      wanted to visit
+      {% elif thing.progress == Progress.doing %}
+      was visiting
+      {% elif thing.progress == Progress.done %}
+      have visited
+      {% endif %}
+    {% elif thing.category == Category.game %}
+      {% if thing.progress == Progress.todo %}
+      wanted to play
+      {% elif thing.progress == Progress.doing %}
+      was playing
+      {% elif thing.progress == Progress.done %}
+      have played
+      {% endif %}
+    {% elif thing.category == Category.event %}
+      {% if thing.progress == Progress.todo %}
+      wanted to participate
+      {% elif thing.progress == Progress.doing %}
+      was participating
+      {% elif thing.progress == Progress.done %}
+      have participated
+      {% endif %}
+    {% endif %}
+
+    <span>{{ thing.category.display_name }}</span>
+
+    <span class="thing-title">
+      <a href="{{ thing.reference }}">
+        {{ thing.title }}
+      </a>.
+    </span>
+
+    <span style="font-size: .8em;">tags: </span>
+    {% for tag in thing.tags %}
+    <span class="thing-tag">
+      <a href="">{{ tag }}</a>
+    </span>
+    {% endfor %}
+  </div>
+  {% with note = thing.note %}
+  {% if note and (note.shared or note.user_id == g.user.id) %}
+  <div class="thing-note">
+    <blockquote>{{ note.text }}</blockquote>
+  </div>
+  {% endif %}
+  {% endwith %}
+  <div class="thing-time">
+    {{ thing.time }}
+  </div>
+</div>
+{%- endmacro %}

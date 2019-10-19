@@ -1,0 +1,14 @@
+#content {width: 1024px; margin-left: auto; margin-right: auto;}
+.footer-link {text-decoration: none; color: #777; font-size: .8em; margin-left: 5px;}
+.footer-copyright {color: #777; font-size: .8em;}
+.thing {padding-bottom: 10px;}
+.thing-title {font-size: 1.2em;}
+.thing-title a {text-decoration: none; color: #111;}
+.thing-title a:hover {color: #fff; background-color: #072;}
+.thing-time {color: #999; font-size: .8em; margin-top: 5px;}
+.thing-tag a {text-decoration: none; color: #999; border-bottom: dashed 1px #999; font-size: .8em;}
+.thing-tag a:hover{color: #fff; background-color: #999;}
+.thing-username a {text-decoration: none; color: #072; }
+.thing-username a:hover {text-decoration: none; color: #fff; background-color: #072;}
+.thing-mgmt a {text-decoration: none; color: #999; font-size: .8em;}
+.thing-mgmt a:hover {color: #fff; background-color: #999;}

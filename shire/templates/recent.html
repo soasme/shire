@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "widget_thing.html"  as wgtThing %}
+
+{% block title %}Recent Things - Pinthingy{% endblock %}
+
+{% block content %}
+<div class="">
+  <h3>Recent Things</h3>
+  <div>
+    {% for thing in things %}
+    <div class="thing">
+    {{ wgtThing.render_thing(thing) }}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
