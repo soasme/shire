@@ -16,7 +16,7 @@ app.config.update({
     'SITE_NAME': config('SITE_NAME', default='?'),
     'BLOG_URL': 'https://enqueuezero.com',
     'SECRET_KEY': config('SECRET_KEY'),
-    'SQLALCHEMY_DATABASE_URI': config('SQLALCHEMY_DATABASE_URI'),
+    'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
     'ANNUAL_FEE': config('ANUAL_FEE', cast=int, default=10),
 })
