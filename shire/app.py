@@ -57,6 +57,15 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+    @classmethod
+    def new(self, username, email, nickname, password, autocommit=True):
+        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        user = User(username=username, email=email,
+                nickname=nickname, password=password_hash)
+        db.session.add(user)
+        if autocommit: db.session.commit()
+        return user
+
 class Charge(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -455,10 +464,9 @@ def _populate_db():
         >>> from app import _reset_db, _populate_db
         >>> _reset_db(); _populate_db()
     """
-    user = User(username='soasme', email='soasme@markdone.com', nickname='Ju',
-            password=bcrypt.generate_password_hash('111111').decode('utf-8'))
-    db.session.add(user)
-    db.session.commit()
+
+    user = User.new('soasme', 'soasme@gmail.com', 'Ju', '111111')
+
     thing_annihilation = Thing(user_id=user.id, category=Category.movie,
             title="Annihilation", shared=True,
             tags=["scifi", "horror", "NataliePortman"],
