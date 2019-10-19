@@ -18,6 +18,7 @@ app.config.update({
     'SECRET_KEY': config('SECRET_KEY'),
     'SQLALCHEMY_DATABASE_URI': config('SQLALCHEMY_DATABASE_URI'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
+    'ANNUAL_FEE': config('ANUAL_FEE', cast=int, default=10),
 })
 
 db = SQLAlchemy()

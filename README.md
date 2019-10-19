@@ -17,11 +17,11 @@ I was a [Douban](https://douban.com) dead-loving user (and even former employee)
 Unfortunately, I was not able to use it because of many reasons, such as being
 reluctant to provide my phone number, data hosted in China, strict censorship, etc.
 After years' frustration without a good replacement, I re-designed and developed
-a new website named Markdone.
+a new website named ?.
 
 ## Fees
 
-You'll need to pay $11 USD a year. It will cover the cost of servers,
+You'll need to pay $10 USD a year. It will cover the cost of servers,
 cloud services, and my time. You payment will help keeping the site run as long as
 possible. You'll see no ads at all because this site is fully supported by all
 users' payments.

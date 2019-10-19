@@ -14,7 +14,7 @@
       the games you have played, the places you have visited, etc. Check out how other users have played around with this site: <a href="/recent/">recent</a>.
     </p>
     <p>
-      It has no ads. It never adds third-party tracking. It doesn't store your search history. You pay 11$ per year to get rid of data harvesting from big companies.
+    It has no ads. It never adds third-party tracking. It doesn't store your search history. You pay ${{ config.ANNUAL_FEE }} per year to get rid of data harvesting from big companies.
     </p>
     <p>
       It has as few images as possible to avoid you from being tracked by other websites. It secures your connections via HTTPS to avoid you from being tampered by malicious parties.
@@ -22,7 +22,7 @@
     {% if not session.get('uid') %}
     <div>
       <a class="pure-button button-secondary" href="/signup/">
-        Sign up for 11$ / year
+          Sign up for {{ config.ANNUAL_FEE }}$ / year
       </a>
     </div>
     {% endif %}
