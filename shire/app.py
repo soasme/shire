@@ -26,7 +26,7 @@ app.config.update({
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
     'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
-    'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool),
+    'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
     'STRIPE_PUBLIC_KEY': config('STRIPE_PUBLIC_KEY', default=''),
     'STRIPE_SECRET_KEY': config('STRIPE_SECRET_KEY', default=''),
     'STRIPE_WEBHOOK_SECRET_KEY': config('STRIPE_WEBHOOK_SECRET_KEY', default=''),
@@ -62,6 +62,7 @@ class Category(enum.Enum):
     event = 7
     paper = 8
     concept = 9
+    software = 10
 
     @property
     def display_name(self):

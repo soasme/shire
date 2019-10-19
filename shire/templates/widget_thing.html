@@ -20,6 +20,8 @@
     <span><i class="fas fa-glass-sticky-note"></i></span>
     {% elif thing.category == Category.concept %}
     <span><i class="fas fa-glass-lightbulb"></i></span>
+    {% elif thing.category == Category.software %}
+    <span><i class="fas fa-glass-code"></i></span>
     {% endif %}
 
     <span class="thing-username">
@@ -32,7 +34,7 @@
       {% elif thing.progress == Progress.doing %}
       was reading
       {% elif thing.progress == Progress.done %}
-      have read
+      has read
       {% endif %}
     {% elif thing.category == Category.movie %}
       {% if thing.progress == Progress.todo %}
@@ -40,7 +42,7 @@
       {% elif thing.progress == Progress.doing %}
       was watching
       {% elif thing.progress == Progress.done %}
-      have watched
+      has watched
       {% endif %}
     {% elif thing.category == Category.tvshow %}
       {% if thing.progress == Progress.todo %}
@@ -48,7 +50,7 @@
       {% elif thing.progress == Progress.doing %}
       was watching
       {% elif thing.progress == Progress.done %}
-      have watched
+      has watched
       {% endif %}
     {% elif thing.category == Category.album %}
       {% if thing.progress == Progress.todo %}
@@ -56,7 +58,7 @@
       {% elif thing.progress == Progress.doing %}
       was listening
       {% elif thing.progress == Progress.done %}
-      have listened
+      has listened
       {% endif %}
     {% elif thing.category == Category.place %}
       {% if thing.progress == Progress.todo %}
@@ -64,7 +66,7 @@
       {% elif thing.progress == Progress.doing %}
       was visiting
       {% elif thing.progress == Progress.done %}
-      have visited
+      has visited
       {% endif %}
     {% elif thing.category == Category.game %}
       {% if thing.progress == Progress.todo %}
@@ -72,7 +74,7 @@
       {% elif thing.progress == Progress.doing %}
       was playing
       {% elif thing.progress == Progress.done %}
-      have played
+      has played
       {% endif %}
     {% elif thing.category == Category.event %}
       {% if thing.progress == Progress.todo %}
@@ -80,7 +82,7 @@
       {% elif thing.progress == Progress.doing %}
       was participating
       {% elif thing.progress == Progress.done %}
-      have participated
+      has participated
       {% endif %}
     {% elif thing.category == Category.paper %}
       {% if thing.progress == Progress.todo %}
@@ -88,7 +90,7 @@
       {% elif thing.progress == Progress.doing %}
       was reading
       {% elif thing.progress == Progress.done %}
-      have read
+      has read
       {% endif %}
     {% elif thing.category == Category.concept %}
       {% if thing.progress == Progress.todo %}
@@ -96,7 +98,15 @@
       {% elif thing.progress == Progress.doing %}
       was learning
       {% elif thing.progress == Progress.done %}
-      have learned
+      has learned
+      {% endif %}
+    {% elif thing.category == Category.software %}
+      {% if thing.progress == Progress.todo %}
+      wanted to use
+      {% elif thing.progress == Progress.doing %}
+      was using
+      {% elif thing.progress == Progress.done %}
+      has used
       {% endif %}
     {% endif %}
 
