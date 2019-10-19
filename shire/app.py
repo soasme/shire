@@ -10,6 +10,7 @@ from flask import Flask, redirect, request, session, g, jsonify, current_app, ur
 from flask import render_template as render
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 
 load_dotenv(find_dotenv())
@@ -22,6 +23,7 @@ app.config.update({
     'SECRET_KEY': config('SECRET_KEY'),
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
+    'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
     'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool),
     'STRIPE_PUBLIC_KEY': config('STRIPE_PUBLIC_KEY', default=''),
     'STRIPE_SECRET_KEY': config('STRIPE_SECRET_KEY', default=''),
@@ -56,6 +58,8 @@ class Category(enum.Enum):
     place = 5
     game = 6
     event = 7
+    paper = 8
+    concept = 9
 
     @property
     def display_name(self):
@@ -109,11 +113,13 @@ class Thing(db.Model):
         return _note
 
     @property
+    def search_keywords(self):
+        if self.category == Category.concept: return self.title.replace(' ', '+')
+        return ('+'.join([self.category.display_name, self.title])).replace(' ', '+')
+
+    @property
     def reference(self):
-        if not self.url:
-            q = (self.category.display_name.replace(' ', '+') + '+' +
-                    self.title.replace(' ', '+'))
-            return f'https://duckduckgo.com/?q={q}'
+        if not self.url: return 'https://duckduckgo.com/?q=' + self.search_keywords
         return self.url
 
     @classmethod
@@ -198,13 +204,26 @@ def faq():
 @app.route('/signup/')
 def signup_page():
     """Create an account"""
-    return render("signup.html")
+    if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
+    error = session.pop('error.signup', None)
+    return render("signup.html", error=error)
 
 @app.route('/signup/', methods=['POST'])
 def signup():
+    """TODO: need to sort out the logic"""
+    if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
+    if not username:
+        session['error.signup'] = 'username is empty'
+        return redirect(url_for('signup_page'))
+    if not email:
+        session['error.signup'] = 'email is empty'
+        return redirect(url_for('signup_page'))
+    if not password:
+        session['error.signup'] = 'password is empty'
+        return redirect(url_for('signup_page'))
     user = User.new(username, email, username, password, autocommit=False)
     db.session.add(user)
     try:
@@ -212,6 +231,9 @@ def signup():
         session['nuid'] = user.id
         session['nemail'] = user.email
         return redirect('/signup/confirm/')
+    except IntegrityError:
+        db.session.rollback()
+        return redirect(url_for('confirm_signup'))
     except Exception as e:
         app.logger.error("error: %s", e)
         db.session.rollback()
@@ -223,16 +245,6 @@ def confirm_signup():
     #uid = session.get('nuid')
     #if not uid: return redirect('/')
     return render('confirm_signup.html')
-
-@app.route('/charge/stripe/key')
-def signup_stripe_key():
-    """Provide stripe public key."""
-    if not current_app.config.get('STRIPE_ENABLED'):
-        return jsonify({'code': 'stripe not enabled'}), 404
-    return jsonify({
-        'code': 'ok',
-        'key': current_app.config.get('STRIPE_PUBLIC_KEY', '')
-    })
 
 @app.route('/charge/stripe/session', methods=['POST'])
 def create_stripe_session():

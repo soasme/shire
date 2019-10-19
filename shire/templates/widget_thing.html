@@ -16,6 +16,10 @@
     <span><i class="fas fa-gamepad"></i></span>
     {% elif thing.category == Category.event %}
     <span><i class="fas fa-glass-cheers"></i></span>
+    {% elif thing.category == Category.paper %}
+    <span><i class="fas fa-glass-sticky-note"></i></span>
+    {% elif thing.category == Category.concept %}
+    <span><i class="fas fa-glass-lightbulb"></i></span>
     {% endif %}
 
     <span class="thing-username">
@@ -77,6 +81,22 @@
       was participating
       {% elif thing.progress == Progress.done %}
       have participated
+      {% endif %}
+    {% elif thing.category == Category.paper %}
+      {% if thing.progress == Progress.todo %}
+      wanted to read
+      {% elif thing.progress == Progress.doing %}
+      was reading
+      {% elif thing.progress == Progress.done %}
+      have read
+      {% endif %}
+    {% elif thing.category == Category.concept %}
+      {% if thing.progress == Progress.todo %}
+      wanted to learn
+      {% elif thing.progress == Progress.doing %}
+      was learning
+      {% elif thing.progress == Progress.done %}
+      have learned
       {% endif %}
     {% endif %}
 

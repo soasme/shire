@@ -20,7 +20,7 @@
     </label>
 
     <label for="password">
-      Password (private, encrypted)
+      Password (encrypted) (´◔ω◔)
       <input type="password" id="password" name="password" autocomplete=off class="pure-input-1-4">
     </label>
 
@@ -29,7 +29,26 @@
       Agree the <a href="/tos/">terms of service</a>
     </label>
 
-    <button type="submit" class="pure-button pure-button-primary">Signup</button>
+    <div>{{ error }}</div>
+
+    <button type="submit"
+            disabled=disabled
+            class="pure-button pure-button-primary"
+            id="submit">
+      Signup
+    </button>
   </fieldset>
 </form>
+
+<script>
+(async () => {
+  document.getElementById("agree").addEventListener("change", async (e) => {
+    if (e.target.checked) {
+      document.querySelector("#submit").disabled = null
+    } else {
+      document.querySelector("#submit").disabled = "disabled"
+    }
+  })
+})()
+</script>
 {% endblock %}

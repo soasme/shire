@@ -11,5 +11,5 @@ body {background-color: #e3e8ee; font-family: -apple-system , BlinkMacSystemFont
 .thing-tag a:hover{color: #fff; background-color: #999;}
 .thing-username a {text-decoration: none; color: #072; }
 .thing-username a:hover {text-decoration: none; color: #fff; background-color: #072;}
-.thing-mgmt a {text-decoration: none; color: #999; font-size: .8em;}
+.thing-mgmt a {text-decoration: none; color: #999; font-size: .8em; cursor: pointer;}
 .thing-mgmt a:hover {color: #fff; background-color: #999;}
