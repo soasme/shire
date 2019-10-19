@@ -1,4 +1,5 @@
-#content {width: 1024px; margin-left: auto; margin-right: auto;}
+body {background-color: #e3e8ee; font-family: -apple-system , BlinkMacSystemFont , "Segoe UI" , "Roboto" , "Helvetica Neue" , "Ubuntu" , sans-serif;}
+#content {width: 1024px; margin-left: auto; margin-right: auto; background-color: #fff; padding: 0 20px 20px; border-radius: 10px;}
 .footer-link {text-decoration: none; color: #777; font-size: .8em; margin-left: 5px;}
 .footer-copyright {color: #777; font-size: .8em;}
 .thing {padding-bottom: 10px;}
