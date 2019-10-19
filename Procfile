@@ -1,1 +1,1 @@
-web: FLASK_APP=shire/app.py DEBUG=false flask run --host=0.0.0.0
+web: gunicorn shire.app:app -w 8 -b 0.0.0.0:$PORT
