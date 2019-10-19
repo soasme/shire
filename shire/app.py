@@ -19,12 +19,14 @@ load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 app.config.update({
-    'SITE_NAME': config('SITE_NAME', default='?'),
-    'SITE_DOMAIN': config('SITE_DOMAIN', default='http://127.0.0.1:5000'),
-    'BLOG_URL': 'https://enqueuezero.com',
+    # REQUIRED
     'SECRET_KEY': config('SECRET_KEY'),
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
-    'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
+    # OPTIONAL
+    'SITE_NAME': config('SITE_NAME', default='?'),
+    'SITE_DOMAIN': config('SITE_DOMAIN', default='http://127.0.0.1:5000'),
+    'BLOG_URL': config('BLOG_URL', default='https://enqueuezero.com'),
+    'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
     'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
     'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
     'STRIPE_PUBLIC_KEY': config('STRIPE_PUBLIC_KEY', default=''),
@@ -155,10 +157,7 @@ app.jinja_env.globals['VERSION'] = __VERSION__
 
 @app.before_request
 def setup_g():
-    if session.get('uid'):
-        g.user = User.query.filter_by(username=session['uid']).first()
-    else:
-        g.user = None
+    g.user = session.get('uid') and User.query.filter_by(username=session['uid']).first()
 
 @app.route('/')
 def index():
