@@ -1,9 +1,12 @@
+import json
 import enum
+from time import time
 from datetime import datetime
 
+import stripe
 from dotenv import find_dotenv, load_dotenv
 from decouple import config
-from flask import Flask, redirect, request, session, g, jsonify
+from flask import Flask, redirect, request, session, g, jsonify, current_app, url_for
 from flask import render_template as render
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -14,15 +17,25 @@ load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.config.update({
     'SITE_NAME': config('SITE_NAME', default='?'),
+    'SITE_DOMAIN': config('SITE_DOMAIN', default='http://127.0.0.1:5000'),
     'BLOG_URL': 'https://enqueuezero.com',
     'SECRET_KEY': config('SECRET_KEY'),
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool),
+    'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool),
+    'STRIPE_PUBLIC_KEY': config('STRIPE_PUBLIC_KEY', default=''),
+    'STRIPE_SECRET_KEY': config('STRIPE_SECRET_KEY', default=''),
+    'STRIPE_WEBHOOK_SECRET_KEY': config('STRIPE_WEBHOOK_SECRET_KEY', default=''),
+    'STRIPE_API_VERSION': config('STRIPE_API_VERSION', default=''),
+    'STRIPE_PLAN_ID': config('STRIPE_PLAN_ID', default=''),
     'ANNUAL_FEE': config('ANUAL_FEE', cast=int, default=10),
 })
 
 db = SQLAlchemy()
 db.init_app(app)
+
+stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
+stripe.api_version = app.config.get('STRIPE_API_VERSION')
 
 bcrypt = Bcrypt()
 bcrypt.init_app(app)
@@ -66,13 +79,12 @@ class User(db.Model):
         if autocommit: db.session.commit()
         return user
 
-class Charge(db.Model):
+class UserSubscription(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    subscription_id = db.Column(db.String(128), nullable=False)
-    fee = db.Column(db.Integer, nullable=False)
-    plan_start = db.Column(db.DateTime)
-    plan_end = db.Column(db.DateTime)
+    customer = db.Column(db.String(64))
+    subscription = db.Column(db.String(64))
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 class Thing(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
@@ -184,17 +196,128 @@ def faq():
     return "Coming soon."
 
 @app.route('/signup/')
-def signup():
+def signup_page():
     """Create an account"""
-    return "Coming soon."
+    return render("signup.html")
+
+@app.route('/signup/', methods=['POST'])
+def signup():
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    user = User.new(username, email, username, password, autocommit=False)
+    db.session.add(user)
+    try:
+        db.session.commit()
+        session['nuid'] = user.id
+        session['nemail'] = user.email
+        return redirect('/signup/confirm/')
+    except Exception as e:
+        app.logger.error("error: %s", e)
+        db.session.rollback()
+        return redirect('/signup/')
 
 @app.route('/signup/confirm/')
 def confirm_signup():
     """Pick a payment"""
+    #uid = session.get('nuid')
+    #if not uid: return redirect('/')
+    return render('confirm_signup.html')
 
-@app.route('/charge')
+@app.route('/charge/stripe/key')
+def signup_stripe_key():
+    """Provide stripe public key."""
+    if not current_app.config.get('STRIPE_ENABLED'):
+        return jsonify({'code': 'stripe not enabled'}), 404
+    return jsonify({
+        'code': 'ok',
+        'key': current_app.config.get('STRIPE_PUBLIC_KEY', '')
+    })
+
+@app.route('/charge/stripe/session', methods=['POST'])
+def create_stripe_session():
+    """Create a stripe subscription checkout session.
+    Potential user will be charged within this session.
+    """
+    plan_id = current_app.config['STRIPE_PLAN_ID']
+    uid = session['nuid']
+    user = User.query.get(uid)
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            subscription_data={"items": [{"plan": plan_id}]},
+            success_url=url_for('stripe_charge_success',
+                uid=session['nuid'], _external=True),
+            cancel_url=url_for('stripe_charge_cancel', _external=True),
+            customer_email=user.email,
+            client_reference_id=user.id,
+        )
+        session['nsess'] = checkout_session['id']
+        return jsonify({
+            'code': 'ok',
+            'checkoutSessionId': checkout_session['id']
+        })
+    except Exception as e:
+        return jsonify({'code': str(e)}), 403
+
+def handle_checkout_session(session):
+    client_reference_id = session['client_reference_id']
+    if not client_reference_id: return
+    client_reference_id = int(client_reference_id)
+    user = User.query.get(client_reference_id)
+    sub = UserSubscription.query.filter_by(user_id=client_reference_id, subscription=session['subscription']).first()
+    if not sub:
+        sub = UserSubscription(user_id=client_reference_id,
+                customer=session['customer'],
+                subscription=session['subscription'])
+        db.session.add(sub)
+        db.session.commit()
+
+def poll_completed_checkout_session(since):
+    events = stripe.Event.list(type = 'checkout.session.completed', created = {
+        'gte': int(since)
+    })
+    for event in events:
+        handle_checkout_session(event['data']['object'])
+
+@app.route('/charge/stripe/success/')
+def stripe_charge_success():
+    if 'nuid' not in session: return redirect('/')
+    session.pop('nuid', None)
+    poll_completed_checkout_session(int(time()) - 7200)
+    return render('signup_success.html')
+
+@app.route('/charge/stripe/cancel/')
+def stripe_charge_cancel():
+    return 'cancel'
+
+@app.route('/charge/stripe/webhook/', methods=['POST'])
+def stripe_charge_webhook():
+    webhook_secret = current_app.config['STRIPE_WEBHOOK_SECRET_KEY']
+    request_data = json.loads(request.data)
+    signature = request.headers.get('stripe-signature')
+    if not secret_key or not signature:
+        return jsonify({'code': 'unknown signature'}), 400
+    try:
+        event = stripe.Webhook.construct_event(
+            payload=request.data, sig_header=signature, secret=webhook_secret)
+        data = event['data']
+        event_type = event['type']
+    except Exception as e:
+        app.logger.error("error: %s", e)
+        return jsonify({'code': 'unable to construct event'}), 400
+
+    data_object = data['object']
+    if event_type == 'checkout.session.completed':
+        items = data_object['display_items']
+        customer = stripe.Customer.retrieve(data_object['customer'])
+        if len(items) != 1 or not items[0].custom:
+            return jsonify({'code': 'unknown items'}), 400
+
+@app.route('/charge/', methods=['POST'])
 def charge():
     """Charge"""
+    return jsonify(dict(request.form))
 
 @app.route('/signup/stripe/callback')
 def finish_signup():
@@ -368,22 +491,6 @@ def change_password():
     """Change password"""
     return "Coming soon."
 
-@app.route('/v1/things', methods=['POST'])
-def add_thing():
-    """Mark a thing.
-
-    | argument | type  | comment |
-    | -------- | ----- | ------- |
-    | category | str   | Type of the thing, choices: book, movie, album, etc |
-    | title    | str   | Title of the thing |
-    | extended | object | Metadata of the thing |
-    | progress | enum  | Choices: todo, doing, done |
-    | tags     | [str] | List of up to 100 tags |
-    | time     | datetime | Creation time |
-    | shared   | bool  | Whether to make it public |
-    """
-    pass
-
 @app.route('/v1/things/<int:id>/share/', methods=['POST'])
 def share_thing(id):
     """Share a thing"""
@@ -437,21 +544,6 @@ def delete_thing(id):
         return jsonify({'code', 'db_error'}), 500
 
     return jsonify({'code': 'ok'}), 200
-
-@app.route('/v1/things/all', methods=['GET'])
-def get_things():
-    """Return all things in user's account, filter by tag.
-
-    | argument | type   | comment |
-    | -------- | ------ | ------- |
-    | type     | str    | return only this type of things |
-    | tag      | [str]  | List of up to 3 tags |
-    | extended | obj    | Common attributes among user's things |
-    | start    | int    | offset value, default is 0 |
-    | limit    | int    | number of results to result, default is 20, maximum is 200 |
-    | since    | datetime | return only results created before this time |
-    | until    | datetime | return only results created after this time |
-    """
 
 if __name__ == '__main__':
     app.run(debug=True)

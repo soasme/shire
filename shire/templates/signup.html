@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<h3>Signup</h3>
+<p>
+  {{ config.SITE_NAME }} charges you $10 per year. You can enjoy a trial period of 30 days.
+</p>
+<form method="post" class="pure-form pure-form-stacked">
+  <fieldset>
+    <label for="username">
+      Username
+      <input id="username" name="username" autocomplete=off class="pure-input-1-4">
+    </label>
+
+    <label for="email">
+      Email (private)
+      <input id="email" name="email" autocomplete=off class="pure-input-1-4">
+    </label>
+
+    <label for="password">
+      Password (private, encrypted)
+      <input type="password" id="password" name="password" autocomplete=off class="pure-input-1-4">
+    </label>
+
+    <label for="agree">
+      <input type="checkbox" name="agree" id="agree">
+      Agree the <a href="/tos/">terms of service</a>
+    </label>
+
+    <button type="submit" class="pure-button pure-button-primary">Signup</button>
+  </fieldset>
+</form>
+{% endblock %}

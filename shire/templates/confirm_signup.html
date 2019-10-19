@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Signup{% endblock %}
+
+{% block content %}
+<h3>Confirm Signup</h3>
+
+{% if config.STRIPE_ENABLED and 'nuid' in session %}
+<form action="{{ url_for('create_stripe_session') }}"
+      method="post"
+      class="pure-form confirm-form">
+  <input type="submit"
+         id="submit"
+         class="pure-input-1-4 pure-button pure-button-primary"
+         value="Checkout">
+</form>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+(async () => {
+  var stripe = Stripe('{{ config.STRIPE_PUBLIC_KEY }}')
+
+  var checkoutSessionId
+
+  try {
+    const res = await fetch('{{ url_for("create_stripe_session") }}', {
+      method: "POST",
+    })
+    const data = await res.json()
+    checkoutSessionId = data.checkoutSessionId
+  } catch (e) {
+    console.error(e)
+    alert("Failed to checkout. Please retry.")
+    return
+  }
+
+  document.querySelector(".confirm-form").addEventListener("submit", async (e) => {
+    e.preventDefault()
+
+    try {
+      const res = await stripe.redirectToCheckout({sessionId: checkoutSessionId})
+      alert(res.error.message)
+    } catch (e) {
+      console.log(e);
+    }
+  })
+})();
+</script>
+{% endif %}
+
+{% endblock %}
