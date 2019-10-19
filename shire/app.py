@@ -13,6 +13,8 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 
+__VERSION__ = '2019.10.20.1'
+
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -148,6 +150,7 @@ class ThingNote(db.Model):
 
 app.jinja_env.globals['Category'] = Category
 app.jinja_env.globals['Progress'] = Progress
+app.jinja_env.globals['VERSION'] = __VERSION__
 
 @app.before_request
 def setup_g():
