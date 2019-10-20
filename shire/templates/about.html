@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}About MarkSthFun{% endblock %}
+
+{% block content %}
+<h3>About The Site</h3>
+<p>
+  MarkSthFun (<a href="https://marksth.fun">marksth.fun</a>, pronounce it as "Mark Something Fun") is a marking website for fun and tasty thingies.
+</p>
+
+<p>
+  In 2019, Ju Lin began work on MarkSthFun as a personal project. He was not able to continuously use Douban, the last free land of Chinese sns websites, so he decided to redesign a new one, mainly just removing tons of features he didn't need. Gradually, he improved the site and invited some of his friends to have fun in this site.
+</p>
+<p>
+  Below are the main principles of this site.
+<p>
+<ul>
+  <li>Marking is way more important than socializing.</li>
+  <li>Keep your data safe over the long term.</li>
+  <li>If you want to know more about a person, read his RSS feed.</li>
+  <li>Unshare as needed; everybody needs a private room. </li>
+  <li>Pay for what you get.</li>
+  <li>No ads.</li>
+</ul>
+
+<p>
+  MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses a POSIX-compatible filesystem, JuiceFS, for collecting logs, metrics, database backup, etc. It uses prometheus and grafana for monitoring. The site runs on two pairs of servers on different regions for high availability.  You'll be bored for the most part of the implementation. However, the site is so fun (at least to me)!
+</p>
+{% endblock %}

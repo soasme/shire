@@ -23,7 +23,7 @@ app.config.update({
     'SECRET_KEY': config('SECRET_KEY'),
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     # OPTIONAL
-    'SITE_NAME': config('SITE_NAME', default='?'),
+    'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
     'SITE_DOMAIN': config('SITE_DOMAIN', default='http://127.0.0.1:5000'),
     'BLOG_URL': config('BLOG_URL', default='https://enqueuezero.com'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
@@ -190,7 +190,7 @@ def guide():
 @app.route('/about/')
 def about():
     """About"""
-    return "Coming soon."
+    return render('about.html')
 
 @app.route('/privacy/')
 def privacy():
