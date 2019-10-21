@@ -194,7 +194,7 @@ def about():
 
 @app.route('/privacy/')
 def privacy():
-    return "Coming soon."
+    return render('privacy.html')
 
 @app.route('/tos/')
 def terms_of_service():

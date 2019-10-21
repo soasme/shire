@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy{% endblock %}
+
+{% block content %}
+<h3>Privacy</h3>
+
+<p>
+  MarkSthFun is a marking website. Users can create an account and mark fun things. Most features are available only for registered users. This is because MarkSthFun needs money to survive and registered users pay money.
+</p>
+
+<p>
+The site will never show ads. There will be no analytics related scripts installed on any page. The site will never track your clickthroughs. As of now, the only third party script on the site is Stripe checkout javascript.
+</p>
+
+<p>
+As a registered user, your information will never be sold, or shared to/with any third parties.
+Your information will only be disclosed if it's a legal necessity. For example, a police/FBI reaches out to me and shows their legal paper.
+</p>
+
+<p>
+Your email is required to mitigate multi-accounting. Your email address is confidential and is used only when you forget your password or need to receive payment invoice from Stripe.
+</p>
+
+<p>
+Your credit/debit card information and subscription invoices will not be stored on MarkSthFun database, but in Stripe.
+</p>
+
+<p>
+  You can set your account completely private if you are an introverted person. You can unshare a record if you want to keep something unseen from public.
+</p>
+
+<p>
+Your password will be encrypted via bcrypt algorithm and save only the encrypted hash into database. Your password will be expired after one year as kind of protection. You will need to reset your password regularly. A completely random password of at least 32 characters, combining a-z, A-Z, 0-9, and special characters are strongly encouraged.
+</p>
+
+<p>
+Nothing but only your password is encrypted in database.
+I do not recommend you storing any credential information on the site, such as your password, date or birth, etc, even when your account is private or marking is unshared. You just need to be cautious.
+</p>
+
+<p>
+Your browsing history will appear on Nginx logs, but is only saved for up to 90 days. The browsing history includes your IP address, the url, http method, user agent, time, etc. I will be the only person who can see them and I will never share it to others.
+The logs will be gzipped and cached on S3 until expired. Your digital footprint will be gone after the deletion cronjob is completed.
+</p>
+
+<p>
+The site stores some non-credential login information in your cookie  You can clear the cookies at any time, except you'll be logged out.
+You can disable the cookie, though I don't know if you can still use the site as normal.
+</p>
+
+<p>
+You can delete your account at any time. The account will be deleted in seven days from the request. You can obtain a copy of deleted data if you want.
+You cannot recover your account after the account deletion since they're completely gone.
+
+You can delete the marking data you created at any time.
+It'll be a soft deletion at first and will be completed deleted by a cronjob.
+</p>
+
+<p>
+  If there is a privacy related bug, it'll be among one of the top priority tasks awaiting to be fixed. If there is a privacy breach, it'll be disclosed as soon as possible on the site blog and discord channel. If you find a privacy leak, please report it to discord channel.
+</p>
+
+
+<p>
+If you have any questions or concerns regarding this policy, please ask in discord channel.
+</p>
+
+{% endblock %}
