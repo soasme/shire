@@ -8,6 +8,10 @@ $ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
+```
+$ ansible-galaxy install -r requirements.yaml
+```
+
 You may setup your ansible config first.
 
 ```
