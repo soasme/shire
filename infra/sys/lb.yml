@@ -2,3 +2,4 @@
 - hosts: loadbalancer
   roles:
     - role: nginxinc.nginx
+    - role: geerlingguy.certbot
