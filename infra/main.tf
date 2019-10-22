@@ -15,3 +15,7 @@ resource "digitalocean_droplet" "fun0001" {
   ssh_keys  = "${var.do_ssh_keys}"
   private_networking = true
 }
+
+output "fun0001_ipv4_address" {
+  value = digitalocean_droplet.fun0001.ipv4_address
+}

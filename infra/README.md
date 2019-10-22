@@ -21,6 +21,12 @@ do_ssh_keys = ["..."] # curl -X GET -H "Content-Type: application/json" -H "Auth
 ...
 ```
 
+If there is a history tfstate, please name it as "terraform.tfstate".
+
+```bash
+$ cp ~/Dropbox/MarkSthFun/infra/terraform.tfstate .
+```
+
 Plan resources.
 
 ```bash
