@@ -43,3 +43,9 @@ Run a ping check on all hosts:
 ```
 $ ansible all -i hosts -m ping
 ```
+
+Setup load balancers:
+
+```
+$ ansible-playbook -i hosts lb.yml
+```
