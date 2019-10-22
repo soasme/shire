@@ -38,3 +38,9 @@ Apply resources.
 ```bash
 $ terraform apply -var-file=.terraformrc
 ```
+
+Destroy resources.
+
+```bash
+$ terraform destroy -var-file=.terraformrc
+```
