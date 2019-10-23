@@ -39,8 +39,22 @@ Run a ping check on all hosts:
 $ ansible all -i inventory.py -m ping
 ```
 
+You will need a `config.yml` for some tokens:
+
+```
+jfs_token: ...
+jfs_bucket_accesskey: ...
+jfs_bucket_secretkey: ...
+```
+
+Initial setup for all servers:
+
+```bash
+$ ansible-playbook -i inventory.py -e "@config.yml" all-provision.yml
+```
+
 Setup load balancers:
 
 ```
-$ ansible-playbook -i inventory.py lb-provision.yml
+$ ansible-playbook -i inventory.py -e "@config.yml" lb-provision.yml
 ```

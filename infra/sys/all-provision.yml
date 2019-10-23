@@ -1,5 +1,10 @@
 ---
 - hosts: all
+  vars:
+    jfs_path: /mfs
+    jfs_name: marksthfun
+    jfs_bucket_name: "juicefs-{{jfs_name}}"
   roles:
     # Make sure server time is setup properly.
     - role: geerlingguy.ntp
+    - role: roles/juicefs
