@@ -50,7 +50,14 @@ jfs_bucket_secretkey: ...
 Initial setup for all servers:
 
 ```bash
-$ ansible-playbook -i inventory.py -e "@config.yml" all-provision.yml
+$ ansible-playbook -i inventory.py -e "@config.yml" base-provision.yml
+```
+
+To run a partial of initial setup roles, you can use `--tags`:
+
+```bash
+$ ansible-playbook -i inventory.py -e "@config.yml" --tags "ntp" base-provision.yml
+$ ansible-playbook -i inventory.py -e "@config.yml" --tags "mfs" base-provision.yml
 ```
 
 Setup load balancers:
