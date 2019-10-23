@@ -1,0 +1,9 @@
+---
+jfs_name: default
+jfs_download_url: https://juicefs.com/static/juicefs
+jfs_bin: /usr/local/bin/juicefs
+jfs_path: /jfs
+jfs_bucket_name: juicefs-{{jfs_name}}
+jfs_token: '""'
+jfs_bucket_accesskey: '""'
+jfs_bucket_secretkey: '""'
