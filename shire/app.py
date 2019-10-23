@@ -46,6 +46,9 @@ stripe.api_version = app.config.get('STRIPE_API_VERSION')
 bcrypt = Bcrypt()
 bcrypt.init_app(app)
 
+class ShireError(Exception): pass
+class ExistingError(ShireError): pass
+
 class Progress(enum.Enum):
     """A progress enum indicating if user has used the thing.
     Currently, we only support done.
@@ -78,14 +81,22 @@ class User(db.Model):
     email = db.Column(db.String(256), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    is_private = db.Column(db.Boolean, nullable=False, default=False)
+    is_charged = db.Column(db.Boolean, nullable=False, default=False)
 
     @classmethod
     def new(self, username, email, nickname, password, autocommit=True):
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         user = User(username=username, email=email,
                 nickname=nickname, password=password_hash)
-        db.session.add(user)
-        if autocommit: db.session.commit()
+        if autocommit:
+            try:
+                db.session.add(user)
+                db.session.commit()
+                return user
+            except IntegrityError:
+                db.session.rollback()
+                raise ExistingError(username)
         return user
 
 class UserSubscription(db.Model):
@@ -227,16 +238,36 @@ def signup():
     if not password:
         session['error.signup'] = 'password is empty'
         return redirect(url_for('signup_page'))
-    user = User.new(username, email, username, password, autocommit=False)
-    db.session.add(user)
+    user = User.query.filter_by(username=username).first()
+    if user and user.is_charged:
+        session['error.signup'] = 'username exists'
+        return redirect(url_for('signup_page'))
+    if user and not user.is_charged:
+        user = User.query.filter_by(username=username).first()
+        user.email = email
+        user.nickname = username
+        user.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        db.session.add(user)
+        try:
+            db.session.commit()
+            session['nuid'] = user.id
+            return redirect(url_for('confirm_signup'))
+        except Exception:
+            db.session.rollback()
+            session['error.signup'] = 'database error'
+            return redirect(url_for('signup_page'))
     try:
-        db.session.commit()
+        user = User.new(username, email, username, password, autocommit=True)
         session['nuid'] = user.id
-        session['nemail'] = user.email
-        return redirect('/signup/confirm/')
-    except IntegrityError:
-        db.session.rollback()
         return redirect(url_for('confirm_signup'))
+    except ExistingError as e:
+        user = User.query.filter_by(username=username).first()
+        if user.is_charged:
+            session['error.signup'] = 'username exists'
+            return redirect(url_for('signup_page'))
+        else:
+            session['nuid'] = user.id
+            return redirect(url_for('confirm_signup'))
     except Exception as e:
         app.logger.error("error: %s", e)
         db.session.rollback()

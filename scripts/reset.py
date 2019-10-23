@@ -5,6 +5,9 @@ def _populate_db():
     """Populate testing data into database. """
 
     user = User.new('soasme', 'soasme@gmail.com', 'Ju', '111111')
+    user.is_charged = True
+    db.session.add(user)
+    db.session.commit()
 
     thing_annihilation = Thing(user_id=user.id, category=Category.movie,
             title="Annihilation", shared=True,
