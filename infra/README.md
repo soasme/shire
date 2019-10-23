@@ -1,27 +1,27 @@
 # Infrastructure
 
-## Getting Started
+## Setup
+
+You'll only need setup environment once.
 
 ```bash
 $ brew install terraform
+$ python3 -mvenv venv
+$ venv/bin/pip install -r requirements.txt
+$ cp sample.env .env
+$ vi .env # Follow the guide on `sample.env` and complete all required configuration items.
 ```
 
-Create a config file.
+## Load envvars
+
+You'll need load envvars before running commands below every time.
 
 ```bash
-$ vi .terraformrc 
+$ source venv/bin/activate
+$ export `dotenv list`
 ```
 
-Example of the config file.
-
-```
-do_token = "..." # https://cloud.digitalocean.com/account/api/tokens > Personal access tokens
-do_accesskey = "..." # ^ > Spaces access keys
-do_secretkey = "..." # ^ > Spaces access keys
-do_project_name = "MarkSthFun"
-do_ssh_keys = ["..."] # curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer ${do_token}" "https://api.digitalocean.com/v2/account/keys"
-...
-```
+## Playbooks
 
 If there is a history tfstate, please name it as "terraform.tfstate".
 
@@ -31,7 +31,6 @@ $ cp ~/Dropbox/MarkSthFun/infra/terraform.tfstate .
 
 Initialize.
 
-
 ```bash
 $ terraform init
 ```
@@ -39,17 +38,42 @@ $ terraform init
 Plan resources.
 
 ```bash
-$ terraform plan -var-file=.terraformrc
+$ terraform plan
 ```
 
 Apply resources.
 
 ```bash
-$ terraform apply -var-file=.terraformrc
+$ terraform apply
 ```
 
 Destroy resources.
 
 ```bash
-$ terraform destroy -var-file=.terraformrc
+$ terraform destroy
+```
+
+## Install Playbooks
+
+```
+$ ansible-galaxy install -r sys/requirements.yaml
+```
+
+## Ping all hosts
+
+```bash
+$ ansible all -m ping
+```
+
+## Provision basic system requirements
+
+```bash
+$ ansible-playbook sys/base-provision.yml
+```
+
+To run a portion of roles among `base-provision.yml`, use option `--tags`. For example,
+
+```bash
+$ ansible-playbook sys/base-provision.yml --tags "ntp"
+$ ansible-playbook sys/base-provision.yml --tags "mfs"
 ```

@@ -2,15 +2,10 @@
 
 ## Getting Started
 
-```bash
-$ python3 -mvenv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-```
+* [Setup](../README.md#Setup) the environment if you haven't.
+* [Load envvars](../README.md#load-envvars) if you haven't.
 
-```
-$ ansible-galaxy install -r requirements.yaml
-```
+## Install playbooks
 
 You may setup your ansible config first.
 
