@@ -15,7 +15,9 @@ $ vi .terraformrc
 Example of the config file.
 
 ```
-do_token = "..."
+do_token = "..." # https://cloud.digitalocean.com/account/api/tokens > Personal access tokens
+do_accesskey = "..." # ^ > Spaces access keys
+do_secretkey = "..." # ^ > Spaces access keys
 do_project_name = "MarkSthFun"
 do_ssh_keys = ["..."] # curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer ${do_token}" "https://api.digitalocean.com/v2/account/keys"
 ...

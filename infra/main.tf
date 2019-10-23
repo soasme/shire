@@ -1,4 +1,6 @@
 variable "do_token" {}
+variable "do_access_key" {}
+variable "do_secret_key" {}
 variable "do_project_name" {}
 variable "do_ssh_keys" { type = "list" }
 
