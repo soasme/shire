@@ -25,27 +25,22 @@ An example of `.ansible.cfg` is like below:
 host_key_checking = False
 ```
 
-Then you will need setup an inventory file.
+Then you will need setup an inventory config file.
 
 ```
-$ vi hosts
+$ vi digital_ocean.ini
 ```
 
-An example of `hosts` is like below:
-
-```
-[app]
-app0001.sfo2.svc.marksth.fun ansible_host=1.1.1.1 ansible_user=root # replace 8.8.8.8 to fun0001 ipv4 address.
-```
+An example of `digital_ocean.ini` is like [this](https://github.com/ansible/ansible/blob/devel/contrib/inventory/digital_ocean.ini). The [inventory.py](inventory.py) comes from [ansible/contrib](https://github.com/ansible/ansible/blob/devel/contrib/inventory/digital_ocean.py).
 
 Run a ping check on all hosts:
 
 ```
-$ ansible all -i hosts -m ping
+$ ansible all -i inventory.py -m ping
 ```
 
 Setup load balancers:
 
 ```
-$ ansible-playbook -i hosts lb.yml
+$ ansible-playbook -i inventory.py lb-provision.yml
 ```

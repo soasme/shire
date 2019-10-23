@@ -27,6 +27,13 @@ If there is a history tfstate, please name it as "terraform.tfstate".
 $ cp ~/Dropbox/MarkSthFun/infra/terraform.tfstate .
 ```
 
+Initialize.
+
+
+```bash
+$ terraform init
+```
+
 Plan resources.
 
 ```bash
