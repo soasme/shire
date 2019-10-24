@@ -19,7 +19,7 @@ provider "digitalocean" {
   spaces_secret_key = "${var.do_secret_key}"
 }
 
-#  Provision Computational Resources
+# Provision Computational Resources
 
 resource "digitalocean_droplet" "server_0001" {
   name      = "0001.sfo2.svc.marksth.fun"
@@ -35,13 +35,15 @@ output "server_00001_ipv4_address" {
   value = digitalocean_droplet.server_0001.ipv4_address
 }
 
-# Provision Space
+# Provision IP addresses (for lb)
 
-resource "digitalocean_spaces_bucket" "mfs" {
-  name      = "${var.bucket_name}"
-  region    = "sfo2"
-  acl       = "private"
-  force_destroy = true
+resource "digitalocean_floating_ip" "vip_0001" {
+  region            = "sfo2"
+}
+
+resource "digitalocean_floating_ip_assignment" "vip_0001" {
+  ip_address = "${digitalocean_floating_ip.vip_0001.ip_address}"
+  droplet_id = "${digitalocean_droplet.server_0001.id}"
 }
 
 # Provision Site Domain and Name Records
@@ -55,7 +57,7 @@ resource "digitalocean_record" "at_A" {
   type      = "A"
   name      = "@"
   ttl       = 300 # 5m
-  value     = "${digitalocean_droplet.server_0001.ipv4_address}"
+  value     = "${digitalocean_floating_ip.vip_0001.ip_address}"
 }
 
 output "site_domain_fqdn" {
