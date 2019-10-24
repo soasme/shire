@@ -1,6 +1,9 @@
 - src: geerlingguy.ntp
 - src: geerlingguy.postgresql
+- src: geerlingguy.firewall
 - src: cloudalchemy.node-exporter
+- src: cloudalchemy.prometheus
+- src: cloudalchemy.grafana
 - src: nginxinc.nginx
   version: 0.12.0
 - src: geerlingguy.certbot
