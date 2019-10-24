@@ -1,0 +1,20 @@
+---
+- hosts: prom
+  roles:
+    - role: cloudalchemy.prometheus
+      tags: ["prometheus"]
+    - role: cloudalchemy.grafana
+      tags: ["grafana"]
+  vars:
+    prometheus_targets:
+      node:
+        targets: "{{ lookup('inventory_hostnames', 'all') }}"
+    grafana_security:
+      admin_user: "{{ lookup('env', 'GRAFANA_ADMIN_USER') }}"
+      admin_password: "{{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') }}"
+    grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: 'http://{{ prometheus_web_listen_address }}'
+        basicAuth: false
