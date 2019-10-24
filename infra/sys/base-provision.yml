@@ -4,3 +4,5 @@
     # Make sure server time is setup properly.
     - role: geerlingguy.ntp
       tags: ["ntp"]
+    - role: cloudalchemy.node-exporter
+      tags: ["node-exporter"]
