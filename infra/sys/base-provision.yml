@@ -1,16 +1,6 @@
 ---
 - hosts: all
-  vars:
-    jfs_path: /mfs
-    jfs_name: marksthfun
-    jfs_bucket_name: "{{ lookup('env', 'JFS_BUCKET_NAME')  }}"
-    jfs_token: "{{ lookup('env', 'JFS_TOKEN') }}"
-    jfs_bucket_accesskey: "{{ lookup('env', 'DO_ACCESS_KEY') }}"
-    jfs_bucket_secretkey: "{{ lookup('env', 'DO_SECRET_KEY') }}"
   roles:
     # Make sure server time is setup properly.
     - role: geerlingguy.ntp
       tags: ["ntp"]
-    # Mount a shared filesystem `/mfs`.
-    - role: roles/juicefs
-      tags: ["mfs"]

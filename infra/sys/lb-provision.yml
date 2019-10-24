@@ -1,5 +1,4 @@
 ---
-- hosts: loadbalancer
+- hosts: lb
   roles:
     - role: nginxinc.nginx
-    - role: geerlingguy.certbot
