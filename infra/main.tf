@@ -37,7 +37,7 @@ output "server_00001_ipv4_address" {
 
 resource "digitalocean_firewall" "lb" {
   name = "lb-22-80-443"
-  droplet_ids = ["digitalocean_droplet.server_0001.id"]
+  droplet_ids = ["${digitalocean_droplet.server_0001.id}"]
 
   inbound_rule {
       protocol           = "tcp"

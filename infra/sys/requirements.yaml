@@ -1,4 +1,5 @@
 - src: geerlingguy.ntp
+- src: geerlingguy.postgresql
 - src: cloudalchemy.node-exporter
 - src: nginxinc.nginx
   version: 0.12.0

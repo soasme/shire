@@ -1,0 +1,11 @@
+---
+- hosts: db
+  become: yes
+  vars:
+    postgresql_databases:
+      - name: "{{ lookup('env', 'SHIRE_DATABASE_NAME') }}"
+    postgresql_users:
+      - name: "{{ lookup('env', 'SHIRE_DATABASE_USER') }}"
+        password: "{{ lookup('env', 'SHIRE_DATABASE_PASS') }}"
+  roles:
+    - role: geerlingguy.postgresql
