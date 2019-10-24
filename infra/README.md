@@ -102,3 +102,23 @@ List of databases
 Name | ...
 postgres | ...
 ```
+
+## Provision Prometheus
+
+```bash
+$ ansible-playbook sys/db-provision.yml
+```
+
+It'll setup prometheus server.
+
+On local host, you can tunnel to prometheus service by running ssh command (visit [127.0.0.1:9090](http://127.0.0.1:9090) to see what's scrapping by prometheus):
+
+```
+$ ssh -L 9090:127.0.0.1:9090 root@${YOUR_PROM_HOST_IP}
+```
+
+On local host, if you want to access grafana service, do the same trick:
+
+```
+$ ssh -L 3000:127.0.0.1:3000 root@${YOUR_PROM_HOST_IP}
+```
