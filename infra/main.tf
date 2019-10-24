@@ -35,6 +35,34 @@ output "server_00001_ipv4_address" {
   value = digitalocean_droplet.server_0001.ipv4_address
 }
 
+resource "digitalocean_firewall" "lb" {
+  name = "lb-22-80-443"
+  droplet_ids = ["digitalocean_droplet.server_0001.id"]
+
+  inbound_rule {
+      protocol           = "tcp"
+      port_range         = "22"
+      source_addresses   = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+      protocol           = "tcp"
+      port_range         = "80"
+      source_addresses   = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+      protocol           = "tcp"
+      port_range         = "443"
+      source_addresses   = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+      protocol           = "icmp"
+      source_addresses   = ["0.0.0.0/0", "::/0"]
+  }
+}
+
 # Provision IP addresses (for lb)
 
 resource "digitalocean_floating_ip" "vip_0001" {
