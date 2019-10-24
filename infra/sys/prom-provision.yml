@@ -8,7 +8,7 @@
   vars:
     prometheus_targets:
       node:
-        targets: "{{ lookup('inventory_hostnames', 'all') }}"
+        targets: "{{ lookup('inventory_hostnames', 'all') | map('regex_replace', '(.*)', 'https://\\1:9100') }}"
     grafana_security:
       admin_user: "{{ lookup('env', 'GRAFANA_ADMIN_USER') }}"
       admin_password: "{{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') }}"
