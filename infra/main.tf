@@ -26,7 +26,7 @@ resource "digitalocean_droplet" "server_0001" {
   size      = "s-1vcpu-1gb"
   image     = "centos-7-x64"
   region    = "sfo2"
-  tags      = ["lb0001", "web0001", "db0001", "worker0001", "lb", "web", "db", "worker"]
+  tags      = ["lb0001", "web0001", "db0001", "worker0001", "lb", "web", "db", "worker", "prom"]
   ssh_keys  = "${var.do_ssh_keys}"
   private_networking = true
 }
