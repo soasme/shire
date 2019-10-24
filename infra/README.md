@@ -75,5 +75,30 @@ To run a portion of roles among `base-provision.yml`, use option `--tags`. For e
 
 ```bash
 $ ansible-playbook sys/base-provision.yml --tags "ntp"
-$ ansible-playbook sys/base-provision.yml --tags "mfs"
+```
+
+## Provision Load Balancer
+
+```bash
+$ ansible-playbook sys/lb-provision.yml
+```
+
+It'll provision letsencrypt certs for site domain and setup nginx.
+
+## Provision Database
+
+```bash
+$ ansible-playbook sys/db-provision.yml
+```
+
+It'll make sure postgres databases are up and running.
+
+On remote host of role db, you can perform sql management by running psql command:
+
+```
+# sudo -u postgres psql
+postgres=# \l
+List of databases
+Name | ...
+postgres | ...
 ```
