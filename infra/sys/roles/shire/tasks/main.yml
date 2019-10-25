@@ -1,0 +1,38 @@
+---
+- name: Install epel repo
+  import_role:
+    name: geerlingguy.repo-epel
+  tags: [epel]
+
+- name: Install ius repo
+  import_role:
+    name: linuxhq.ius
+  vars:
+    ius_repository_ius: true
+  tags: [ius]
+
+- name: Install pip3.6
+  import_role:
+    name: geerlingguy.pip
+  vars:
+    pip_package: python36u-pip
+  tags: [pip]
+
+- name: Install pip2
+  import_role:
+    name: geerlingguy.pip
+  vars:
+    pip_package: python-pip
+  tags: [pip]
+
+- name: Install supervisor
+  import_role:
+    name: geerlingguy.supervisor
+  vars:
+    supervisor_version: latest
+    supervisor_started: true
+    supervisor_enabled: true
+    supervisor_config_path: /etc/supervisor
+    supervisor_programs: []
+    # TODO: add supervisor password
+  tags: [supervisor]
