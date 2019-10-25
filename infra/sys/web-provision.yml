@@ -2,3 +2,4 @@
 - hosts: web
   roles:
     - role: roles/shire
+    - role: roles/shire-web

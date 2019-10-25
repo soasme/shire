@@ -37,10 +37,11 @@
     # TODO: add supervisor password
   tags: [supervisor]
 
-- name: Deploy app
+- name: Deploy web
   import_role:
     name: ansistrano.deploy
   vars:
+    shire_entry: 'web'
     ansistrano_deploy_from: "{{ playbook_dir }}/../../"
     ansistrano_deploy_to: /var/www/shire
     ansistrano_version_dir: releases
@@ -49,6 +50,8 @@
     ansistrano_keep_releases: 5
     ansistrano_deploy_via: rsync
     ansistrano_rsync_extra_params: "--exclude='.env' --exclude='.git' --exclude='venv'"
+    ansistrano_after_setup_tasks_file: "{{ playbook_dir }}/roles/shire-{{ shire_entry }}/tasks/after-setup-tasks-file.yml"
+    ansistrano_after_symlink_shared_tasks_file: "{{ playbook_dir }}/roles/shire-{{ shire_entry }}/tasks/after-symlink-shared-tasks-file.yml"
     # after setup: install sys deps, create venv
     # after code-updated: install python deps
     # after symlink: update supervisor conf, and reread, update.

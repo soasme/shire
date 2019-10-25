@@ -1,0 +1,33 @@
+---
+- name: Prepare .env
+  template:
+    src: env.j2
+    dest: "{{ ansistrano_shared_path }}/.env"
+    backup: true
+
+- name: Setup sys deps
+  yum:
+    name:
+      - gcc
+      - python36u-devel
+      - postgresql-devel
+
+- name: Setup virtualenv
+  pip:
+    executable: pip3.6
+    name: virtualenv
+
+- name: Setup venv
+  pip:
+    chdir: "{{ ansistrano_shared_path }}"
+    virtualenv: "{{ ansistrano_shared_path }}/venv3.6"
+    virtualenv_python: python3.6
+    name:
+      - gunicorn==19.9.0
+      - pip==19.3.1
+
+- name: Link venv
+  file:
+    src: "{{ ansistrano_shared_path }}/venv3.6"
+    dest: "{{ ansistrano_shared_path }}/venv"
+    state: link

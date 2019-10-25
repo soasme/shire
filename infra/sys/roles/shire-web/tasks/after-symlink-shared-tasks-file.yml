@@ -1,0 +1,7 @@
+---
+- name: Install dependencies
+  pip:
+    chdir: "{{ ansistrano_shared_path }}"
+    virtualenv: "{{ ansistrano_shared_path }}/venv"
+    virtualenv_python: python3.6
+    requirements: "{{ ansistrano_release_path.stdout }}/requirements.txt"
