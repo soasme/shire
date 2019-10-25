@@ -36,3 +36,17 @@
     supervisor_programs: []
     # TODO: add supervisor password
   tags: [supervisor]
+
+- name: Deploy app
+  import_role:
+    name: ansistrano.deploy
+  vars:
+    ansistrano_deploy_from: "{{ playbook_dir }}/../../"
+    ansistrano_deploy_to: /var/www/shire
+    ansistrano_version_dir: releases
+    ansistrano_current_dir: current
+    ansistrano_current_via: symlink
+    ansistrano_keep_releases: 5
+    ansistrano_deploy_via: rsync
+    ansistrano_rsync_extra_params: "--exclude='.env' --exclude='.git' --exclude='venv'"
+  tags: [deploy]
