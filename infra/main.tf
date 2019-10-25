@@ -22,7 +22,7 @@ provider "digitalocean" {
 # Provision Computational Resources
 
 resource "digitalocean_droplet" "server_0001" {
-  name      = "0001.sfo2.svr.marksth.fun"
+  name      = "0001.sfo2.svr.${var.site_domain}"
   size      = "s-1vcpu-1gb"
   image     = "centos-7-x64"
   region    = "sfo2"
