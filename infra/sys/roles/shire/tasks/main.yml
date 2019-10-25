@@ -49,4 +49,7 @@
     ansistrano_keep_releases: 5
     ansistrano_deploy_via: rsync
     ansistrano_rsync_extra_params: "--exclude='.env' --exclude='.git' --exclude='venv'"
+    # after setup: install sys deps, create venv
+    # after code-updated: install python deps
+    # after symlink: update supervisor conf, and reread, update.
   tags: [deploy]
