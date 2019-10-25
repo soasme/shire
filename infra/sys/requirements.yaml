@@ -1,3 +1,4 @@
+- src: linuxhq.ius
 - src: geerlingguy.ntp
 - src: geerlingguy.postgresql
 - src: geerlingguy.firewall
@@ -10,3 +11,4 @@
 - src: cloudalchemy.grafana
 - src: nginxinc.nginx
   version: 0.12.0
+- src: bertvv.dnsmasq
