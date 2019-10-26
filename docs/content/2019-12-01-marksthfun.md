@@ -1,5 +1,6 @@
 ---
 title: Mark Something Fun!
+slug: 2019-12-01-marksthfun
 date: 2019-12-01
 category: product
 ---
@@ -10,11 +11,11 @@ Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (<http
 
 ## Motivate
 
-I was a [douban](https://www.douban.com) user, in which I can mark the books I have read, movies I have watched, and albums I have listened. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cyber security law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. And I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough, really. Enough.
+I was a [douban](https://www.douban.com) user, in which I can mark the books I have read, movies I have watched, and albums I have listened. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cyber security law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. But I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough, really. Enough.
 
 I could have marked my book on goodreads, marked my traces on google maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)
 
-Since there is no tool in the market that fits me well, as an engineer, I build on my own.
+Since there is no tool in the market that fits me well, as an engineer, I started building my own.
 
 ## Introduction
 
@@ -47,7 +48,7 @@ Below are the principles that I keep in mind when building this new website.
 
 ## Implementation
 
-Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible is used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless.
+Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible are used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless.
 
 ## Conclusion
 
