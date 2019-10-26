@@ -39,9 +39,3 @@
     name:
       - gunicorn==19.9.0
       - pip==19.3.1
-
-- name: Link venv
-  file:
-    src: "{{ ansistrano_shared_path }}/venv3.6"
-    dest: "{{ ansistrano_shared_path }}/venv"
-    state: link

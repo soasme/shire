@@ -5,8 +5,7 @@
     dest: "{{ shire_supervisor_web_conf_path }}"
     backup: false
 
-#- name: Restart supervisor
-  #supervisorctl:
-    #name: "shire-web"
-    #state: restarted
-    #config: "{{ shire_supervisor_web_conf_path }}"
+- name: Restart supervisor
+  supervisorctl:
+    name: "shire.web"
+    state: restarted

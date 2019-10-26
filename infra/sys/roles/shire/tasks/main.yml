@@ -47,9 +47,11 @@
     ansistrano_current_dir: current
     ansistrano_current_via: symlink
     ansistrano_keep_releases: 5
+    ansistrano_shared_paths: [venv3.6, ]
+    ansistrano_shared_files: [.env, ]
     ansistrano_deploy_via: rsync
-    ansistrano_rsync_extra_params: "--exclude='.env' --exclude='.git' --exclude='venv'"
     ansistrano_after_setup_tasks_file: "{{ playbook_dir }}/roles/shire-{{ shire_entry }}/tasks/after-setup-tasks-file.yml"
+    ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/roles/shire-{{ shire_entry }}/tasks/after-symlink-tasks-file.yml"
     ansistrano_after_symlink_shared_tasks_file: "{{ playbook_dir }}/roles/shire-{{ shire_entry }}/tasks/after-symlink-shared-tasks-file.yml"
     # after setup: install sys deps, create venv
     # after code-updated: install python deps
@@ -59,4 +61,5 @@
     shire_supervisor_web_process_num: 4
     shire_process_user: shire
     shire_process_group: shire
+    shire_port: 8000
   tags: [deploy]
