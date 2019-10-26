@@ -2,3 +2,4 @@ ansible
 requests
 python-dotenv[cli]
 jmespath
+netaddr

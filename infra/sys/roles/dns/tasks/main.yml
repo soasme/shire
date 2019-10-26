@@ -1,0 +1,22 @@
+---
+- name: Ensure hosts file exists
+  file:
+    path: /etc/addn.hosts
+    state: touch
+
+- name: Addn hosts
+  template:
+    src: addn-hosts.j2
+    dest: /etc/addn.hosts
+
+- name: Ensure dnsmasq installed
+  include_role:
+    name: bertvv.dnsmasq
+  vars:
+    dnsmasq_addn_hosts: /etc/addn.hosts
+    dnsmasq_resolv_file: /etc/resolv.conf
+
+- name: Restart dnsmasq service
+  service:
+    name: dnsmasq
+    state: restarted

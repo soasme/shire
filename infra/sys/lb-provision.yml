@@ -27,8 +27,13 @@
         state: present
       tags: [certbot]
   roles:
+    # Enable next monday, since it's rate limited.
+    # Need to backup certs so that we won't be rate limited again.
+    # Pre-task: upload certs if local has one.
+    # "IMPORTANT NOTES:", " - Your account credentials have been saved in your Certbot", "   configuration directory at /etc/letsencrypt. You should make a", "   secure backup of this folder now. This configuration directory will", "   also contain certificates and private keys obtained by Certbot so", "   making regular backups of this folder is ideal.
     - role: geerlingguy.certbot
       tags: [certbot]
+    # Post-task: fetch the file 
     - role: nginxinc.nginx
       tags: [nginx]
   vars:
@@ -68,11 +73,25 @@
         autoindex: false
         web_server:
           locations:
-            default:
+            backend:
               location: /
-              html_file_location: /usr/share/nginx/html
-              html_file_name: index.html
-              autoindex: false
+              proxy_pass: http://web.shire.sfo2.svc.{{ lookup('env', 'SITE_DOMAIN' }}:8000
+              proxy_set_header:
+                header_host:
+                  name: Host
+                  value: $host
+                header_x_real_ip:
+                  name: X-Real-IP
+                  value: $remote_addr
+                header_x_forwarded_for:
+                  name: X-Forwarded-For
+                  value: $proxy_add_x_forwarded_for
+                header_x_forwarded_proto:
+                  name: X-Forwarded-Proto
+                  value: $scheme
+              proxy_ignore_headers:
+                - Vary
+                - Cache-Control
           http_demo_conf: false
       blog80:
         template_file: http/default.conf.j2

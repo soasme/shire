@@ -1,0 +1,7 @@
+{% for item in groups['db'] %}
+{{ hostvars[item]['do_networks']['v4'][1]['ip_address'] }}    do.sfo2.svc.{{ lookup('env', 'SITE_DOMAIN') }}
+{% endfor %}
+
+{% for item in groups['web'] %}
+{{ hostvars[item]['do_networks']['v4'][1]['ip_address'] }}    web.shire.sfo2.svc.{{ lookup('env', 'SITE_DOMAIN') }}
+{% endfor %}

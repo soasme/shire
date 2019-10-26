@@ -1,0 +1,5 @@
+---
+- hosts: dns
+  vars:
+  roles:
+    - role: roles/dns

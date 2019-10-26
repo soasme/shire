@@ -101,6 +101,8 @@ $ ansible-playbook sys/lb-provision.yml
 
 The cert includes wildcard (`*.example.com`).
 
+TODO: restore & backup certs to a remote dir, by date
+
 ## Provision Database
 
 Provision postgres database.
