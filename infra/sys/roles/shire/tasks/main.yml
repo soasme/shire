@@ -41,7 +41,6 @@
   import_role:
     name: ansistrano.deploy
   vars:
-    shire_entry: 'web'
     ansistrano_deploy_from: "{{ playbook_dir }}/../../"
     ansistrano_deploy_to: /var/www/shire
     ansistrano_version_dir: releases
@@ -55,4 +54,9 @@
     # after setup: install sys deps, create venv
     # after code-updated: install python deps
     # after symlink: update supervisor conf, and reread, update.
+    shire_entry: 'web'
+    shire_supervisor_web_conf_path: /etc/supervisor/conf.d/shire-web.conf
+    shire_supervisor_web_process_num: 4
+    shire_process_user: shire
+    shire_process_group: shire
   tags: [deploy]

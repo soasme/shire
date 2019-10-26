@@ -1,0 +1,12 @@
+---
+- name: Setup supervisor conf
+  template:
+    src: web.supervisor.j2
+    dest: "{{ shire_supervisor_web_conf_path }}"
+    backup: false
+
+#- name: Restart supervisor
+  #supervisorctl:
+    #name: "shire-web"
+    #state: restarted
+    #config: "{{ shire_supervisor_web_conf_path }}"

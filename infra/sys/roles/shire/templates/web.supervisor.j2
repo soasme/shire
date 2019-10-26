@@ -1,0 +1,11 @@
+[program:shire-web]
+directory="{{ ansistrano_release_path.stdout }}"
+process_name=%(program_name)s
+command="{{ ansistrano_release_path.stdout }}/venv/bin/gunicorn -w {{ shire_supervisor_web_process_num }} --access-logfile - --error-logfile - shire.app:app"
+user="{{ shire_process_user }}"
+stdout_logfile="{{ ansistrano_shared_path }}/stdout.log"
+stderr_logfile="{{ ansistrano_shared_path }}/stderr.log"
+autostart=true
+autorestart=true
+startsecs=2
+startretries=3

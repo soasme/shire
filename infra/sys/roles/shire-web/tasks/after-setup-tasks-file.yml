@@ -1,4 +1,17 @@
 ---
+- name: Ensure group exists
+  group:
+    name: "{{ shire_process_group }}"
+    state: present
+
+- name: Ensure user exists
+  user:
+    name: "{{ shire_process_user }}"
+    create_home: false
+    shell: /bin/bash
+    group: "{{ shire_process_group }}"
+    state: present
+
 - name: Prepare .env
   template:
     src: env.j2
@@ -11,6 +24,7 @@
       - gcc
       - python36u-devel
       - postgresql-devel
+      - openssl-devel
 
 - name: Setup virtualenv
   pip:
