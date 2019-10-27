@@ -24,8 +24,8 @@ app.config.update({
     'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
     # OPTIONAL
     'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
-    'SITE_DOMAIN': config('SITE_DOMAIN', default='http://127.0.0.1:5000'),
-    'BLOG_URL': config('BLOG_URL', default='https://enqueuezero.com'),
+    'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
+    'BLOG_URL': config('BLOG_URL', default='http://127.0.0.1:3000'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
     'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
     'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
@@ -219,7 +219,7 @@ def faq():
 def signup_page():
     """Create an account"""
     if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
-    error = session.pop('error.signup', None)
+    error = session.pop('error.signup', '')
     return render("signup.html", error=error)
 
 @app.route('/signup/', methods=['POST'])
@@ -387,6 +387,10 @@ def profile(username):
     return render('profile.html', username=username, user=user,
             things_cnt=things_cnt, things=things, is_me=is_me,
             mark_error=mark_error)
+
+@app.route('/u/<username>/<q>/')
+def query_user_marks(username, q):
+    return q
 
 @app.route('/mark/', methods=['POST'])
 def mark():

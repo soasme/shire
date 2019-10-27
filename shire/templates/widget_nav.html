@@ -1,18 +1,13 @@
 <div class="header">
   <div class="home-menu pure-menu pure-menu-horizontal">
     <a class="pure-menu-heading" href="/">{{ config.SITE_NAME }}</a>
-
-    <ul class="pure-menu-list">
-      <li class="pure-menu-item"><a href="/recent/" class="pure-menu-link">Recent</a></li>
-      <li class="pure-menu-item"><a href="/guide/" class="pure-menu-link">Guide</a></li>
-      {% if session.get('uid') %}
-      <li class="pure-menu-item">
-        <a href="/u/{{ session.get('uid') }}" class="pure-menu-link">
-          @{{ session.get('uid') }}
-        </a>
-      </li>
-      <li class="pure-menu-item"><a href="/logout/" class="pure-menu-link">Logout</a></li>
-      {% endif %}
-    </ul>
+    <a class="pure-menu-heading" href="/recent/">Recent</a>
+    <a class="pure-menu-heading" href="/guide/">Guide</a>
+    {% if session.get('uid') %}
+    <a href="/u/{{ session.get('uid') }}" class="pure-menu-heading">
+      @{{ session.get('uid') }}
+    </a>
+    <a href="/logout/" class="pure-menu-heading">Logout</a>
+    {% endif %}
   </div>
 </div>
