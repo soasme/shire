@@ -1,3 +1,4 @@
+import os
 import json
 import enum
 from time import time
@@ -171,7 +172,15 @@ class ThingNote(db.Model):
 
 app.jinja_env.globals['Category'] = Category
 app.jinja_env.globals['Progress'] = Progress
-app.jinja_env.globals['VERSION'] = __VERSION__
+
+@app.template_filter('autoversion')
+def autoversion_filter(filename):
+  fullpath = os.path.join(__DIR__.resolve(), filename[1:])
+  try:
+      timestamp = str(os.path.getmtime(fullpath))
+      return f"{filename}?v={timestamp}"
+  except OSError:
+      return filename
 
 @app.before_request
 def setup_g():
