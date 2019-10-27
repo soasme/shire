@@ -54,7 +54,7 @@
     {{ wgtThing.render_thing(thing) }}
     {% if is_me %}
     <div class="thing-mgmt">
-      <a href="/things/{{ thing.id }}/update/">update</a>
+      <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
       <a class="delete" data-id="{{ thing.id }}">delete</a>
       <a class="share" data-id="{{ thing.id }}">
         {% if thing.shared %}unshare{% else %}share{% endif %}

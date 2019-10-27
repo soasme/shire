@@ -25,7 +25,7 @@
     {% endif %}
 
     <span class="thing-username">
-      <a href="/u/{{ thing.user.username }}">{{ thing.user.username }}</a>
+      <a href="{{ url_for('profile', username=thing.user.username) }}">{{ thing.user.username }}</a>
     </span>
 
     {% if thing.category == Category.book %}

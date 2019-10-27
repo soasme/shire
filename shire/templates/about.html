@@ -5,7 +5,7 @@
 {% block content %}
 <h3>About The Site</h3>
 <p>
-  MarkSthFun (<a href="https://marksth.fun">marksth.fun</a>, pronounce it as "Mark Something Fun") is a marking website for fun and tasty thingies.
+  {{ config.SITE_NAME }}(<a href="{{ url_for('index') }}">{{ config.SITE_DOMAIN }}</a>, pronounce it as "Mark Something Fun") is a marking website for fun and tasty thingies.
 </p>
 
 <p>

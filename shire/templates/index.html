@@ -11,7 +11,7 @@
     </p>
     <p>
       You can mark the books you have read, the movies you have watched, the albums you have listened,
-      the games you have played, the places you have visited, etc. Check out how other users have played around with this site: <a href="/recent/">recent</a>.
+      the games you have played, the places you have visited, etc. Check out how other users have played around with this site: <a href="{{ url_for('recent') }}">recent</a>.
     </p>
     <p>
     It has no ads. It never adds third-party tracking. It doesn't store your search history. You pay ${{ config.ANNUAL_FEE }} per year to get rid of data harvesting from big companies.
@@ -21,7 +21,7 @@
     </p>
     {% if not session.get('uid') %}
     <div>
-      <a class="pure-button pure-button-primary" href="/signup/">
+      <a class="pure-button pure-button-primary" href="{{ url_for('signup_page') }}">
           Sign up for {{ config.ANNUAL_FEE }}$ / year
       </a>
     </div>
@@ -29,10 +29,12 @@
     <p>
       The site is run by a one-person team. My name is <a href="https://github.com/soasme">Ju Lin</a>. I'm living in Auckland, NZ.
     </p>
+    {% if config.BLOG_URL %}
     <p>
       If you want to know more about this site, this <a href="{{ config.BLOG_URL }}">blog</a>
       can provide you a lot of information.
     </p>
+    {% endif %}
   </div>
 
   <div class="pure-u-1-3">

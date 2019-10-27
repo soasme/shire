@@ -1,8 +1,8 @@
 <div class="footer">
   <hr style="border-top:1px dotted #aaa;">
   <span class="footer-copyright">© Enqueue Zero 2020. All rights reserved.</span>
-  <a href="/about/" class="footer-link">about</a>
-  <a href="/privacy/" class="footer-link">privacy</a>
-  <a href="/tos/" class="footer-link">terms of service</a>
-  <a href="/faq/" class="footer-link">faq</a>
+  <a href="{{ url_for('about') }}" class="footer-link">about</a>
+  <a href="{{ url_for('privacy') }}" class="footer-link">privacy</a>
+  <a href="{{ url_for('terms_of_service') }}" class="footer-link">terms of service</a>
+  <a href="{{ url_for('faq') }}" class="footer-link">faq</a>
 </div>

@@ -2,8 +2,10 @@ import json
 import enum
 from time import time
 from datetime import datetime
+from pathlib import Path
 
 import stripe
+from whitenoise import WhiteNoise
 from dotenv import find_dotenv, load_dotenv
 from decouple import config
 from flask import Flask, redirect, request, session, g, jsonify, current_app, url_for
@@ -15,6 +17,9 @@ from sqlalchemy.types import JSON, Enum
 
 __VERSION__ = '2019.10.20.1'
 
+__DIR__ = Path(__file__) / ".."
+__STATIC_DIR__ = __DIR__ / "static"
+
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -25,7 +30,7 @@ app.config.update({
     # OPTIONAL
     'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
     'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
-    'BLOG_URL': config('BLOG_URL', default='http://127.0.0.1:3000'),
+    'BLOG_URL': config('BLOG_URL', default=''),
     'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
     'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
     'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
@@ -36,6 +41,8 @@ app.config.update({
     'STRIPE_PLAN_ID': config('STRIPE_PLAN_ID', default=''),
     'ANNUAL_FEE': config('ANUAL_FEE', cast=int, default=10),
 })
+
+app.wsgi_app = WhiteNoise(app.wsgi_app, root=__STATIC_DIR__.resolve())
 
 db = SQLAlchemy()
 db.init_app(app)
