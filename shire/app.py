@@ -15,6 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 
 from shire.core import db, bcrypt
+from shire.errors import ShireError, ExistingError
 
 __VERSION__ = '2019.10.20.1'
 
@@ -51,9 +52,6 @@ stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
 stripe.api_version = app.config.get('STRIPE_API_VERSION')
 
 bcrypt.init_app(app)
-
-class ShireError(Exception): pass
-class ExistingError(ShireError): pass
 
 class Progress(enum.Enum):
     """A progress enum indicating if user has used the thing.
