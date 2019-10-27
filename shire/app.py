@@ -11,10 +11,10 @@ from dotenv import find_dotenv, load_dotenv
 from decouple import config
 from flask import Flask, redirect, request, session, g, jsonify, current_app, url_for
 from flask import render_template as render
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
+
+from shire.core import db, bcrypt
 
 __VERSION__ = '2019.10.20.1'
 
@@ -45,13 +45,11 @@ app.config.update({
 
 app.wsgi_app = WhiteNoise(app.wsgi_app, root=__STATIC_DIR__.resolve())
 
-db = SQLAlchemy()
 db.init_app(app)
 
 stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
 stripe.api_version = app.config.get('STRIPE_API_VERSION')
 
-bcrypt = Bcrypt()
 bcrypt.init_app(app)
 
 class ShireError(Exception): pass
