@@ -4,6 +4,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
+from sqlalchemy.dialects.postgresql.json import JSONB
 
 from shire.core import db, bcrypt
 
@@ -73,7 +74,7 @@ class Thing(db.Model):
     extended = db.Column(JSON, nullable=False)
     shared = db.Column(db.Boolean, nullable=False, default=True)
     progress = db.Column(Enum(Progress), nullable=False, default=Progress.done)
-    tags = db.Column(JSON, nullable=False)
+    tags = db.Column(JSONB, nullable=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     @property
@@ -106,9 +107,9 @@ class Thing(db.Model):
                 .order_by(cls.time.desc()).offset(offset).limit(limit).all())
 
     @classmethod
-    def get_recent_user_tagged_things(cls, user_id, tag, offset, limit, include_private=False):
+    def get_recent_user_tagged_things(cls, user_id, tags, offset, limit, include_private=False):
         return (Thing.query.filter_by(user_id=user_id)
-                .filter(Thing.tags.contains(tag))
+                .filter(Thing.tags.contains(tags))
                 .filter_by(shared=include_private)
                 .order_by(cls.time.desc()).offset(offset).limit(limit).all())
 
