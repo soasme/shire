@@ -399,3 +399,16 @@ def delete_thing(id):
         abort(500)
 
     return redirect(url_for('profile', username=g.user.username))
+
+def filter_user_things_by_tag(username, tag):
+    user = User.query.filter_by(username=username).first()
+    if not user: abort(404)
+    is_me = g.user == user
+    if tag.startswith('.') and not is_me: abort(403)
+    offset = request.args.get('offset', type=int, default=0)
+    limit = request.args.get('limit', type=int, default=100)
+    things = Thing.get_recent_user_tagged_things(user.id, tag, offset, limit)
+    return render_template('profile.html',
+            username=username, user=user,
+            things_cnt=None, things=things, is_me=is_me,
+            mark_error='')

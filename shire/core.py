@@ -86,6 +86,7 @@ def create_app():
     app.add_url_rule('/charge/stripe/webhook/', 'stripe_charge_webhook', views.stripe_charge_webhook, methods=['POST'])
     app.add_url_rule('/charge/', 'charge', views.charge, methods=['POST'])
     app.add_url_rule('/u/<username>/', 'profile', views.profile)
+    app.add_url_rule('/u/<username>/t/<tag>/', 'tagged_things', views.filter_user_things_by_tag)
     app.add_url_rule('/mark/', 'mark', views.mark, methods=['POST'])
     app.add_url_rule('/things/<int:id>/update/', 'update_thing_page', views.update_thing_page)
     app.add_url_rule('/things/<int:id>/update/', 'update_thing', views.update_thing, methods=['POST'])

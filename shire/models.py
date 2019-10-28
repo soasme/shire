@@ -106,6 +106,12 @@ class Thing(db.Model):
                 .order_by(cls.time.desc()).offset(offset).limit(limit).all())
 
     @classmethod
+    def get_recent_user_tagged_things(cls, user_id, tag, offset, limit):
+        return (Thing.query.filter_by(user_id=user_id)
+                .filter(Thing.tags.contains(tag))
+                .order_by(cls.time.desc()).offset(offset).limit(limit).all())
+
+    @classmethod
     def get_user_things_cnt(cls, user_id):
         return Thing.query.filter_by(user_id=user_id).count()
 

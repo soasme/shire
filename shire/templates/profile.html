@@ -7,6 +7,7 @@
 <h3>@{{ username }}'s Things</h3>
 
 {# Display the number of things user has marked. #}
+{% if things_cnt != None %}
 {% if things_cnt == 0 %}
 <p>
   {% if is_me %}You haven't{% else %}Ze hasn't{% endif %}
@@ -17,6 +18,7 @@
   {% if is_me %}You have{% else %}Ze has{% endif %}
   marked {{ things_cnt }} things so far.
 </p>
+{% endif %}
 {% endif %}
 
 {# Add a new thing? #}
