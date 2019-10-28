@@ -19,14 +19,14 @@ You can write notes for your marks and manage things by tags.
 You can decide whether to share your things publicly or not.
 You can discover fun things marked by fun people, of course, if they're willing to share.
 
-The site is developed and operated by one-person team.
+The site is developed and operated by a one-person team.
 
 ## Fees
 
 You'll need to pay $1 per month.
 
-It will cover the cost of web servers, database backup, domains,
-cloud services, and last but not least, my time.
+It will cover the cost of web servers, database backup, domains fee,
+email delivery, CDN, cloud services, and last but not least, my time.
 You payment will help keeping the site run as long as possible.
 You'll see no ads at all because this site is fully supported by all
 users' payments. You'll see where the money goes [here].
