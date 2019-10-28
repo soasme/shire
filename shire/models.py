@@ -111,7 +111,7 @@ class Thing(db.Model):
         base_query = Thing.query.filter_by(user_id=user_id).filter(Thing.tags.contains(tags))
         if not include_private:
             base_query = base_query.filter_by(shared=True)
-        return base_query.order_by(cls.time.desc()).offset(offset).limit(limit).all())
+        return base_query.order_by(cls.time.desc()).offset(offset).limit(limit).all()
 
     @classmethod
     def get_user_things_cnt(cls, user_id):
