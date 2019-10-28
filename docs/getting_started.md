@@ -3,9 +3,7 @@
 ## Prepare environment
 
 ```
-$ python3 -mvenv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
+$ poetry install
 $ vi .env # update env vars
 ```
 
@@ -21,7 +19,7 @@ DATABASE_URL=sqlite:////tmp/shire.db
 ## Populate Testing Data
 
 ```bash
-$ PYTHONPATH=. python scripts/reset.py
+$ poetry run python scripts/reset.py
 ```
 
 ## Run
@@ -29,7 +27,7 @@ $ PYTHONPATH=. python scripts/reset.py
 Run the web application at <http://127.0.0.1:5000>.
 
 ```bash
-$ flash run
+$ poetry run flash run
 ```
 
 ## Shell
@@ -37,7 +35,7 @@ $ flash run
 Open interactive shell.
 
 ```bash
-$ flask shell
+$ poetry run flask shell
 ```
 
 ## Update HeyFrodo
