@@ -20,9 +20,9 @@ def autoversion_filter(filename):
         return filename
 
 def from_now(dt):
-    diff = dt - datetime.utcnow()
-    if diff.days < 0:
-        return f'{-diff.days} days ago'
+    diff = datetime.utcnow() - dt
+    if diff.days > 0:
+        return f'{diff.days} days ago'
     hours = diff.seconds // 3600
     if hours > 0:
         return f'{hours} hours ago'
