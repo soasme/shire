@@ -1,5 +1,7 @@
 from datetime import datetime
-from shire.app import app, db, User, Thing, ThingNote, Category, Progress
+from shire.app import app
+from shire.core import db
+from shire.models import User, Thing, ThingNote, Category, Progress
 
 def _populate_db():
     """Populate testing data into database. """

@@ -88,8 +88,10 @@ def create_app():
     app.add_url_rule('/mark/', 'mark', views.mark, methods=['POST'])
     app.add_url_rule('/things/<int:id>/update/', 'update_thing_page', views.update_thing_page)
     app.add_url_rule('/things/<int:id>/update/', 'update_thing', views.update_thing, methods=['POST'])
+    app.add_url_rule('/things/<int:id>/download/', 'download_thing', views.download_thing)
+    app.add_url_rule('/things/<int:id>/delete/', 'delete_thing_page', views.delete_thing_page)
+    app.add_url_rule('/things/<int:id>/delete/', 'delete_thing', views.delete_thing, methods=['POST'])
 
     app.add_url_rule('/login/', 'login', views.login, methods=['POST'])
     app.add_url_rule('/v1/things/<int:id>/share/', 'share_thing', views.share_thing, methods=['POST'])
-    app.add_url_rule('/v1/things/<int:id>/', 'delete_thing', views.delete_thing, methods=['DELETE'])
     return app

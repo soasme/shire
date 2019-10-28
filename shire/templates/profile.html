@@ -55,7 +55,7 @@
     {% if is_me %}
     <div class="thing-mgmt">
       <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
-      <a class="delete" data-id="{{ thing.id }}">delete</a>
+      <a href="{{ url_for('delete_thing_page', id=thing.id) }}">delete</a>
       <a class="share" data-id="{{ thing.id }}">
         {% if thing.shared %}unshare{% else %}share{% endif %}
       </a>
@@ -65,30 +65,6 @@
   </div>
   {% endfor %}
 </div>
-
-{# Delete thing #}
-<script>
-(async () => {
-  var delButtons = document.querySelectorAll("div.thing-mgmt a.delete")
-  delButtons.forEach(async (del) => {
-    del.onclick = async (e) => {
-      var id = e.target.getAttribute('data-id')
-      var errEl = document.querySelector("#thing-mgmt-error-" + id)
-      try {
-        const res = await fetch('/v1/things/' + id + '/', {method: 'DELETE'})
-        const data = await res.json()
-        if (res.status != 200) {
-          errEl.innerHTML = data.code
-        } else {
-          window.location.reload()
-        }
-      } catch (error) {
-        errEl.innerHTML = error
-      }
-    }
-  })
-})();
-</script>
 
 {# Share or Unshare a thing #}
 <script>

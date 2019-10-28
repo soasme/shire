@@ -4,7 +4,8 @@ from datetime import datetime
 
 import stripe
 from flask import (session, render_template, redirect,
-                   current_app, jsonify, abort, request, g,)
+                   current_app, jsonify, abort, request, g,
+                   url_for, )
 
 from shire.core import db, bcrypt, __DIR__
 from shire.models import Thing, ThingNote, User
@@ -179,7 +180,7 @@ def charge():
 
 def profile(username):
     user = User.query.filter_by(username=username).first()
-    if not user: return abort(404)
+    if not user: abort(404)
     is_me = user.username == session.get('uid')
     things_cnt = Thing.get_user_things_cnt(user.id)
     offset = request.args.get('offset', type=int, default=0)
@@ -352,22 +353,27 @@ def share_thing(id):
 
     return jsonify({'code': 'ok'}), 200
 
+def download_thing(id):
+    if not g.user: return redirect('/')
+    thing = Thing.query.get(id)
+    if thing.user_id != g.user.id: abort(403)
+    return jsonify(thing.to_simplejson())
+
+def delete_thing_page(id):
+    if not g.user: return redirect('/')
+    thing = Thing.query.get(id)
+    if thing.user_id != g.user.id: abort(403)
+    return render_template('delete_thing.html', thing=thing)
 
 def delete_thing(id):
     """Delete a thing
     """
-    if not g.user:
-        return jsonify({'code': 'not authenticated'}), 401
-
+    if not g.user: return redirect('/')
     thing = Thing.query.get(id)
-    if not thing:
-        return jsonify({'code': 'not_found'}), 404
-
-    if thing.user_id != g.user.id:
-        return jsonify({'code': 'not authorized'}), 403
+    if not thing: abort(404)
+    if thing.user_id != g.user.id: abort(403)
 
     db.session.delete(thing)
-
     thing_note = ThingNote.query.get(id)
     if thing_note:
         db.session.delete(thing)
@@ -377,6 +383,6 @@ def delete_thing(id):
     except Exception as e:
         app.logger.error("error: %s", e)
         db.session.rollback()
-        return jsonify({'code', 'db_error'}), 500
+        abort(500)
 
-    return jsonify({'code': 'ok'}), 200
+    return redirect(url_for('profile', username=g.user.username))

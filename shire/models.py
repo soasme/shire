@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 
-from shire.core import db
+from shire.core import db, bcrypt
 
 class Progress(enum.Enum):
     """A progress enum indicating if user has used the thing.
@@ -110,9 +110,10 @@ class Thing(db.Model):
         return Thing.query.filter_by(user_id=user_id).count()
 
     def to_simplejson(self):
-        return dict(id=self.id, user_id=user_id, category=self.category,
+        return dict(id=self.id, user_id=self.user_id, category=self.category.name,
                 title=self.title, extended=self.extended, shared=self.shared,
-                url=self.url, progress=self.progress, tags=self.tags, time=self.time)
+                url=self.url, tags=self.tags, time=self.time.isoformat(),
+                note=(self.note and self.note.text or ''))
 
 class ThingNote(db.Model):
     thing_id = db.Column(db.Integer, primary_key=True)

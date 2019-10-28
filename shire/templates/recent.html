@@ -9,7 +9,10 @@
   <div>
     {% for thing in things %}
     <div class="thing">
+    {% with %}
+    {% set is_me = thing.user.username == session.get('uid') %}
     {{ wgtThing.render_thing(thing) }}
+    {% endwith %}
     </div>
     {% endfor %}
   </div>

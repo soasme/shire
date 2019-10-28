@@ -4,7 +4,7 @@
     {% if session.get('uid') %}
     <a class="pure-menu-heading" href="{{ url_for('profile', username=session['uid']) }}">Home</a>
     {% endif %}
-    <a class="pure-menu-heading" href="{{ url_for('recent') }}">Recent</a>
+    <a class="pure-menu-heading" href="{{ url_for('recent') }}">Explore</a>
     <a class="pure-menu-heading" href="{{ url_for('guide') }}">Guide</a>
     {% if session.get('uid') %}
     <a href="{{ url_for('logout') }}" class="pure-menu-heading">Logout</a>
