@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  web:
+    build: {dockerfile: "Dockerfile", context: "./"}
+    command: poetry run flask run --host=0.0.0.0
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+    env_file: .env
+  db:
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_USER: frodo
+      POSTGRES_PASSWORD: whereissam
+      POSTGRES_DB: shire
+    volumes:
+      - ./data:/var/lib/postgresql/data

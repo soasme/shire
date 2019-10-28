@@ -3,42 +3,54 @@
 ## Prepare environment
 
 ```
-$ poetry install
+$ cp sample.env .env
 $ vi .env # update env vars
 ```
 
 An example of minimal `.env`:
 
 ```
-FLASK_DEBUG=True
-FLASK_APP=shire/app.py
 SECRET_KEY=42
 DATABASE_URL=sqlite:////tmp/shire.db
+FLASK_DEBUG=True
+FLASK_APP=shire/app.py
+```
+
+## Start
+
+Run the marksthfun stack:
+
+```bash
+$ docker-compose up -d
 ```
 
 ## Populate Testing Data
 
 ```bash
-$ poetry run python scripts/reset.py
+$ docker-compose exec web poetry run python scripts/reset.py
 ```
 
-## Run
+## Inspect
 
-Run the web application at <http://127.0.0.1:5000>.
-
-```bash
-$ poetry run flash run
-```
+Check the website running in local: <http://127.0.0.1:5000>.
 
 ## Shell
 
 Open interactive shell.
 
 ```bash
-$ poetry run flask shell
+$ docker-compose exec web poetry run flask shell
 ```
 
-## Update HeyFrodo
+## Show Routes
+
+```bash
+$ docker-compose exec web poetry run flask routes
+```
+
+## Update Frodo
+
+(For admin only)
 
 For site admins, add `heroku` remote.
 

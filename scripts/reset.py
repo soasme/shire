@@ -58,7 +58,7 @@ def _populate_db():
 
 def _reset_db():
     """Reset testing database."""
-    import os; os.unlink('/tmp/pth.db')
+    db.drop_all()
     db.create_all()
 
 if __name__ == '__main__':
