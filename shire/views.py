@@ -407,7 +407,7 @@ def filter_user_things_by_tag(username, tag):
     if tag.startswith('.') and not is_me: abort(403)
     offset = request.args.get('offset', type=int, default=0)
     limit = request.args.get('limit', type=int, default=100)
-    things = Thing.get_recent_user_tagged_things(user.id, tag, offset, limit)
+    things = Thing.get_recent_user_tagged_things(user.id, tag, offset, limit, include_private=is_me)
     return render_template('profile.html',
             username=username, user=user,
             things_cnt=None, things=things, is_me=is_me,

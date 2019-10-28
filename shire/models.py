@@ -106,9 +106,10 @@ class Thing(db.Model):
                 .order_by(cls.time.desc()).offset(offset).limit(limit).all())
 
     @classmethod
-    def get_recent_user_tagged_things(cls, user_id, tag, offset, limit):
+    def get_recent_user_tagged_things(cls, user_id, tag, offset, limit, include_private=False):
         return (Thing.query.filter_by(user_id=user_id)
                 .filter(Thing.tags.contains(tag))
+                .filter_by(shared=include_private)
                 .order_by(cls.time.desc()).offset(offset).limit(limit).all())
 
     @classmethod
