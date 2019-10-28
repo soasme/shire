@@ -1,6 +1,17 @@
 ---
 - hosts: lb
   pre_tasks:
+    - name: Check if letsencrypt state exists
+      stat: path=/etc/letsencrypt
+      register: letsencrypt_state
+
+    - name: Restore certbot state
+      synchronize:
+        src: "{{ letsencrypt_state_dir }}"
+        dest: "/etc/letsencrypt/"
+        mode: push
+      when: not letsencrypt_state.stat.exists
+
     - name: Setup digitalocean credentials for certbot
       copy:
         content: "dns_digitalocean_token={{ lookup('env', 'DO_TOKEN') }}"
@@ -26,6 +37,13 @@
           - python2-certbot-dns-digitalocean
         state: present
       tags: [certbot]
+  post_tasks:
+    - name: Backup certbot state
+      synchronize:
+        src: "/etc/letsencrypt/"
+        dest: "{{ letsencrypt_backup_dir }}"
+        mode: pull
+      when: letsencrypt_state.stat.exists
   roles:
     # Enable next monday, since it's rate limited.
     # Need to backup certs so that we won't be rate limited again.
@@ -37,6 +55,8 @@
     - role: nginxinc.nginx
       tags: [nginx]
   vars:
+    letsencrypt_state_dir: "{{ lookup('env', 'LETSENCRYPT_STATE_DIR') }}"
+    letsencrypt_backup_dir: "{{ lookup('env', 'LETSENCRYPT_BACKUP_DIR') }}"
     certbot_admin_email: "{{ lookup('env', 'CERTBOT_ADMIN_EMAIL') }}"
     certbot_create_if_missing: true
     certbot_create_standalone_stop_services: []
