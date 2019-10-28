@@ -8,7 +8,7 @@ from flask import (session, render_template, redirect,
                    url_for, )
 
 from shire.core import db, bcrypt, __DIR__
-from shire.models import Thing, ThingNote, User
+from shire.models import Thing, ThingNote, User, Category, Progress
 from shire.errors import ShireError, ExistingError
 
 def autoversion_filter(filename):
