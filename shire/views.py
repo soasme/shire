@@ -12,12 +12,25 @@ from shire.models import Thing, ThingNote, User
 from shire.errors import ShireError, ExistingError
 
 def autoversion_filter(filename):
-  fullpath = os.path.join(__DIR__.resolve(), filename[1:])
-  try:
-      timestamp = str(os.path.getmtime(fullpath))
-      return f"{filename}?v={timestamp}"
-  except OSError:
-      return filename
+    fullpath = os.path.join(__DIR__.resolve(), filename[1:])
+    try:
+        timestamp = str(os.path.getmtime(fullpath))
+        return f"{filename}?v={timestamp}"
+    except OSError:
+        return filename
+
+def from_now(dt):
+    diff = dt - datetime.utcnow()
+    if diff.days < 0:
+        return f'{-diff.days} days ago'
+    hours = diff.seconds // 3600
+    if hours > 0:
+        return f'{hours} hours ago'
+    minutes = (diff.seconds//60)%60
+    if minutes > 0:
+        return f'{minutes} minutes ago'
+    seconds = int(diff.total_seconds()%60)
+    return f'{seconds} seconds ago'
 
 def setup_globals():
     g.user = session.get('uid') and User.query.filter_by(username=session['uid']).first()

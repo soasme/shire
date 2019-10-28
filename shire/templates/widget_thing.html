@@ -133,7 +133,7 @@
   {% endif %}
   {% endwith %}
   <div class="thing-time">
-    {{ thing.time }}
+    {{ thing.time | from_now }}
   </div>
 </div>
 {%- endmacro %}

@@ -65,6 +65,7 @@ def create_app():
     app.jinja_env.globals['Progress'] = Progress
 
     app.template_filter('autoversion')(views.autoversion_filter)
+    app.template_filter('from_now')(views.from_now)
 
     app.before_request(views.setup_globals)
 
