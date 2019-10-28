@@ -1,5 +1,5 @@
 {%- macro render_thing(thing) -%}
-<div >
+<div>
   <div class="thing-content">
 
     {% if thing.category == Category.book %}
@@ -111,6 +111,10 @@
     {% endif %}
 
     <span>{{ thing.category.display_name }}</span>
+
+    {% if not thing.shared %}
+    <span><i class="fas fa-lock"></i></span>
+    {% endif %}
 
     <span class="thing-title">
       <a href="{{ thing.reference }}">
