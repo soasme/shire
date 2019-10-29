@@ -1,4 +1,5 @@
 import enum
+import jinja2
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
@@ -128,3 +129,8 @@ class ThingNote(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text, nullable=False)
     shared = db.Column(db.Boolean, default=True)
+
+    @property
+    def html(self):
+        if not self.text: return ''
+        return '<br>'.join([jinja2.escape(s) for s in self.text.split('\n')])

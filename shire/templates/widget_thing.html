@@ -134,7 +134,7 @@
   {% with note = thing.note %}
   {% if note and note.text and (note.shared or note.user_id == g.user.id) %}
   <div class="thing-note">
-    <blockquote>{{ note.text }}</blockquote>
+    <blockquote>{{ note.html | safe}}</blockquote>
   </div>
   {% endif %}
   {% endwith %}
