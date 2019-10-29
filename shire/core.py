@@ -41,7 +41,8 @@ def create_app():
         # OPTIONAL
         'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
         'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
-        'BLOG_URL': config('BLOG_URL', default=''),
+        'BLOG_URL': config('BLOG_URL', default='https://blog.marksth.fun'),
+        'GITHUB_URL': config('GITHUB_URL', default='https://github.com/marksthfun/shire'),
         'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
         'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
         'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
@@ -50,7 +51,7 @@ def create_app():
         'STRIPE_WEBHOOK_SECRET_KEY': config('STRIPE_WEBHOOK_SECRET_KEY', default=''),
         'STRIPE_API_VERSION': config('STRIPE_API_VERSION', default=''),
         'STRIPE_PLAN_ID': config('STRIPE_PLAN_ID', default=''),
-        'ANNUAL_FEE': config('ANUAL_FEE', cast=int, default=10),
+        'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })
     db.init_app(app)
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')

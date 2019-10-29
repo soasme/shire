@@ -5,7 +5,7 @@
 {% block content %}
 <h3>About The Site</h3>
 <p>
-  {{ config.SITE_NAME }}(<a href="{{ url_for('index') }}">{{ config.SITE_DOMAIN }}</a>, pronounce it as "Mark Something Fun") is a marking website for fun and tasty thingies.
+  {{ config.SITE_NAME }}(<a href="{{ url_for('index') }}">{{ config.SITE_DOMAIN }}</a>), pronouncing as "Mark Something Fun", is a website for marking fun thingies for fun people.
 </p>
 
 <p>
@@ -25,6 +25,6 @@
 </ul>
 
 <p>
-  MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses a POSIX-compatible filesystem, JuiceFS, for collecting logs, metrics, database backup, etc. It uses prometheus and grafana for monitoring. The site runs on two pairs of servers on different regions for high availability.  You'll be bored for the most part of the implementation. However, the site is so fun (at least to me)!
+MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs on some digitalocean servers. You'll be bored for the most part of the <a href="{{ config.GITHUB_URL }}">implementation</a>.
 </p>
 {% endblock %}
