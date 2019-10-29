@@ -1,13 +1,14 @@
 ---
 title: Mark Something Fun!
-slug: 2019-12-01-marksthfun
+slug: docs/introduction
 date: 2019-12-01
-category: product
+category: Product
 ---
 
 > Make pie, or invent universe. [@soasme](https://www.douban.com/people/soasme/)
 
 Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (<https://marksth.fun>).
+You can pronounce it as "Mark Something Fun".
 
 ## Motivate
 
@@ -15,7 +16,7 @@ I was a [douban](https://www.douban.com) user, in which I can mark the books I h
 
 I could have marked my book on goodreads, marked my traces on google maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)
 
-Since there is no tool in the market that fits me well, as an engineer, I started building my own.
+Since there is no tool / service in the market that fits me well, as an engineer, I started building my own.
 
 ## Introduction
 
@@ -48,11 +49,14 @@ Below are the principles that I keep in mind when building this new website.
 
 ## Implementation
 
-Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible are used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless.
+Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible are used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless, no big data, no machine learning.
+
+Here is a [list](https://marksth.fun/u/soasme/t/marksthfun-stack/) of technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)
 
 ## Conclusion
 
 If you like what I'm building, do not hesitated signing up.
 It only cost you a cup of coffee ☕ per quarter.
+If you can invite a friend to join, you don't need to pay for the next year subscription fee.
 
 Enjoy your marking from today! [https://marksth.fun](https://marksth.fun)
