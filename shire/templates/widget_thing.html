@@ -142,4 +142,42 @@
     <a href="{{ url_for('thing_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
   </div>
 </div>
+{% if session.get('uid') == thing.user.username %}
+<div class="thing-mgmt">
+  <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
+  <a href="{{ url_for('delete_thing_page', id=thing.id) }}">delete</a>
+  <a class="share" data-id="{{ thing.id }}">
+    {% if thing.shared %}unshare{% else %}share{% endif %}
+  </a>
+  <span id="thing-mgmt-error-{{ thing.id }}"></span>
+</div>
+{% endif %}
+{%- endmacro %}
+
+
+{%- macro load_thing_widget() -%}
+{# Share or Unshare a thing #}
+<script>
+(async () => {
+  var shareButtons = document.querySelectorAll("div.thing-mgmt a.share")
+  shareButtons.forEach(async (share) => {
+    share.onclick = async (e) => {
+      var id = e.target.getAttribute('data-id')
+      var errEl = document.querySelector("#thing-mgmt-error-" + id)
+      try {
+        const res = await fetch('/v1/things/' + id + '/share/', {method: 'POST'})
+        const data = await res.json()
+        errEl.innerHTML = data.code
+        if (share.innerHTML == 'share') {
+          share.innerHTML = 'unshare'
+        } else {
+          share.innerHTML = 'share'
+        }
+      } catch (error) {
+        errEl.innerHTML = error
+      }
+    }
+  })
+})();
+</script>
 {%- endmacro %}
