@@ -139,7 +139,7 @@
   {% endif %}
   {% endwith %}
   <div class="thing-time">
-    {{ thing.time | from_now }}
+    <a href="{{ url_for('thing_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
   </div>
 </div>
 {%- endmacro %}

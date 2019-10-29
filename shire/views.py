@@ -245,6 +245,13 @@ def mark():
 
     return redirect(f'/u/{g.user.username}')
 
+def thing_page(id):
+    thing = Thing.query.get(id)
+    if not thing: abort(404)
+    owner = thing.user
+    if owner.is_private: abort(403)
+    if not thing.shared and g.user != owner: abort(403)
+    return render_template('thing.html', thing=thing)
 
 def update_thing_page(id):
     if not g.user:
