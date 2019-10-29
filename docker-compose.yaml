@@ -2,7 +2,7 @@ version: "3.7"
 services:
   web:
     build: {dockerfile: "Dockerfile", context: "./"}
-    command: poetry run flask run --host=0.0.0.0
+    command: poetry run gunicorn -w 4 -b 0.0.0.0:5000 shire.app:app
     ports:
       - 5000:5000
     volumes:
