@@ -51,10 +51,10 @@ def logout():
     session.pop('uid', None)
     return redirect('/')
 
-def recent():
+def explore():
     things = Thing.get_recent_all_things()
     tags = set(reduce(add, [(t.tags or []) for t in things]))
-    return render_template('recent.html', things=things, tags=tags)
+    return render_template('explore.html', things=things, tags=tags)
 
 def signup_page():
     if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'

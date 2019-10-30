@@ -72,7 +72,7 @@ def create_app():
 
     app.add_url_rule('/', 'index', views.index)
     app.add_url_rule('/logout/', 'logout', views.logout)
-    app.add_url_rule('/recent/', 'recent', views.recent)
+    app.add_url_rule('/explore/', 'explore', views.explore)
     app.add_url_rule('/guide/', 'guide', views.guide)
     app.add_url_rule('/about/', 'about', views.about)
     app.add_url_rule('/privacy/', 'privacy', views.privacy)
