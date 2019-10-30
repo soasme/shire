@@ -1,46 +1,45 @@
 {%- macro render_thing(thing) -%}
 <div>
-  <div class="thing-content pure-g">
+  <div class="thing-content">
 
-    <div class="thing-username pure-u-1-8">
+    <span class="thing-username">
       <a href="{{ url_for('profile', username=thing.user.username) }}">@{{ thing.user.username }}</a>
-    </div>
+    </span>
 
-    <div class="pure-u-7-8">
+    <span>:&nbsp;&nbsp;</span>
 
-      {% if thing.category == Category.book %}
-      <span><i class="fas fa-book"></i></span>
-      {% elif thing.category == Category.movie %}
-      <span><i class="fas fa-film"></i></span>
-      {% elif thing.category == Category.tvshow %}
-      <span><i class="fas fa-tv"></i></span>
-      {% elif thing.category == Category.album %}
-      <span><i class="fas fa-music"></i></span>
-      {% elif thing.category == Category.place %}
-      <span><i class="fas fa-map-marker-alt"></i></span>
-      {% elif thing.category == Category.game %}
-      <span><i class="fas fa-gamepad"></i></span>
-      {% elif thing.category == Category.event %}
-      <span><i class="fas fa-glass-cheers"></i></span>
-      {% elif thing.category == Category.paper %}
-      <span><i class="fas fa-sticky-note"></i></span>
-      {% elif thing.category == Category.concept %}
-      <span><i class="fas fa-lightbulb"></i></span>
-      {% elif thing.category == Category.software %}
-      <span><i class="fas fa-code"></i></span>
-      {% endif %}
+    {% if not thing.shared %}
+    <span>(<i class="fas fa-lock"></i>)</span>
+    {% endif %}
 
-      {% if not thing.shared %}
-      <span>(<i class="fas fa-lock"></i>)</span>
-      {% endif %}
+    {% if thing.category == Category.book %}
+    <span><i class="fas fa-book"></i></span>
+    {% elif thing.category == Category.movie %}
+    <span><i class="fas fa-film"></i></span>
+    {% elif thing.category == Category.tvshow %}
+    <span><i class="fas fa-tv"></i></span>
+    {% elif thing.category == Category.album %}
+    <span><i class="fas fa-music"></i></span>
+    {% elif thing.category == Category.place %}
+    <span><i class="fas fa-map-marker-alt"></i></span>
+    {% elif thing.category == Category.game %}
+    <span><i class="fas fa-gamepad"></i></span>
+    {% elif thing.category == Category.event %}
+    <span><i class="fas fa-glass-cheers"></i></span>
+    {% elif thing.category == Category.paper %}
+    <span><i class="fas fa-sticky-note"></i></span>
+    {% elif thing.category == Category.concept %}
+    <span><i class="fas fa-lightbulb"></i></span>
+    {% elif thing.category == Category.software %}
+    <span><i class="fas fa-code"></i></span>
+    {% endif %}
 
-      <span class="thing-title">
-        <a href="{{ thing.reference }}">
-          {{ thing.title }}
-        </a>
-      </span>
+    <span class="thing-title">
+      <a href="{{ thing.reference }}">
+        {{ thing.title }}
+      </a>
+    </span>
 
-    </div>
   </div>
   {% with note = thing.note %}
   {% if note and note.text and (note.shared or note.user_id == g.user.id) %}

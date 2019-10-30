@@ -329,8 +329,7 @@ def update_thing(id):
         session['error.mark'] = 'database error. please try later.'
         return redirect(request.referrer or '/')
 
-    session['error.mark'] = 'updated'
-    return redirect(request.referrer)
+    return redirect(url_for('thing_page', id=thing.id))
 
 def login():
     """Login"""
