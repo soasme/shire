@@ -74,7 +74,6 @@ class Thing(db.Model):
     url = db.Column(db.String(2048), nullable=True, default='')
     extended = db.Column(JSON, nullable=False)
     shared = db.Column(db.Boolean, nullable=False, default=True)
-    progress = db.Column(Enum(Progress), nullable=False, default=Progress.done)
     tags = db.Column(JSONB, nullable=False)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 

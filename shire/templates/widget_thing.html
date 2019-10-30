@@ -2,6 +2,11 @@
 <div>
   <div class="thing-content">
 
+    <span class="thing-username">
+      <a href="{{ url_for('profile', username=thing.user.username) }}">@{{ thing.user.username }}</a>
+    </span>
+    <span>has marked</span>
+
     {% if thing.category == Category.book %}
     <span><i class="fas fa-book"></i></span>
     {% elif thing.category == Category.movie %}
@@ -24,96 +29,10 @@
     <span><i class="fas fa-code"></i></span>
     {% endif %}
 
-    <span class="thing-username">
-      <a href="{{ url_for('profile', username=thing.user.username) }}">{{ thing.user.username }}</a>
-    </span>
-
-    {% if thing.category == Category.book %}
-      {% if thing.progress == Progress.todo %}
-      wanted to read
-      {% elif thing.progress == Progress.doing %}
-      was reading
-      {% elif thing.progress == Progress.done %}
-      has read
-      {% endif %}
-    {% elif thing.category == Category.movie %}
-      {% if thing.progress == Progress.todo %}
-      wanted to watch
-      {% elif thing.progress == Progress.doing %}
-      was watching
-      {% elif thing.progress == Progress.done %}
-      has watched
-      {% endif %}
-    {% elif thing.category == Category.tvshow %}
-      {% if thing.progress == Progress.todo %}
-      wanted to watch
-      {% elif thing.progress == Progress.doing %}
-      was watching
-      {% elif thing.progress == Progress.done %}
-      has watched
-      {% endif %}
-    {% elif thing.category == Category.album %}
-      {% if thing.progress == Progress.todo %}
-      wanted to listen
-      {% elif thing.progress == Progress.doing %}
-      was listening
-      {% elif thing.progress == Progress.done %}
-      has listened
-      {% endif %}
-    {% elif thing.category == Category.place %}
-      {% if thing.progress == Progress.todo %}
-      wanted to visit
-      {% elif thing.progress == Progress.doing %}
-      was visiting
-      {% elif thing.progress == Progress.done %}
-      has visited
-      {% endif %}
-    {% elif thing.category == Category.game %}
-      {% if thing.progress == Progress.todo %}
-      wanted to play
-      {% elif thing.progress == Progress.doing %}
-      was playing
-      {% elif thing.progress == Progress.done %}
-      has played
-      {% endif %}
-    {% elif thing.category == Category.event %}
-      {% if thing.progress == Progress.todo %}
-      wanted to participate
-      {% elif thing.progress == Progress.doing %}
-      was participating
-      {% elif thing.progress == Progress.done %}
-      has participated
-      {% endif %}
-    {% elif thing.category == Category.paper %}
-      {% if thing.progress == Progress.todo %}
-      wanted to read
-      {% elif thing.progress == Progress.doing %}
-      was reading
-      {% elif thing.progress == Progress.done %}
-      has read
-      {% endif %}
-    {% elif thing.category == Category.concept %}
-      {% if thing.progress == Progress.todo %}
-      wanted to learn
-      {% elif thing.progress == Progress.doing %}
-      was learning
-      {% elif thing.progress == Progress.done %}
-      has learned
-      {% endif %}
-    {% elif thing.category == Category.software %}
-      {% if thing.progress == Progress.todo %}
-      wanted to use
-      {% elif thing.progress == Progress.doing %}
-      was using
-      {% elif thing.progress == Progress.done %}
-      has used
-      {% endif %}
-    {% endif %}
-
-    <span>{{ thing.category.display_name }}</span>
+    <span>{{ thing.category.display_name }} </span>
 
     {% if not thing.shared %}
-    <span><i class="fas fa-lock"></i></span>
+    <span>(<i class="fas fa-lock"></i>)</span>
     {% endif %}
 
     <span class="thing-title">
@@ -140,18 +59,21 @@
   {% endwith %}
   <div class="thing-time">
     <a href="{{ url_for('thing_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
+    {% if session.get('uid') == thing.user.username %}
+    <span class="thing-mgmt">
+      |
+      <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
+      |
+      <a href="{{ url_for('delete_thing_page', id=thing.id) }}">delete</a>
+      |
+      <a class="share" data-id="{{ thing.id }}">
+        {% if thing.shared %}unshare{% else %}share{% endif %}
+      </a>
+      <span id="thing-mgmt-error-{{ thing.id }}"></span>
+    </span>
+    {% endif %}
   </div>
 </div>
-{% if session.get('uid') == thing.user.username %}
-<div class="thing-mgmt">
-  <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
-  <a href="{{ url_for('delete_thing_page', id=thing.id) }}">delete</a>
-  <a class="share" data-id="{{ thing.id }}">
-    {% if thing.shared %}unshare{% else %}share{% endif %}
-  </a>
-  <span id="thing-mgmt-error-{{ thing.id }}"></span>
-</div>
-{% endif %}
 {%- endmacro %}
 
 
