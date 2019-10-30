@@ -53,7 +53,7 @@ def logout():
 
 def recent():
     things = Thing.get_recent_all_things()
-    tags = reduce(add, [(t.tags or []) for t in things])
+    tags = set(reduce(add, [(t.tags or []) for t in things]))
     return render_template('recent.html', things=things, tags=tags)
 
 def signup_page():
