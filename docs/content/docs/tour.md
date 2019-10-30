@@ -16,9 +16,9 @@ This is a tour guide of MarkSthFun <https://marksth.fun>.
 * You can discover fun people and their tags by subscribing their RSS feeds!
 * You can find those people who are of the same interest quickly.
 * You can import and export your data instantly.
-* You can delete your account if you don't want to stay. All your data will be erased completely.
-* The site provides multiple levels of privacy control, such as private account, private mark, private tag, and private note.
-* The site offers RESTful APIs and encourages third-party extensions.
+<!-- TODO * You can delete your account if you don't want to stay. All your data will be erased completely. -->
+<!-- TODO * The site provides multiple levels of privacy control, such as private account, private mark, private tag, and private note. -->
+<!-- TODO * The site offers RESTful APIs and encourages third-party extensions. -->
 * The site follows a minimalist design. Marking is way more important than socializing.
 * There is always a dedicated maintainer (me) who is striving to answer your questions.
 * The price is reasonable, $1 per month.
@@ -41,7 +41,7 @@ When no url is provided, a duckduckgo searching link will be attached. (We trust
 
 We recommend you setting up your privacy properly.
 
-In your account settings page, you can convert your account to *private* at any time. No marks within a privacy account will be shared publicly, even when the mark is shared.
+<!-- TODO In your account settings page, you can convert your account to *private* at any time. No marks within a privacy account will be shared publicly, even when the mark is shared. -->
 
 The marks that are unshared are invisible to other users. Private marks have a lock icon displayed. The browser will remember your share setting for marks in your local. Note that when switching device or cleaning cookies will reset your share setting for marks.
 
