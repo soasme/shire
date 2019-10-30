@@ -1,6 +1,8 @@
 import os
 import json
 from datetime import datetime
+from functools import reduce
+from operator import add
 
 import stripe
 from flask import (session, render_template, redirect,
@@ -51,7 +53,8 @@ def logout():
 
 def recent():
     things = Thing.get_recent_all_things()
-    return render_template('recent.html', things=things)
+    tags = reduce(add, [(t.tags or []) for t in things])
+    return render_template('recent.html', things=things, tags=tags)
 
 def signup_page():
     if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
