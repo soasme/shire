@@ -200,8 +200,8 @@ def profile(username):
     limit = request.args.get('limit', type=int, default=100)
     things = Thing.get_recent_user_things(user.id, offset, limit)
     mark_error = session.pop('error.mark', '')
-    return render_template('profile.html',
-            username=username, user=user,
+    return render_template('things.html',
+            title=f'@{username}',
             things_cnt=things_cnt, things=things, is_me=is_me,
             mark_error=mark_error)
 
@@ -415,7 +415,16 @@ def filter_user_things_by_tag(username, tag):
     offset = request.args.get('offset', type=int, default=0)
     limit = request.args.get('limit', type=int, default=100)
     things = Thing.get_recent_user_tagged_things(user.id, [tag], offset, limit, include_private=is_me)
-    return render_template('profile.html',
-            username=username, user=user,
+    return render_template('things.html',
+            title=f'@{username}',
             things_cnt=None, things=things, is_me=is_me,
+            mark_error='')
+
+def filter_global_things_by_tag(tag):
+    offset = request.args.get('offset', type=int, default=0)
+    limit = request.args.get('limit', type=int, default=100)
+    things =  Thing.get_recent_tagged_things([tag], offset, limit)
+    return render_template('things.html',
+            title=f'#{tag}',
+            things_cnt=None, things=things, is_me=None,
             mark_error='')

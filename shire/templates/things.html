@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% import "widget_thing.html"  as wgtThing %}
 
-{% block title %}@{{ username }}'s things{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h3>@{{ username }}'s Things</h3>
+<h3>{{ title }} </h3>
 
 {# Display the number of things user has marked. #}
 {% if things_cnt != None %}
