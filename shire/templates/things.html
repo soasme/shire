@@ -4,58 +4,60 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h3>{{ title }} </h3>
-
-{# Display the number of things user has marked. #}
-{% if things_cnt != None %}
-{% if things_cnt == 0 %}
-<p>
-  {% if is_me %}You haven't{% else %}Ze hasn't{% endif %}
-  marked any thing so far.
-</p>
-{% else %}
-<p>
-  {% if is_me %}You have{% else %}Ze has{% endif %}
-  marked {{ things_cnt }} things so far.
-</p>
-{% endif %}
-{% endif %}
-
-{# Add a new thing? #}
-{% if is_me %}
-<div>
-  <form method="post" action="/mark/" class="pure-form">
-    <fieldset>
-      <select name="category" class="pure-input-1-8">
-        {% for cat in Category %}
-        <option>{{ cat.name }}</option>
-        {% endfor %}
-      </select>
-      <input name="title" class="pure-input-1-4" placeholder="title" autocomplete=off>
-      <input name="tags" class="pure-input-1-4" placeholder="tags" autocomplete=off>
-      <label for="shared">
-        <input name="shared" type="checkbox" checked=checked> Shared
-      </label>
-      <button type="submit" class="pure-button pure-button-primary">
-        Mark
-      </button>
-    </fieldset>
-  </form>
-  <div style="color: red;">
-    {{ mark_error }}
-  </div>
-  <script>
-  </script>
-</div>
-{% endif %}
-
-{# Display paginated things. #}
 <div class="pure-g">
-  {% for thing in things %}
-  <div class="pure-u-1 thing">
-    {{ wgtThing.render_thing(thing) }}
+  {# Left #}
+  <div class="pure-u-3-4">
+    <h3>{{ title }} </h3>
+
+    {# Add a new thing? #}
+    {% if is_me %}
+    <div>
+      <form method="post" action="/mark/" class="pure-form">
+        <fieldset>
+          <select name="category" class="pure-input-1-8">
+            {% for cat in Category %}
+            <option>{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+          <input name="title" class="pure-input-1-4" placeholder="title" autocomplete=off>
+          <input name="tags" class="pure-input-1-4" placeholder="tags" autocomplete=off>
+          <label for="shared">
+            <input name="shared" type="checkbox" checked=checked> Shared
+          </label>
+          <button type="submit" class="pure-button pure-button-primary">
+            Mark
+          </button>
+        </fieldset>
+      </form>
+      <div style="color: red;">
+        {{ mark_error }}
+      </div>
+      <script>
+      </script>
+    </div>
+    {% endif %}
+
+    {% for thing in things %}
+    <div class="pure-u-1 thing">
+      {{ wgtThing.render_thing(thing) }}
+    </div>
+    {% endfor %}
+
   </div>
-  {% endfor %}
+
+  {# Right (Sidebar) #}
+  <div class="pure-u-1-4">
+    <h3>Tags</h3>
+    <div>
+      {% for tag in tags %}
+      <span class="thing-tag">
+        <a href="{{ url_for('all_tagged_things', tag=tag) }}">{{ tag }}</a>
+      </span>
+      {% endfor %}
+    </div>
+  </div>
 </div>
+
+
 {{ wgtThing.load_thing_widget() }}
 {% endblock %}
