@@ -69,11 +69,13 @@
     {% endif %}
     <span style="font-size: .8em;">| tags: </span>
     {% for tag in thing.tags %}
+    {% if not (thing.user != g.user and tag.startswith('.')) %}
     <span class="thing-tag">
       <a href="{{ url_for('tagged_things', username=thing.user.username, tag=tag) }}">
         {{ tag }}
       </a>
     </span>
+    {% endif %}
     {% endfor %}
   </div>
 </div>

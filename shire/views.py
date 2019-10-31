@@ -1,8 +1,6 @@
 import os
 import json
 from datetime import datetime
-from functools import reduce
-from operator import add
 
 import stripe
 from flask import (session, render_template, redirect,
@@ -53,7 +51,7 @@ def logout():
 
 def explore():
     things = Thing.get_recent_all_things()
-    tags = set(reduce(add, [(t.tags or []) for t in things]))
+    tags = Thing.get_public_tagset(things)
     return render_template('explore.html', things=things, tags=tags)
 
 def signup_page():
@@ -203,7 +201,7 @@ def profile(username):
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
     things = Thing.get_recent_user_things(user.id, offset, limit)
-    tags = set(reduce(add, [(t.tags or []) for t in things]))
+    tags = Thing.get_public_tagset(things)
     mark_error = session.pop('error.mark', '')
     return render_template('things.html',
             title=f'@{username}',
@@ -254,7 +252,7 @@ def thing_page(id):
     thing = Thing.query.get(id)
     if not thing: abort(404)
     owner = thing.user
-    if owner.is_private: abort(403)
+    if not thing.is_visible_by(g.user): abort(403)
     if not thing.shared and g.user != owner: abort(403)
     return render_template('thing.html', thing=thing)
 
@@ -419,7 +417,7 @@ def filter_user_things_by_tag(username, tag):
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
     things = Thing.get_recent_user_tagged_things(user.id, [tag], offset, limit, include_private=is_me)
-    tags = set(reduce(add, [(t.tags or []) for t in things]))
+    tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'@{username}',
             things_cnt=None, things=things, is_me=is_me,
@@ -429,7 +427,7 @@ def filter_global_things_by_tag(tag):
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
     things =  Thing.get_recent_tagged_things([tag], offset, limit)
-    tags = set(reduce(add, [(t.tags or []) for t in things]))
+    tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'#{tag}',
             things_cnt=None, things=things, is_me=None,
@@ -445,7 +443,7 @@ def filter_user_things_by_category(username, category):
     category = getattr(Category, category)
     things = Thing.get_recent_user_categorized_things(user.id,
             category, offset, limit, include_private=is_me)
-    tags = set(reduce(add, [(t.tags or []) for t in things]))
+    tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'@{username} ({category.name})',
             things_cnt=None, things=things, is_me=is_me,

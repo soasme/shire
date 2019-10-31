@@ -1,5 +1,7 @@
 import enum
 import jinja2
+from functools import reduce
+from operator import add
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
@@ -139,6 +141,10 @@ class Thing(db.Model):
             return self.user_id == user.id
         else:
             return self.shared
+
+    @classmethod
+    def get_public_tagset(cls, things):
+        return set(reduce(add, [([tag for tag in t.tags if not tag.startswith('.')] or []) for t in things]))
 
 class ThingNote(db.Model):
     thing_id = db.Column(db.Integer, primary_key=True)
