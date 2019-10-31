@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+<h3>Account</h3>
+<div>user: {{ g.user.username }}</div>
+<div>created: {{ g.user.time | from_now }}</div>
+<div>email: {{ g.user.email }}</div>
+
+<form class="pure-form pure-form-stacked" method="post">
+  <fieldset>
+    <label for="is_private">
+      Private
+      <input type="checkbox" name="is_private" id="is_private"
+        {% if g.user.is_private %}checked="checked"{% endif %}>
+    </label>
+
+    <div>{{ error }}</div>
+
+    <input type="submit" value="Update" class="pure-button pure-button-primary">
+  </fieldset>
+</form>
+{% endblock %}

@@ -8,7 +8,6 @@ a:hover { color: #ffffff; background-color: #5469d4; }
 .footer-link {text-decoration: none; color: #777; font-size: .8em; margin-left: 5px;}
 .footer-copyright {color: #777; font-size: .8em;}
 .thing {padding-bottom: 10px;}
-.thing-title {font-size: 1.2em;}
 .thing-time {color: #999; font-size: .8em; margin-top: 5px;}
 .thing-time a {color: #999;}
 .thing-time a:hover {background-color: #999; color: #fff;}

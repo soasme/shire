@@ -449,3 +449,25 @@ def filter_user_things_by_category(username, category):
             title=f'@{username} ({category.name})',
             things_cnt=None, things=things, is_me=is_me,
             mark_error='', tags=tags)
+
+def account():
+    if not g.user: abort(403)
+    error = session.pop('error.update_account', '')
+    return render_template('profile.html', error=error)
+
+def update_account():
+    if not g.user: abort(403)
+    is_private = request.form.get('is_private') == 'on'
+
+    g.user.is_private = is_private
+
+    try:
+        db.session.add(g.user)
+        db.session.commit()
+        session['error.update_account'] = 'updated successfully!'
+        return redirect(url_for('account'))
+    except Exception as e:
+        current_app.logger.error('update account error: %s', e)
+        db.session.rollback()
+        session['error.update_account'] = 'database error, please try later.'
+        return redirect(url_for('account'))
