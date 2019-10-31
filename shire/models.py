@@ -134,6 +134,12 @@ class Thing(db.Model):
                 url=self.url, tags=self.tags, time=self.time.isoformat(),
                 note=(self.note and self.note.text or ''))
 
+    def is_visible_by(self, user):
+        if user and user.is_private:
+            return self.user_id == user.id
+        else:
+            return self.shared
+
 class ThingNote(db.Model):
     thing_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)

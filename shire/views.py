@@ -197,6 +197,7 @@ def charge():
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
+    if user.is_private and (not g.user or user.id != g.user.id): abort(403)
     is_me = user.username == session.get('uid')
     things_cnt = Thing.get_user_things_cnt(user.id)
     offset = request.args.get('offset', type=int, default=0)
