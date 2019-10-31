@@ -88,6 +88,8 @@ def create_app():
     app.add_url_rule('/charge/', 'charge', views.charge, methods=['POST'])
     app.add_url_rule('/u/<username>/', 'profile', views.profile)
     app.add_url_rule('/u/<username>/t/<tag>/', 'tagged_things', views.filter_user_things_by_tag)
+    app.add_url_rule('/u/<username>/c/<category>/', 'categorized_things',
+            views.filter_user_things_by_category)
     app.add_url_rule('/t/<tag>/', 'all_tagged_things', views.filter_global_things_by_tag)
     app.add_url_rule('/mark/', 'mark', views.mark, methods=['POST'])
     app.add_url_rule('/things/<int:id>/', 'thing_page', views.thing_page)
