@@ -1,11 +1,47 @@
 ---
 - hosts: db
   become: yes
-  vars:
-    postgresql_databases:
-      - name: "{{ lookup('env', 'SHIRE_DATABASE_NAME') }}"
-    postgresql_users:
-      - name: "{{ lookup('env', 'SHIRE_DATABASE_USER') }}"
-        password: "{{ lookup('env', 'SHIRE_DATABASE_PASS') }}"
+  pre_tasks:
+    - name: make selinux permissive
+      selinux:
+        policy: targeted
+        state: permissive
+      become: yes
+
+    - name: Add PostgreSQL Yum Repository to CentOS 7
+      yum:
+        name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+        state: present
+
+    - name: Install epel
+      package:
+        name:
+          - epel-release
+          - yum-utils
+        state: latest
+
   roles:
     - role: geerlingguy.postgresql
+      become: yes
+      postgresql_enablerepo: pgdg12
+      postgresql_version: 12
+      postgresql_data_dir: /var/lib/pgsql/12/data
+      postgresql_bin_path: /usr/pgsql-12/bin
+      postgresql_config_path: /var/lib/pgsql/12/data
+      postgresql_daemon: postgresql-12.service
+      postgresql_packages:
+        - postgresql12-server
+        - postgresql12
+        - postgresql12-libs
+        - postgresql12-contrib
+        - postgresql12-devel
+      postgresql_databases:
+        - name: "{{ lookup('env', 'SHIRE_DATABASE_NAME') }}"
+      postgresql_users:
+        - name: "{{ lookup('env', 'SHIRE_DATABASE_USER') }}"
+          password: "{{ lookup('env', 'SHIRE_DATABASE_PASS') }}"
+      postgresql_hba_entries:
+        - { type: local, database: all, user: postgres, auth_method: peer }
+        - { type: local, database: all, user: all, auth_method: peer }
+        - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5 }
+        - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }
