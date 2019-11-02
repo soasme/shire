@@ -124,8 +124,6 @@ Relatively, you can recover the state before provisioning lb to avoid re-issuing
 $ scp -r /path/to/backup/dir/etc/letsencrypt root@$LBHOST:/etc
 ```
 
-TODO: restore & backup certs to a remote dir, by date
-
 ## Provision Database
 
 Provision postgres database.
@@ -138,7 +136,7 @@ On remote host of role db, you can perform sql management by running psql comman
 
 ```
 $ su postgres
-$ /usr/pgsql-12/bin/pg_restore --verbose --clean --no-owner --no-acl -h localhost -p 5432 -UZcNRrJsj -dkNTFGHNfZLCX -Fc -1 /tmp/latest.dump
+$ /usr/pgsql-12/bin/pg_restore --verbose --clean --no-owner --no-acl -h localhost -p 5432 -U $PG_USER -d $PG_DATABASE -Fc -1 /tmp/latest.dump
 # /usr/pgsql-12/bin/psql
 postgres=# \dt
 ```
