@@ -20,3 +20,8 @@
   service:
     name: dnsmasq
     state: restarted
+
+- name: Install bind-utils
+  package:
+    name: bind-utils
+    state: latest
