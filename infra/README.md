@@ -54,7 +54,8 @@ You'll need to buy a domain and specify the name server of your domain to below 
 * ns2.digitalocean.com
 * ns3.digitalocean.com
 
-Destroy resources. (Re-creating infrastructure might hit the rate limit of letsencrypt. Please consider backup letsencrypt certs.)
+
+Destroy resources.
 
 ```bash
 $ terraform destroy
@@ -104,8 +105,23 @@ The cert includes wildcard (`*.example.com`).
 **Known Issue**: Currently, nginx `proxy_pass` will be blocked by SELinux. Nginx selinux policy will need to be installed manually.
 
 ```bash
+(on lb host)
 $ grep nginx /var/log/audit/audit.log | audit2allow -M nginx
 $ semodule -i nginx.pp
+```
+
+**Known Issue**: Re-creating infrastructure might hit the rate limit of letsencrypt. Please consider backup letsencrypt certs.
+
+```bash
+(on localhost)
+$ export LBHOST=`terraform output server_00001_ipv4_address`
+$ scp -r root@${LBHOST}:/etc/letsencrypt /path/to/backup/dir/etc
+```
+
+Relatively, you can recover the state before provisioning lb to avoid re-issuing a certificate:
+
+```bash
+$ scp -r /path/to/backup/dir/etc/letsencrypt root@$LBHOST:/etc
 ```
 
 TODO: restore & backup certs to a remote dir, by date
