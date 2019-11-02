@@ -50,6 +50,14 @@ resource "digitalocean_floating_ip" "vip_0001" {
   region            = "sfo2"
 }
 
+# Note: by default vip 0001 is bound to the load blancer host.
+# In the future, we might introduce a secondary load balancer,
+# and use a script to attach ip dynamically to fail over.
+resource "digitalocean_floating_ip_assignment" "vip_0001" {
+  ip_address = "${digitalocean_floating_ip.vip_0001.ip_address}"
+  droplet_id = "${digitalocean_droplet.server_0001.id}"
+}
+
 # Provision Site Domain and Name Records
 
 resource "digitalocean_domain" "site_domain" {
