@@ -18,6 +18,11 @@ def test_signup_missing_username(client):
     r = r.follow()
     assert 'username is empty' in r.unicode_body
 
+    # Fun fact: Ken Thompson's Unix password was finally disclosed.
+    # It's `p/q2-q4!`, which is a notation in chess to move pawn
+    # from Queen's 2 to Queen's 4.
+    # <https://leahneukirchen.org/blog/archive/2019/10/ken-thompson-s-unix-password.html>
+
 def test_signup_missing_password(client):
     r = client.get('/signup/')
     assert r.form.method == 'post'
