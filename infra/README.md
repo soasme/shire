@@ -54,7 +54,7 @@ You'll need to buy a domain and specify the name server of your domain to below 
 * ns2.digitalocean.com
 * ns3.digitalocean.com
 
-Destroy resources.
+Destroy resources. (Re-creating infrastructure might hit the rate limit of letsencrypt. Please consider backup letsencrypt certs.)
 
 ```bash
 $ terraform destroy
@@ -101,6 +101,13 @@ $ ansible-playbook sys/lb-provision.yml
 
 The cert includes wildcard (`*.example.com`).
 
+**Known Issue**: Currently, nginx `proxy_pass` will be blocked by SELinux. Nginx selinux policy will need to be installed manually.
+
+```bash
+$ grep nginx /var/log/audit/audit.log | audit2allow -M nginx
+$ semodule -i nginx.pp
+```
+
 TODO: restore & backup certs to a remote dir, by date
 
 ## Provision Database
@@ -114,12 +121,13 @@ $ ansible-playbook sys/db-provision.yml
 On remote host of role db, you can perform sql management by running psql command:
 
 ```
-# sudo -u postgres psql
-postgres=# \l
-List of databases
-Name | ...
-postgres | ...
+$ su postgres
+$ /usr/pgsql-12/bin/pg_restore --verbose --clean --no-owner --no-acl -h localhost -p 5432 -UZcNRrJsj -dkNTFGHNfZLCX -Fc -1 /tmp/latest.dump
+# /usr/pgsql-12/bin/psql
+postgres=# \dt
 ```
+
+TODO: Backup.
 
 ## Provision Prometheus
 
@@ -139,6 +147,12 @@ On local host, if you want to access grafana service, do the same trick:
 
 ```
 $ ssh -L 3000:127.0.0.1:3000 root@${YOUR_PROM_HOST_IP}
+```
+
+## Provision DNS
+
+```bash
+$ ansible-playbook sys/dns-provision.yml
 ```
 
 ## Provision Web
