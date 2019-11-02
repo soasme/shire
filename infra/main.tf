@@ -9,6 +9,8 @@ variable "do_project_name" {}
 variable "do_ssh_keys" { type = "list" }
 variable "site_domain" {}
 variable "bucket_name" {}
+variable "site_domain_txt" {}
+variable "site_domain_mx" { type = "list" }
 
 # All digitalocean related resources, outputs will require this provider.
 # So, let's claim it first.
@@ -41,11 +43,6 @@ resource "digitalocean_floating_ip" "vip_0001" {
   region            = "sfo2"
 }
 
-resource "digitalocean_floating_ip_assignment" "vip_0001" {
-  ip_address = "${digitalocean_floating_ip.vip_0001.ip_address}"
-  droplet_id = "${digitalocean_droplet.server_0001.id}"
-}
-
 # Provision Site Domain and Name Records
 
 resource "digitalocean_domain" "site_domain" {
@@ -58,6 +55,24 @@ resource "digitalocean_record" "at_A" {
   name      = "@"
   ttl       = 300 # 5m
   value     = "${digitalocean_floating_ip.vip_0001.ip_address}"
+}
+
+resource "digitalocean_record" "at_txt" {
+  domain    = "${digitalocean_domain.site_domain.name}"
+  type      = "TXT"
+  name      = "@"
+  ttl       = 300 # 5m
+  value     = "${var.site_domain_txt}"
+}
+
+resource "digitalocean_record" "at_mx" {
+  count     = "${length(var.site_domain_mx)}"
+  domain    = "${digitalocean_domain.site_domain.name}"
+  type      = "MX"
+  name      = "@"
+  ttl       = 3600 # 1h
+  priority  = var.site_domain_mx[count.index]["priority"]
+  value     = var.site_domain_mx[count.index]["value"]
 }
 
 output "site_domain_fqdn" {
