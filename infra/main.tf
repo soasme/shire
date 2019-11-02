@@ -37,13 +37,6 @@ output "server_00001_ipv4_address" {
   value = digitalocean_droplet.server_0001.ipv4_address
 }
 
-# Provision Space
-
-resource "digitalocean_spaces_bucket" "bucket" {
-  name = var.bucket_name
-  region = "sfo2"
-}
-
 # Provision IP addresses (for lb)
 
 resource "digitalocean_floating_ip" "vip_0001" {
