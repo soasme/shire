@@ -8,7 +8,7 @@ from flask import (session, render_template, redirect,
                    url_for, )
 
 from shire.core import db, bcrypt, __DIR__
-from shire.models import Thing, ThingNote, User, Category, Progress
+from shire.models import Thing, ThingNote, User, Category
 from shire.errors import ShireError, ExistingError
 
 def autoversion_filter(filename):
@@ -219,7 +219,6 @@ def mark():
         session['error.mark'] = "invalid category."
         return redirect(f'/u/{g.user.username}')
     category = getattr(Category, category_name)
-    progress = Progress.done
     title = request.form.get('title')
     if not title:
         session['error.mark'] = "please provide a title."

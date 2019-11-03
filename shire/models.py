@@ -11,14 +11,6 @@ from sqlalchemy.dialects.postgresql.json import JSONB
 
 from shire.core import db, bcrypt
 
-class Progress(enum.Enum):
-    """A progress enum indicating if user has used the thing.
-    Currently, we only support done.
-    """
-    todo = 1
-    doing = 2
-    done = 3
-
 class Category(enum.Enum):
     book = 1
     movie = 2

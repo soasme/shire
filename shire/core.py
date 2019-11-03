@@ -30,7 +30,7 @@ def create_celery(**kwargs):
 
 def create_app():
     from shire.core import db, bcrypt
-    from shire.models import Category, Progress, User, Thing, ThingNote
+    from shire.models import Category, User, Thing, ThingNote
     from shire import views
 
     app = Flask(__name__)
@@ -63,7 +63,6 @@ def create_app():
     )
 
     app.jinja_env.globals['Category'] = Category
-    app.jinja_env.globals['Progress'] = Progress
 
     app.template_filter('autoversion')(views.autoversion_filter)
     app.template_filter('from_now')(views.from_now)
