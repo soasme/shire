@@ -49,18 +49,25 @@ def test_signup_missing_email(client):
     r = r.follow()
     assert 'email is empty' in r.unicode_body
 
-def test_signup_uncharged_user(client):
-    # GIVEN a new user (uncharged)
-    from shire.models import User
-    User.new(username='frodo', email='frodo@marksth.fun', nickname='Frodo', password='P/q2-q4!')
+def signup_fresh_user(client, user='frodo', password='p/q2-q4!', email='frodo@marksth.fun'):
+    r = client.get('/signup/')
+    r.form.set('username', 'frodo')
+    r.form.set('password', 'p/q2-q4!')
+    r.form.set('email', 'frodo@marksth.fun')
+    r.form.submit()
+    return r.follow()
 
-    #   AND he lands on signup page
+def test_signup_uncharged_user(client):
+    # Given a new user (uncharged)
+    signup_fresh_user(client, 'frodo', 'p/q2-q4!', 'frodo@marksth.fun')
+
+    #   and he lands on signup page
     r = client.get('/signup/')
     assert r.form.method == 'post'
 
     # When he submits the form
     r.form.set('username', 'frodo')
-    r.form.set('password', 'p/q1-q4?')
+    r.form.set('password', 'p/q1-q4!')
     r.form.set('email', 'sam@marksth.fun')
     r = r.form.submit()
 
@@ -70,13 +77,12 @@ def test_signup_uncharged_user(client):
     assert r.request.path == '/signup/confirm/'
 
 def test_signup_fresh_user(client):
-    #   AND he lands on signup page
     r = client.get('/signup/')
     assert r.form.method == 'post'
 
     # When he submits the form
     r.form.set('username', 'frodo')
-    r.form.set('password', 'p/q2-q4?')
+    r.form.set('password', 'p/q2-q4!')
     r.form.set('email', 'frodo@marksth.fun')
     r = r.form.submit()
 
@@ -84,3 +90,8 @@ def test_signup_fresh_user(client):
     assert r.status_code == 302
     r = r.follow()
     assert r.request.path == '/signup/confirm/'
+
+
+def test_confirm_signup(client):
+    r = signup_fresh_user(client, 'frodo', 'p/q2-q4!', 'frodo@marksth.fun')
+
