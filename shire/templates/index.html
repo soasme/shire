@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "widget_signup.html" as widget_signup %}
 
 {% block title %}Welcome to {{ config.SITE_NAME }}{% endblock %}
 
@@ -24,11 +25,7 @@
       You can use the site for free the next year if you invite a user.
     </p>
     {% if not session.get('uid') %}
-    <div>
-      <a class="pure-button pure-button-primary" href="{{ url_for('signup_page') }}">
-          Sign up for ${{ config.ANNUAL_FEE }} / year
-      </a>
-    </div>
+    {{ widget_signup.render_signup_button() }}
     {% endif %}
     <p>
     The site is <a href="{{ config.GITHUB_URL }}">open/libre software</a> under GNU Affero GPL license.

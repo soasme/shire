@@ -1,0 +1,31 @@
+{%- macro render_signup_button() -%}
+<div>
+  <script src="https://js.stripe.com/v3"></script>
+  <button class="pure-button pure-button-primary"
+          id="checkout-button-{{ config.STRIPE_PLAN_ID }}"
+          role="link">
+      Sign up for ${{ config.ANNUAL_FEE }} / year
+  </button>
+  <div id="error-message"></div>
+  <script>
+  (function() {
+    var stripe = Stripe('{{ config.STRIPE_PUBLIC_KEY }}');
+
+    var checkoutButton = document.getElementById('checkout-button-{{ config.STRIPE_PLAN_ID }}');
+    checkoutButton.addEventListener('click', function () {
+      stripe.redirectToCheckout({
+        items: [{plan: '{{ config.STRIPE_PLAN_ID  }}', quantity: 1}],
+        successUrl: '{{ url_for("signup_success_page", _external=true) }}',
+        cancelUrl: '{{ url_for("signup_canceled_page", _external=true) }}',
+      })
+      .then(function (result) {
+        if (result.error) {
+            var displayError = document.getElementById('error-message');
+            displayError.textContent = result.error.message;
+        }
+      });
+    });
+  })();
+  </script>
+</div>
+{%- endmacro %}

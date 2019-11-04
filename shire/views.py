@@ -55,142 +55,19 @@ def explore():
     return render_template('explore.html', things=things, tags=tags)
 
 def signup_page():
-    if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
-    error = session.pop('error.signup', '')
-    return render_template("signup.html", error=error)
+    return 'coming soon'
 
 def signup():
-    if not current_app.config['SIGNUP_ENABLED']: return 'coming soon'
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    if not username:
-        session['error.signup'] = 'username is empty'
-        return redirect(url_for('signup_page'))
-    if not email:
-        session['error.signup'] = 'email is empty'
-        return redirect(url_for('signup_page'))
-    if not password:
-        session['error.signup'] = 'password is empty'
-        return redirect(url_for('signup_page'))
-    user = User.query.filter_by(username=username).first()
-    if user and user.is_charged:
-        session['error.signup'] = 'username exists'
-        return redirect(url_for('signup_page'))
-    if user and not user.is_charged:
-        user = User.query.filter_by(username=username).first()
-        user.email = email
-        user.nickname = username
-        user.password = bcrypt.generate_password_hash(password).decode('utf-8')
-        db.session.add(user)
-        try:
-            db.session.commit()
-            session['nuid'] = user.id
-            return redirect(url_for('confirm_signup'))
-        except Exception:
-            db.session.rollback()
-            session['error.signup'] = 'database error'
-            return redirect(url_for('signup_page'))
-    try:
-        user = User.new(username, email, username, password, autocommit=True)
-        session['nuid'] = user.id
-        return redirect(url_for('confirm_signup'))
-    except ExistingError as e:
-        user = User.query.filter_by(username=username).first()
-        if user.is_charged:
-            session['error.signup'] = 'username exists'
-            return redirect(url_for('signup_page'))
-        else:
-            session['nuid'] = user.id
-            return redirect(url_for('confirm_signup'))
-    except Exception as e:
-        current_app.logger.error("error: %s", e)
-        db.session.rollback()
-        return redirect('/signup/')
+    return 'coming soon'
 
+def signup_success_page():
+    return 'coming soon'
 
-def confirm_signup():
-    uid = session.get('nuid')
-    if not uid: return redirect('/')
-    return render_template('confirm_signup.html')
+def signup_success():
+    return 'coming soon'
 
-def handle_checkout_session(session):
-    client_reference_id = session['client_reference_id']
-    if not client_reference_id: return
-    client_reference_id = int(client_reference_id)
-    user = User.query.get(client_reference_id)
-    sub = UserSubscription.query.filter_by(user_id=client_reference_id, subscription=session['subscription']).first()
-    if not sub:
-        sub = UserSubscription(user_id=client_reference_id,
-                customer=session['customer'],
-                subscription=session['subscription'])
-        db.session.add(sub)
-        db.session.commit()
-
-def poll_completed_checkout_session(since):
-    events = stripe.Event.list(type = 'checkout.session.completed', created = {
-        'gte': int(since)
-    })
-    for event in events:
-        handle_checkout_session(event['data']['object'])
-
-def create_stripe_session():
-    """Create a stripe subscription checkout session.
-    Potential user will be charged within this session.
-    """
-    plan_id = current_app.config['STRIPE_PLAN_ID']
-    uid = session['nuid']
-    user = User.query.get(uid)
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            subscription_data={"items": [{"plan": plan_id}]},
-            success_url=url_for('stripe_charge_success',
-                uid=session['nuid'], _external=True),
-            cancel_url=url_for('stripe_charge_cancel', _external=True),
-            customer_email=user.email,
-            client_reference_id=user.id,
-        )
-        session['nsess'] = checkout_session['id']
-        return jsonify({
-            'code': 'ok',
-            'checkoutSessionId': checkout_session['id']
-        })
-    except Exception as e:
-        return jsonify({'code': str(e)}), 403
-
-def stripe_charge_success():
-    if 'nuid' not in session: return redirect('/')
-    session.pop('nuid', None)
-    poll_completed_checkout_session(int(time()) - 7200)
-    return render_template('signup_success.html')
-
-def stripe_charge_cancel(): return 'cancel'
-
-def stripe_charge_webhook():
-    webhook_secret = current_app.config['STRIPE_WEBHOOK_SECRET_KEY']
-    request_data = json.loads(request.data)
-    signature = request.headers.get('stripe-signature')
-    if not secret_key or not signature:
-        return jsonify({'code': 'unknown signature'}), 400
-    try:
-        event = stripe.Webhook.construct_event(
-            payload=request.data, sig_header=signature, secret=webhook_secret)
-        data = event['data']
-        event_type = event['type']
-    except Exception as e:
-        current_app.logger.error("error: %s", e)
-        return jsonify({'code': 'unable to construct event'}), 400
-
-    data_object = data['object']
-    if event_type == 'checkout.session.completed':
-        items = data_object['display_items']
-        customer = stripe.Customer.retrieve(data_object['customer'])
-        if len(items) != 1 or not items[0].custom:
-            return jsonify({'code': 'unknown items'}), 400
-
-def charge():
-    return jsonify(dict(request.form))
+def signup_canceled_page():
+    return 'coming soon'
 
 def profile(username):
     user = User.query.filter_by(username=username).first()
