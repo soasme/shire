@@ -24,7 +24,7 @@
     <p>
       You can use the site for free the next year if you invite a user.
     </p>
-    {% if not session.get('uid') %}
+    {% if not session.get('uid') and config.SIGNUP_ENABLED %}
     {{ widget_signup.render_signup_button() }}
     {% endif %}
     <p>
