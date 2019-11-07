@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from decouple import config
 
+from shire.exts.sub import Subscription
 
 __DIR__ = Path(__file__) / ".."
 __STATIC_DIR__ = __DIR__ / "static"
@@ -15,7 +16,7 @@ __STATIC_DIR__ = __DIR__ / "static"
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 celery = Celery(__name__)
-
+sub = Subscription()
 
 def create_celery(**kwargs):
     app = create_app()
@@ -51,12 +52,16 @@ def create_app():
         'STRIPE_WEBHOOK_SECRET_KEY': config('STRIPE_WEBHOOK_SECRET_KEY', default=''),
         'STRIPE_API_VERSION': config('STRIPE_API_VERSION', default=''),
         'STRIPE_PLAN_ID': config('STRIPE_PLAN_ID', default=''),
+        'SUBSCRIPTION_WEBHOOK_ENABLED': config('SUBSCRIPTION_WEBHOOK_ENABLED', cast=bool, default=True),
+        'SUBSCRIPTION_WEBHOOK_URL': config('SUBSCRIPTION_WEBHOOK_URL', default='/subscription/hook/'),
+        'SUBSCRIPTION_CLI_ENABLED': config('SUBSCRIPTION_CLI_ENABLED', cast=bool, default=True),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })
     db.init_app(app)
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
     bcrypt.init_app(app)
+    sub.init_app(app)
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,
         root=__STATIC_DIR__.resolve()
