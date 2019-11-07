@@ -51,7 +51,7 @@ def stripe_checkout_session_completed_poll(window=60*60):
         session = event['data']['object']
         checkout_session_completed.send(event['data']['object'])
 
-@user_cli.command('poll')
+@subscription_cli.command('poll')
 @click.option('--window', '-w', type=int, default=60*60)
 def cli_poll(window):
     stripe_checkout_session_completed_poll(window)
