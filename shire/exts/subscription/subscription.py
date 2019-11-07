@@ -1,10 +1,16 @@
 """
 This module handles the after-the-payment when customer successfully completes their
 payment and initiates a subscription using Checkout.
+
+See <https://stripe.com/docs/payments/checkout/fulfillment>.
 """
 
 import stripe
+from blinker import Namespace
+from flask import request, abort
 
+subscription_signals = Namespace()
+checkout_session_completed = subscription_signals.signal('checkout.session.completed')
 
 def webhook():
     """Called by stripe server.
@@ -13,7 +19,19 @@ def webhook():
 
     https://stripe.com/docs/payments/checkout/fulfillment#webhooks
     """
-    pass
+    payload = request.body
+    signature = request.headers.get('stripe-signature')
+    secret = current_app.config['STRIPE_WEBHOOK_SECRET']
+
+    try:
+        event = stripe.Webhook.construct_event(payload, signature, secret)
+    except (ValueError, stripe.error.SignatureVerificationError):
+        abort(400)
+
+    if event['type'] == 'checkout.session.completed':
+        checkout_session_completed.send(event['data']['object'])
+
+    return jsonify({'received': True})
 
 
 def poll():
