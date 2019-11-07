@@ -3,6 +3,34 @@ This module handles the after-the-payment when customer successfully completes t
 payment and initiates a subscription using Checkout.
 
 See <https://stripe.com/docs/payments/checkout/fulfillment>.
+
+Tips:
+
+1. The consumer of this extension should provide your own implementation when
+   a checkout.session.completed event triggers.
+
+Example::
+
+    @checkout_session_completed.connect
+    def do_something(session):
+        print(session)
+        send_registration_email.delay(session)
+        # ...
+
+2. The webhook can be enabled by specifying `SUBSCRIPTION_WEBHOOK_ENABLED`.
+   By default, it's false.
+
+3. The webhook url can be defined by specifying `SUBSCRIPTION_WEBHOOK_URL`.
+   By default, it's /subscription/hook/. It works only when
+   SUBSCRIPTION_WEBHOOK_ENABLED is true.
+
+4. The cli can be enabled by specifying `SUBSCRIPTION_CLI_ENABLED`.
+   By default, it's false.
+   You can run `flask subscription poll` to sync and process recent events.
+
+5. The extension does not guarantee the times of the event being processed.
+   Please make sure there will not be side-effects when the event is processed
+   multiple times.
 """
 
 import stripe
@@ -54,9 +82,14 @@ def stripe_checkout_session_completed_poll(window=60*60):
 @subscription_cli.command('poll')
 @click.option('--window', '-w', type=int, default=60*60)
 def cli_poll(window):
+    """Poll recent checkout.session.complete events from Stripe."""
     stripe_checkout_session_completed_poll(window)
 
 class Subscription:
+    """Subscription extension.
+
+    It supports handling after-the-payment events from Stripe.
+    """
 
     def __init__(self, app=None):
         self.app = app
