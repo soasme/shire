@@ -12,7 +12,7 @@ from flask import request, abort
 subscription_signals = Namespace()
 checkout_session_completed = subscription_signals.signal('checkout.session.completed')
 
-def webhook():
+def stripe_checkout_session_completed_webhook():
     """Called by stripe server.
 
     It passively waits stripe events and handle them by per request.
@@ -34,13 +34,19 @@ def webhook():
     return jsonify({'received': True})
 
 
-def poll():
+def stripe_checkout_session_completed_poll(window=60*60):
     """Called by crontab.
 
     It actively poll stripe events and handle them in batch.
 
     https://stripe.com/docs/payments/checkout/fulfillment#polling
     """
+    events = stripe.Event.list(type = 'checkout.session.completed', created = {
+        'gte': int(time.time() - window),
+    })
+    for event in events.auto_paging_iter():
+        session = event['data']['object']
+        checkout_session_completed.send(event['data']['object'])
 
 class Subscription:
 
@@ -51,4 +57,3 @@ class Subscription:
 
     def init_app(self, app):
         app.extensions['subscription'] = app
-
