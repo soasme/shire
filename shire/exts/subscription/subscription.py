@@ -7,8 +7,11 @@ See <https://stripe.com/docs/payments/checkout/fulfillment>.
 
 import stripe
 from blinker import Namespace
+import click
 from flask import request, abort
+from flask.cli import AppGroup
 
+subscription_cli = AppGroup('subscription')
 subscription_signals = Namespace()
 checkout_session_completed = subscription_signals.signal('checkout.session.completed')
 
@@ -35,9 +38,9 @@ def stripe_checkout_session_completed_webhook():
 
 
 def stripe_checkout_session_completed_poll(window=60*60):
-    """Called by crontab.
+    """Called by crontab or periodically cron-like beater.
 
-    It actively poll stripe events and handle them in batch.
+    It actively polls stripe events and handles them in a batch.
 
     https://stripe.com/docs/payments/checkout/fulfillment#polling
     """
@@ -48,6 +51,11 @@ def stripe_checkout_session_completed_poll(window=60*60):
         session = event['data']['object']
         checkout_session_completed.send(event['data']['object'])
 
+@user_cli.command('poll')
+@click.option('--window', '-w', type=int, default=60*60)
+def cli_poll(window):
+    stripe_checkout_session_completed_poll(window)
+
 class Subscription:
 
     def __init__(self, app=None):
@@ -57,3 +65,14 @@ class Subscription:
 
     def init_app(self, app):
         app.extensions['subscription'] = app
+
+        if app.config.get('SUBSCRIPTION_WEBHOOK_ENABLED'):
+            webhook_url = app.config.get('SUBSCRIPTION_WEBHOOK_URL', '/subscription/hook/')
+            app.add_url_rule(
+                webhook_url,
+                'stripe_checkout_session_completed_webhook',
+                stripe_checkout_session_completed_webhook
+            )
+
+        if app.config.get('SUBSCRIPTION_CLI_ENABLED'):
+            app.cli.add_command(subscription_cli)
