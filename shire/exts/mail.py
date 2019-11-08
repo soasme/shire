@@ -1,5 +1,14 @@
 import requests
 
+class Shell:
+
+    def send_mail(self, from_, to, subject, text):
+        print(f"""Send mail (mailer: shell)
+From: {from_}
+To: {to}
+Subject: {subject}
+Text: {text}""")
+
 class Mailgun:
 
     def __init__(self, key, base_url, timeout=10):
@@ -34,7 +43,8 @@ class Mail:
                 base_url=app.config.get('MAILGUN_BASE_URL', 'https://api.mailgun.net/v3'),
             )
         else:
-            raise ValueError('Missing mailer configurations.')
+            app.logger.warning('No mailer provided. The default shell mailer is activated.')
+            self.mailer = Shell()
 
     def send_mail(self, from_, to, subject, text):
         if not hasattr(self, 'mailer'): raise AttributeError('mailer not initialized.')
