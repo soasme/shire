@@ -20,12 +20,13 @@ class Mailgun:
 class Mail:
 
     def __init__(self, app=None):
-        if not app:
+        self.app = app
+        if app:
             self.init_app(app)
 
     def init_app(self, app):
         self.app = app
-        self.app.extensions['mail'] = self
+        app.extensions['mail'] = self
 
         if app.config.get('MAILGUN_API_KEY'):
             self.mailer = Mailgun(

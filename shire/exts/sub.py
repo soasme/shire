@@ -97,7 +97,8 @@ class Subscription:
             self.init_app(app)
 
     def init_app(self, app):
-        app.extensions['subscription'] = app
+        self.app = app
+        app.extensions['sub'] = self
 
         if app.config.get('SUBSCRIPTION_WEBHOOK_ENABLED'):
             webhook_url = app.config.get('SUBSCRIPTION_WEBHOOK_URL', '/subscription/hook/')

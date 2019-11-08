@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from decouple import config
 
 from shire.exts.sub import Subscription
+from shire.exts.mail import Mail
 
 __DIR__ = Path(__file__) / ".."
 __STATIC_DIR__ = __DIR__ / "static"
@@ -17,6 +18,7 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 celery = Celery(__name__)
 sub = Subscription()
+mail = Mail()
 
 def create_celery(**kwargs):
     app = create_app()
@@ -55,6 +57,7 @@ def create_app():
         'SUBSCRIPTION_WEBHOOK_ENABLED': config('SUBSCRIPTION_WEBHOOK_ENABLED', cast=bool, default=True),
         'SUBSCRIPTION_WEBHOOK_URL': config('SUBSCRIPTION_WEBHOOK_URL', default='/subscription/hook/'),
         'SUBSCRIPTION_CLI_ENABLED': config('SUBSCRIPTION_CLI_ENABLED', cast=bool, default=True),
+        'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })
     db.init_app(app)
@@ -62,6 +65,7 @@ def create_app():
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
     bcrypt.init_app(app)
     sub.init_app(app)
+    mail.init_app(app)
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,
         root=__STATIC_DIR__.resolve()
