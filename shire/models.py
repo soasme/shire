@@ -30,7 +30,7 @@ class Category(enum.Enum):
 
 class User(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
-    username = db.Column(db.String(128), nullable=False, unique=True)
+    username = db.Column(db.String(128), nullable=True, unique=True)
     nickname = db.Column(db.String(128))
     email = db.Column(db.String(256), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
@@ -39,9 +39,9 @@ class User(db.Model):
     is_charged = db.Column(db.Boolean, nullable=False, default=False)
 
     @classmethod
-    def new(self, username, email, nickname, password, autocommit=True):
+    def new(cls, username, email, nickname, password, autocommit=True):
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-        user = User(username=username, email=email,
+        user = cls(username=username, email=email,
                 nickname=nickname, password=password_hash)
         if autocommit:
             try:
@@ -51,6 +51,33 @@ class User(db.Model):
             except IntegrityError:
                 db.session.rollback()
                 raise ExistingError(username)
+        return user
+
+    @classmethod
+    def present(cls, email):
+        """Make sure a user record with the given email addr exists.
+
+        * If user exists, it makes sure `is_charged` being true.
+        * Otherwise, it'll add a new user record with is_charged=true.
+
+        This method has no side-effect on a paid user.
+        """
+        user = cls.query.filter_by(email=email).first()
+        if user:
+            if not user.is_charged:
+                user.is_charged = True
+                db.session.add(user)
+                db.session.commit()
+            return user
+        user = cls(email=email, password='', nickname='', username=None, is_charged=is_charged)
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            user.is_charged = True
+            db.session.add(user)
+            db.session.commit()
         return user
 
 class UserSubscription(db.Model):

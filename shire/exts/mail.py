@@ -43,7 +43,6 @@ class Mail:
                 base_url=app.config.get('MAILGUN_BASE_URL', 'https://api.mailgun.net/v3'),
             )
         else:
-            app.logger.warning('No mailer provided. The default shell mailer is activated.')
             self.mailer = Shell()
 
     def send_mail(self, from_, to, subject, text):
