@@ -2,12 +2,12 @@ import requests
 
 class Shell:
 
-    def send_mail(self, from_, to, subject, text):
+    def send_mail(self, from_, to, subject, html):
         print(f"""Send mail (mailer: shell)
 From: {from_}
 To: {to}
 Subject: {subject}
-Text: {text}""")
+Html: {html}""")
 
 class Mailgun:
 
@@ -17,12 +17,12 @@ class Mailgun:
         self.timeout = timeout
         self.session = requests.Session()
 
-    def send_mail(self, from_, to, subject, text):
+    def send_mail(self, from_, to, subject, html):
         return self.session.post(f'{self.base_url}/messages', data={
             'from': from_,
             'to': to,
             'subject': subject,
-            'text': text
+            'html': html,
         }, auth=('api', self.key), timeout=self.timeout)
 
 
@@ -45,6 +45,6 @@ class Mail:
         else:
             self.mailer = Shell()
 
-    def send_mail(self, from_, to, subject, text):
+    def send_mail(self, from_, to, subject, html):
         if not hasattr(self, 'mailer'): raise AttributeError('mailer not initialized.')
-        return self.mailer.send_mail(from_, to, subject, text)
+        return self.mailer.send_mail(from_, to, subject, html)
