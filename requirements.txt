@@ -4,6 +4,8 @@ flask==1.1.1
 flask-sqlalchemy==2.4.1
 flask-bcrypt==0.7.1
 gunicorn==19.9.0
+gevent==1.4.0
+blinker==1.4
 psycopg2==2.8.3
 stripe==2.37.2
 whitenoise==4.1.4
