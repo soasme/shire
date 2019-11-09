@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from decouple import config
 
-from shire.exts.sub import Subscription
+from shire.exts.sub import Subscription, checkout_session_completed
 from shire.exts.mail import Mail
 
 __DIR__ = Path(__file__) / ".."
@@ -34,7 +34,7 @@ def create_celery(**kwargs):
 def create_app():
     from shire.core import db, bcrypt
     from shire.models import Category, User, Thing, ThingNote
-    from shire import views
+    from shire import views, tasks
 
     app = Flask(__name__)
     app.config.update({
@@ -60,12 +60,19 @@ def create_app():
         'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })
+
     db.init_app(app)
+
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
+
     bcrypt.init_app(app)
+
     sub.init_app(app)
+    checkout_session_completed.connect(tasks.provision_user_account.delay)
+
     mail.init_app(app)
+
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,
         root=__STATIC_DIR__.resolve()
@@ -108,4 +115,5 @@ def create_app():
     app.add_url_rule('/account/', 'account', views.account)
     app.add_url_rule('/account/', 'update_account', views.update_account, methods=['POST'])
     app.add_url_rule('/v1/things/<int:id>/share/', 'share_thing', views.share_thing, methods=['POST'])
+
     return app
