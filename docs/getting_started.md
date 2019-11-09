@@ -21,6 +21,7 @@ FLASK_APP=shire/app.py
 Run the marksthfun stack:
 
 ```bash
+$ docker-compose build
 $ docker-compose up -d
 ```
 
@@ -46,6 +47,24 @@ $ docker-compose exec web poetry run flask shell
 
 ```bash
 $ docker-compose exec web poetry run flask routes
+```
+
+## Reload && Restart
+
+```bash
+(The pid might change. It'll be indicated in web log: `Listening at: http://0.0.0.0:5000 (11)`)
+$ docker-compose exec web kill -HUP 11
+
+$ docker-compose restart web
+```
+
+## Add new dependency
+
+```bash
+$ docker-compose run --rm web bash
+# poetry add blinker
+# exit
+$ docker-compose build
 ```
 
 ## Update Frodo
