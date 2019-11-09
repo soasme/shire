@@ -77,6 +77,7 @@ def create_app():
     app.template_filter('from_now')(views.from_now)
 
     app.before_request(views.setup_globals)
+    app.teardown_request(views.auto_rollback)
 
     app.add_url_rule('/', 'index', views.index)
     app.add_url_rule('/logout/', 'logout', views.logout)

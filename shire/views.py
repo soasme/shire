@@ -35,6 +35,11 @@ def from_now(dt):
 def setup_globals():
     g.user = session.get('uid') and User.query.filter_by(username=session['uid']).first()
 
+def auto_rollback(exception):
+    if exception:
+        db.session.rollback()
+    db.session.remove()
+
 def index():
     error = session.pop('error.login', '')
     return render_template('index.html', error=error)
