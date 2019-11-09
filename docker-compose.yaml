@@ -2,12 +2,14 @@ version: "3.7"
 services:
   web:
     build: {dockerfile: "Dockerfile", context: "./"}
-    command: poetry run gunicorn -w 4 -b 0.0.0.0:5000 shire.app:app
+    command: poetry run gunicorn -k gevent -b 0.0.0.0:5000 shire.app:app
     ports:
       - 5000:5000
     volumes:
       - .:/app
     env_file: .env
+  cache:
+    image: redis:5.0.6-alpine
   db:
     image: postgres:9.6-alpine
     environment:
