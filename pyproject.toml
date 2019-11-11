@@ -20,6 +20,7 @@ celery = "^4.3"
 gevent = "^1.4"
 blinker = "^1.4"
 redis = "^3.3"
+flower = "^0.9.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
