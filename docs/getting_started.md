@@ -54,7 +54,7 @@ $ docker-compose exec app poetry run flask routes
 ```bash
 $ docker-compose exec app poetry run bash
 # ps aux|grep gunicorn|head -1|awk '{print $2}'|xargs kill -HUP
-# ps aux|grep celery|head -1|awk '{print $2}'|xargs kill -HUP
+# ps aux|grep 'celery worker'|head -1|awk '{print $2}'|xargs kill -HUP
 ```
 
 ## Restart
@@ -71,6 +71,26 @@ $ docker-compose run --rm app bash
 # exit
 $ docker-compose build
 ```
+
+## Ping Worker
+
+```bash
+$ docker-compose exec app poetry run flask shell
+>>> from shire.tasks import ping
+>>> r = ping.delay()
+>>> r
+<AsyncResult: e62e0305-209c-458f-aa47-cb2fd789f1aa>
+>>> r.result
+'PONG'
+```
+
+You should see logs in `bg` process, something like below.
+
+```
+app_1    | 09:27:38 bg.1   | [2019-11-11 09:27:38,683: WARNING/ForkPoolWorker-4] PING SUCCESS
+```
+
+You should also see some stats in [flower dashboard](http://127.0.0.1:5555/dashboard) and [flower tasks](http://127.0.0.1:5555/tasks) changed.
 
 ## Update Frodo
 

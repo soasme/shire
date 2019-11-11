@@ -1,7 +1,14 @@
+import sys
 from flask import current_app
 
 from shire.core import db, mail, celery
 from shire.models import User
+
+@celery.task
+def ping():
+    sys.stderr.write("PING SUCCESS")
+    sys.stderr.flush()
+    return 'PONG'
 
 @celery.task
 def provision_user_account(session=None, email=None, *args, **kwargs):
