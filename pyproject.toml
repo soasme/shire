@@ -2,7 +2,7 @@
 name = "shire"
 version = "0.1.0"
 description = "The website for marksth.fun"
-authors = ["soasme <soasme@gmail.com>"]
+authors = ["Ju Lin <ju@marksth.fun>"]
 license = "AGPLv3"
 
 [tool.poetry.dependencies]
@@ -29,7 +29,7 @@ honcho = "^1.0"
 [tool.poetry.scripts]
 web = 'gunicorn.app.wsgiapp:run'
 worker = 'celery.__main__:main'
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-
