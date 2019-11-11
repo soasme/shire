@@ -19,11 +19,17 @@ whitenoise = "^4.1.4"
 celery = "^4.3"
 gevent = "^1.4"
 blinker = "^1.4"
+redis = "^3.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 webtest = "^2.0"
+honcho = "^1.0"
 
+[tool.poetry.scripts]
+web = 'gunicorn.app.wsgiapp:run'
+worker = 'celery.__main__:main'
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+

@@ -6,3 +6,4 @@ WORKDIR /app
 ADD pyproject.toml /app/pyproject.toml
 ADD poetry.lock /app/poetry.lock
 RUN poetry install
+ENTRYPOINT ["poetry", "run"]
