@@ -28,7 +28,7 @@ $ docker-compose up -d
 ## Populate Testing Data
 
 ```bash
-$ docker-compose exec web poetry run python scripts/reset.py
+$ docker-compose exec app python scripts/reset.py
 ```
 
 ## Inspect
@@ -40,28 +40,33 @@ Check the website running in local: <http://127.0.0.1:5000>.
 Open interactive shell.
 
 ```bash
-$ docker-compose exec web poetry run flask shell
+$ docker-compose exec app poetry run flask shell
 ```
 
 ## Show Routes
 
 ```bash
-$ docker-compose exec web poetry run flask routes
+$ docker-compose exec app poetry run flask routes
 ```
 
-## Reload && Restart
+## Reload
 
 ```bash
-(The pid might change. It'll be indicated in web log: `Listening at: http://0.0.0.0:5000 (11)`)
-$ docker-compose exec web kill -HUP 11
+$ docker-compose exec app poetry run bash
+# ps aux|grep gunicorn|head -1|awk '{print $2}'|xargs kill -HUP
+# ps aux|grep celery|head -1|awk '{print $2}'|xargs kill -HUP
+```
 
-$ docker-compose restart web
+## Restart
+
+```bash
+$ docker-compose restart app
 ```
 
 ## Add new dependency
 
 ```bash
-$ docker-compose run --rm web bash
+$ docker-compose run --rm app bash
 # poetry add blinker
 # exit
 $ docker-compose build
