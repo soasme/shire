@@ -47,6 +47,7 @@ def create_app():
         'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
         'BLOG_URL': config('BLOG_URL', default='https://blog.marksth.fun'),
         'GITHUB_URL': config('GITHUB_URL', default='https://github.com/marksthfun/shire'),
+        'SUPPORT_EMAIL': config('SUPPORT_EMAIL', default='support@marksth.fun'),
         'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
         'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
         'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
