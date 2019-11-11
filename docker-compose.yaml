@@ -1,8 +1,9 @@
 version: "3.7"
 services:
-  web:
+  app:
+    image: shire:latest
     build: {dockerfile: "Dockerfile", context: "./"}
-    command: poetry run gunicorn -k gevent -b 0.0.0.0:5000 shire.app:app
+    command: honcho start
     ports:
       - 5000:5000
     volumes:

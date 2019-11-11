@@ -22,7 +22,6 @@ mail = Mail()
 
 def create_celery(**kwargs):
     app = create_app()
-    celery.conf.update(app.config)
     class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):
             with app.app_context():
@@ -41,6 +40,8 @@ def create_app():
         # REQUIRED
         'SECRET_KEY': config('SECRET_KEY'),
         'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
+        'BROKER_URL': config('BROKER_URL'),
+        'CELERY_RESULT_BACKEND': config('CELERY_RESULT_BACKEND'),
         # OPTIONAL
         'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
         'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
@@ -62,6 +63,8 @@ def create_app():
     })
 
     db.init_app(app)
+
+    celery.conf.update(app.config)
 
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
