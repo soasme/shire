@@ -100,6 +100,21 @@ Export Procfile to supervisor.d conf.
 $ docker-compose exec app poetry run honcho export supervisord data/supervisor.d --app=shire --log=/var/www/shire/shared/logs
 ```
 
+## Use Stripe CLI
+
+Docs: <https://stripe.com/docs/stripe-cli>.
+
+With the help of stripe CLI, we can let stripe call webhook without using a third-party tunnel.
+The stripe listening process is not enabled in procfile by default.
+When needed, please do yourself by following below procedure.
+
+```bash
+$ docker-compose exec app poetry run bash
+[shire@ed3254aa11b6 current]$ stripe login
+
+[shire@ed3254aa11b6 current]$ stripe listen --forward-to http://localhost:5000/subscription/hook/
+```
+
 ## Update Frodo
 
 (For admin only)
