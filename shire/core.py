@@ -20,21 +20,22 @@ celery = Celery(__name__)
 sub = Subscription()
 mail = Mail()
 
-def create_celery(**kwargs):
-    app = create_app()
-    class ContextTask(celery.Task):
+def init_celery(app, celery):
+    TaskBase = celery.Task
+    class AppContextTask(TaskBase):
+        abstract = True
         def __call__(self, *args, **kwargs):
             with app.app_context():
-                return self.run(*args, **kwargs)
-    celery.Task = ContextTask
-    return celery
-
+                try:
+                    return TaskBase.__call__(self, *args, **kwargs)
+                except Exception as e:
+                    db.session.rollback()
+                    raise e
+                finally:
+                    db.session.remove()
+    celery.Task = AppContextTask
 
 def create_app():
-    from shire.core import db, bcrypt
-    from shire.models import Category, User, Thing, ThingNote
-    from shire import views, tasks
-
     app = Flask(__name__)
     app.config.update({
         # REQUIRED
@@ -66,6 +67,7 @@ def create_app():
     db.init_app(app)
 
     celery.conf.update(app.config)
+    init_celery(app, celery)
 
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
@@ -73,7 +75,6 @@ def create_app():
     bcrypt.init_app(app)
 
     sub.init_app(app)
-    checkout_session_completed.connect(tasks.provision_user_account.delay)
 
     mail.init_app(app)
 
@@ -81,6 +82,9 @@ def create_app():
         app.wsgi_app,
         root=__STATIC_DIR__.resolve()
     )
+
+    from shire.models import Category, User, Thing, ThingNote
+    from shire import views, tasks
 
     app.jinja_env.globals['Category'] = Category
 
@@ -119,6 +123,8 @@ def create_app():
     app.add_url_rule('/account/', 'account', views.account)
     app.add_url_rule('/account/', 'update_account', views.update_account, methods=['POST'])
     app.add_url_rule('/v1/things/<int:id>/share/', 'share_thing', views.share_thing, methods=['POST'])
+
+    checkout_session_completed.connect(tasks.sync_stripe_session.delay)
 
     celery.add_periodic_task(30.0, tasks.ping, expires=10.0)
     celery.add_periodic_task(300.0, tasks.poll_payments, expires=60.0)
