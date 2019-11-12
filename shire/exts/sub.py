@@ -62,7 +62,7 @@ def stripe_checkout_session_completed_webhook():
         abort(400)
 
     if event['type'] == 'checkout.session.completed':
-        checkout_session_completed.send(session=event['data']['object'])
+        checkout_session_completed.send(event['data']['object'])
 
     return jsonify({'received': True})
 
@@ -79,7 +79,7 @@ def stripe_checkout_session_completed_poll(window=60*60):
     })
     for event in events.auto_paging_iter():
         session = event['data']['object']
-        checkout_session_completed.send(session=event['data']['object'])
+        checkout_session_completed.send(session)
 
 @subscription_cli.command('poll')
 @click.option('--window', '-w', type=int, default=60*60)
@@ -107,7 +107,8 @@ class Subscription:
             app.add_url_rule(
                 webhook_url,
                 'stripe_checkout_session_completed_webhook',
-                stripe_checkout_session_completed_webhook
+                stripe_checkout_session_completed_webhook,
+                methods=['POST'],
             )
 
         if app.config.get('SUBSCRIPTION_CLI_ENABLED'):
