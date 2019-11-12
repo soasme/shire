@@ -3,10 +3,13 @@ WARNING: The tasks defined in this module is supposed to be idempotent.
 It should be safe to re-run these tasks at any time.
 """
 import sys
-from flask import current_app
+
+import stripe
+from loguru import logger
+from flask import current_app, url_for
 
 from shire.core import db, mail, celery
-from shire.models import User
+from shire.models import User, Customer, SubscriptionStatus, CustomerSubscription
 
 @celery.task
 def ping():
@@ -15,24 +18,39 @@ def ping():
     return 'PONG'
 
 @celery.task
-def provision_user_account(session=None, email=None, *args, **kwargs):
-    user_email = email or session['customer_email']
+def sync_stripe_session(session):
+    session_id = session['id']
+    customer_id = session['customer']
+    assert customer_id, 'no customer id in session'
+
+    stripe_customer = stripe.Customer.retrieve(customer_id)
+    if stripe_customer.get('deleted'):
+        logger.info("session({}) customer doesn't exist anymore: {}", session_id, customer_id)
+        return
+
+    user_email = stripe_customer['email']
     assert user_email, 'no email detected.'
-    user = User.present(user_email)
-    # TODO: generate an url
-    mail.send_mail(**{
-        'from_': current_app.config('MAIL_FROM'),
-        'to': [email],
-        'subject': f'Welcome to {current_app.config["SITE_NAME"]}',
-        'html': f'''
-<p>This is your registration link: <a href="{ url }">{ url }</a></p>.
-<p>If you can't click the link, please copy this link to your browser.</p>.
-<p>If you encounter a problem, you can ask via {current_app.config['SUPPORT_EMAIL']}.</p>
-<p></p>
-<p>Best regards,</p>
-<p>{current_app.config['SITE_NAME']}</p>
-        '''
-    })
+
+    subscription_id = session['subscription']
+    assert subscription_id, 'no subscription id in session'
+
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    status = getattr(SubscriptionStatus, stripe_subscription['status'])
+
+    customer = Customer(
+        id=customer_id,
+        email=user_email,
+        payload=stripe_customer
+    )
+    subscription = CustomerSubscription(
+        id=subscription_id,
+        customer_id=subscription_id,
+        status=status,
+        payload=stripe_subscription
+    )
+    db.session.add(customer)
+    db.session.add(subscription)
+    db.session.commit()
 
 @celery.task
 def poll_payments(window=60*60):

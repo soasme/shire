@@ -28,6 +28,26 @@ class Category(enum.Enum):
         if self.name == 'tvshow': return 'TV show'
         else: return self.name
 
+class SubscriptionStatus(enum.Enum):
+    incomplete = 1
+    incomplete_expired = 2
+    trialing = 3
+    active = 4
+    past_due = 5
+    canceled = 6
+    unpaid = 7
+
+class Customer(db.Model):
+    id = db.Column(db.String(64), nullable=False, primary_key=True)
+    email = db.Column(db.String(256), nullable=False)
+    payload = db.Column(JSON)
+
+class CustomerSubscription(db.Model):
+    id = db.Column(db.String(64), nullable=False, primary_key=True)
+    customer_id = db.Column(db.String(64), nullable=False)
+    status = db.Column(Enum(SubscriptionStatus), nullable=False)
+    payload = db.Column(JSON)
+
 class User(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     username = db.Column(db.String(128), nullable=False, unique=True)
@@ -51,33 +71,6 @@ class User(db.Model):
             except IntegrityError:
                 db.session.rollback()
                 raise ExistingError(username)
-        return user
-
-    @classmethod
-    def present(cls, email):
-        """Make sure a user record with the given email addr exists.
-
-        * If user exists, it makes sure `is_charged` being true.
-        * Otherwise, it'll add a new user record with is_charged=true.
-
-        This method has no side-effect on a paid user.
-        """
-        user = cls.query.filter_by(email=email).first()
-        if user:
-            if not user.is_charged:
-                user.is_charged = True
-                db.session.add(user)
-                db.session.commit()
-            return user
-        user = cls(email=email, password='', nickname='', username=None, is_charged=is_charged)
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            user.is_charged = True
-            db.session.add(user)
-            db.session.commit()
         return user
 
 class UserSubscription(db.Model):
