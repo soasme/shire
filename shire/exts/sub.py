@@ -33,6 +33,8 @@ Example::
    multiple times.
 """
 
+from time import time
+
 import stripe
 from blinker import Namespace
 import click
@@ -73,7 +75,7 @@ def stripe_checkout_session_completed_poll(window=60*60):
     https://stripe.com/docs/payments/checkout/fulfillment#polling
     """
     events = stripe.Event.list(type = 'checkout.session.completed', created = {
-        'gte': int(time.time() - window),
+        'gte': int(time() - window),
     })
     for event in events.auto_paging_iter():
         session = event['data']['object']
