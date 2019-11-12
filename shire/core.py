@@ -121,5 +121,6 @@ def create_app():
     app.add_url_rule('/v1/things/<int:id>/share/', 'share_thing', views.share_thing, methods=['POST'])
 
     celery.add_periodic_task(30.0, tasks.ping, expires=10.0)
+    celery.add_periodic_task(300.0, tasks.poll_payments, expires=60.0)
 
     return app

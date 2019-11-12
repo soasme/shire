@@ -1,3 +1,7 @@
+"""
+WARNING: The tasks defined in this module is supposed to be idempotent.
+It should be safe to re-run these tasks at any time.
+"""
 import sys
 from flask import current_app
 
@@ -29,3 +33,8 @@ def provision_user_account(session=None, email=None, *args, **kwargs):
 <p>{current_app.config['SITE_NAME']}</p>
         '''
     })
+
+@celery.task
+def poll_payments(window=60*60):
+    from shire.exts.sub import stripe_checkout_session_completed_poll
+    stripe_checkout_session_completed_poll(window)
