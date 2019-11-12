@@ -12,3 +12,4 @@ whitenoise==4.1.4
 celery==4.3
 redis==3.3.11
 flower==0.9.3
+celery-redbeat==0.13.0

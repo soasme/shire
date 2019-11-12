@@ -22,6 +22,7 @@ blinker = "^1.4"
 redis = "^3.3"
 flower = "^0.9.3"
 honcho = "^1.0"
+celery-redbeat = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
