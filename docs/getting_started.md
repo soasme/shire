@@ -115,6 +115,31 @@ $ docker-compose exec app poetry run bash
 [shire@ed3254aa11b6 current]$ stripe listen --forward-to http://localhost:5000/subscription/hook/
 ```
 
+Or, if you have logged in:
+
+```bash
+$ docker-compose exec app stripe listen --forward-to http://127.0.0.1:5000/subscription/hook/
+```
+
+Note that you don't need this in production, instead, you should configure webhook in Stripe dashboard: <https://dashboard.stripe.com/test/webhooks>.
+
+You can also view events at <https://dashboard.stripe.com/test/events>.
+
+## Manually Re-Poll Payments
+
+```bash
+$ docker-compose exec app poetry run flask shell
+>>> from shire.tasks import *
+>>> poll_payments.delay()
+<AsyncResult: 7d7ee242-e84a-4e66-abca-97a56de0e47f>
+```
+
+Or,
+
+```bash
+$ docker-compose exec app poetry run celery -A shire.worker:celery call shire.tasks.poll_payments
+```
+
 ## Update Frodo
 
 (For admin only)
