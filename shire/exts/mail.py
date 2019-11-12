@@ -36,6 +36,7 @@ class Mail:
     def init_app(self, app):
         self.app = app
         app.extensions['mail'] = self
+        self.default_mailer = Shell()
 
         if app.config.get('MAILGUN_API_KEY'):
             self.mailer = Mailgun(
@@ -43,7 +44,7 @@ class Mail:
                 base_url=app.config.get('MAILGUN_BASE_URL', 'https://api.mailgun.net/v3'),
             )
         else:
-            self.mailer = Shell()
+            self.mailer = self.default_mailer
 
     def send_mail(self, from_, to, subject, html):
         if not hasattr(self, 'mailer'): raise AttributeError('mailer not initialized.')
