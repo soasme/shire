@@ -14,3 +14,4 @@ redis==3.3.11
 flower==0.9.3
 honcho==1.0
 celery-redbeat==0.13.0
+loguru==0.3.2
