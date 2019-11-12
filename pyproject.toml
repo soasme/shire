@@ -21,11 +21,11 @@ gevent = "^1.4"
 blinker = "^1.4"
 redis = "^3.3"
 flower = "^0.9.3"
+honcho = "^1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 webtest = "^2.0"
-honcho = "^1.0"
 
 [tool.poetry.scripts]
 web = 'gunicorn.app.wsgiapp:run'
