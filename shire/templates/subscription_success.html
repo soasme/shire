@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription Success{% endblock %}
+
+{% block content %}
+<h3>You have subscribed {{ config["SITE_NAME"] }}!</h3>
+
+<p>
+  You can complete your signup and set your username and password here:
+  <a href="{{ url_for('signup_page') }}">Signup</a>.
+</p>
+
+{% endblock %}

@@ -59,6 +59,12 @@ def explore():
     tags = Thing.get_public_tagset(things)
     return render_template('explore.html', things=things, tags=tags)
 
+def subscription_success_page():
+    return render_template('subscription_success.html')
+
+def subscription_cancel_page():
+    return render_template('subscription_cancel.html')
+
 def signup_page():
     return 'coming soon'
 
