@@ -51,6 +51,27 @@ def sync_stripe_session(session):
     db.session.add(customer)
     db.session.add(subscription)
     db.session.commit()
+    # TODO: set a key in cache for validation.
+
+def create_account(session):
+    email = session['email']
+    username = session['username']
+    password = session['password']
+    password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    user = User.query.filter(User.email==email | User.username==username).first()
+    if user:
+        raise ValueError('Re-creating account: (email|username)')
+
+    user = User(username=username, email=email, password=password_hash)
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+        return user
+    except IntegrityError:
+        db.session.rollback()
+        raise ValueError('Re-creating account: (email|username)')
 
 @celery.task
 def poll_payments(window=60*60):
