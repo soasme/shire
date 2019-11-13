@@ -25,7 +25,7 @@ def sync_stripe_session(session):
 
     stripe_customer = stripe.Customer.retrieve(customer_id)
     if stripe_customer.get('deleted'):
-        logger.info("session({}) customer doesn't exist anymore: {}", session_id, customer_id)
+        logger.info("Session({}) customer doesn't exist anymore: {}. Ignore sync this stripe session.", session_id, customer_id)
         return
 
     user_email = stripe_customer['email']
