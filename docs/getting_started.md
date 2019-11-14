@@ -92,6 +92,13 @@ app_1    | 09:27:38 bg.1   | [2019-11-11 09:27:38,683: WARNING/ForkPoolWorker-4]
 
 You should also see some stats in [flower dashboard](http://127.0.0.1:5555/dashboard) and [flower tasks](http://127.0.0.1:5555/tasks) changed.
 
+## Export Requirements
+
+```bash
+$ docker-compose exec app bash
+$ echo "# updated `date`." >> requirements.txt && poetry show|awk '{print $1 "==" $2}' >> requirements.txt
+```
+
 ## Export Supervisor Conf
 
 Export Procfile to supervisor.d conf.
