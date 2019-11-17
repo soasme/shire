@@ -1,0 +1,32 @@
+{% from "flask_user/_macros.html" import render_checkbox_field, render_submit_field %}
+
+{%- macro login_form(form) -%}
+<form action="{{ url_for('user.login') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+
+    <label for="{{form.username.id}}">{{form.username.label.text}}</label>
+    {{ form.username(tabindex=110, autocomplete='off') }}
+    {% for e in (form.username.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{form.password.id}}">{{form.password.label.text}}</label>
+    {{ form.password(tabindex=110, autocomplete='off') }}
+    {% for e in (form.password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    {% if config.USER_ENABLE_REMEMBER_ME %}
+    {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
+    {% endif %}
+
+    <p><a href="{{ url_for('user.forgot_password') }}" tabindex='0'>
+      {%trans%}Forgot your Password?{%endtrans%}</a></p>
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=150>Sign in</button>
+  </fieldset>
+</form>
+{%- endmacro %}
