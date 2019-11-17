@@ -6,6 +6,7 @@ from celery import Celery
 from whitenoise import WhiteNoise
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_user import UserManager
 from decouple import config
 
 from shire.exts.sub import Subscription, checkout_session_completed
@@ -60,6 +61,13 @@ def create_app():
         'SUBSCRIPTION_WEBHOOK_ENABLED': config('SUBSCRIPTION_WEBHOOK_ENABLED', cast=bool, default=True),
         'SUBSCRIPTION_WEBHOOK_URL': config('SUBSCRIPTION_WEBHOOK_URL', default='/subscription/hook/'),
         'SUBSCRIPTION_CLI_ENABLED': config('SUBSCRIPTION_CLI_ENABLED', cast=bool, default=True),
+        'USER_APP_NAME': config('SITE_NAME', default='MarkSthFun'),
+        'USER_ENABLE_EMAIL': config('USER_ENABLE_EMAIL', default=False),
+        'USER_ENABLE_USERNAME': config('USER_ENABLE_USERNAME', default=True),
+        'USER_REQUIRE_RETYPE_PASSWORD': config('USER_REQUIRE_RETYPE_PASSWORD', default=False),
+        'USER_ENABLE_FORGOT_PASSWORD': config('USER_ENABLE_FORGOT_PASSWORD', default=True),
+        'USER_LOGIN_TEMPLATE': 'login.html',
+        'USER_REGISTER_TEMPLATE': 'register.html',
         'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })
@@ -84,6 +92,9 @@ def create_app():
     )
 
     from shire.models import Category, User, Thing, ThingNote
+
+    user_manager = UserManager(app, db, User)
+
     from shire import views, tasks
 
     app.jinja_env.globals['Category'] = Category

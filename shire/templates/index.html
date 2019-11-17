@@ -19,36 +19,17 @@
     It has as few images as possible to avoid you from being tracked by other websites. It secures your connections via HTTPS to avoid you from being tampered by malicious parties.
     </p>
     <p>
-      You pay ${{ config.ANNUAL_FEE }} per year to get rid of data being harvested by big companies.
+      You pay ${{ config.ANNUAL_FEE }} per year to get rid of data being harvested by big companies. You can use the site for free the next year if you invite a user.
+      {% if current_user.is_anonymous and config.SIGNUP_ENABLED %}
+      <a href="{{ url_for('user.register') }}">Sign up for free</a>.
+      {% endif %}
     </p>
-    <p>
-      You can use the site for free the next year if you invite a user.
-    </p>
-    {% if not session.get('uid') and config.SIGNUP_ENABLED %}
-    {{ widget_signup.render_signup_button() }}
-    {% endif %}
     <p>
     The site is <a href="{{ config.GITHUB_URL }}">open/libre software</a> under GNU Affero GPL license.
     {% if config.BLOG_URL %}
       Please read our <a href="{{ config.BLOG_URL }}">blog</a> if you want to know more.
     {% endif %}
     </p>
-  </div>
-
-  <div class="pure-u-1-3">
-    {% if not session.get('uid') %}
-    <h3>Login</h3>
-    <form method="post" action="/login/" id="login-form" class="pure-form pure-form-stacked">
-      <input type="text" id="username" name="username" placeholder="username"/>
-      <input type="password" id="password" name="password" placeholder="password" />
-      <div><input type="submit" value="Login" class="pure-button"/></div>
-    </form>
-
-    <div id="login-error">
-      <span class="pure-form-message">{{ error }}</span>
-    </div>
-    {% endif %}
-
   </div>
 </div>
 {% endblock %}

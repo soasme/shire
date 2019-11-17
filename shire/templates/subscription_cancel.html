@@ -6,7 +6,7 @@
 {% block content %}
 <h3>Your subscription has canceled.</h3>
 
-{% if not session.get('uid') and config.SIGNUP_ENABLED %}
+{% if not current_user and config.SIGNUP_ENABLED %}
 <p>Note that you can signup for free for the first 30 days. During the trial period, you won't be charged. Give it a try:</p>
 {{ widget_signup.render_signup_button() }}
 {% endif %}

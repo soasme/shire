@@ -6,8 +6,8 @@ from shire.models import User, Thing, ThingNote, Category
 def _populate_db():
     """Populate testing data into database. """
 
-    user = User.new('soasme', 'soasme@gmail.com', 'Ju', '111111')
-    user.is_charged = True
+    user = User.new('soasme', 'soasme@gmail.com', '111111')
+    user.active = True
     db.session.add(user)
     db.session.commit()
 
