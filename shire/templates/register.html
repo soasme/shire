@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% from "widget_user.html" import register_form %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<h1>Sign Up</h1>
+{{ register_form(form) }}
+{% endblock %}
+

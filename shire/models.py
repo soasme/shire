@@ -5,6 +5,7 @@ from operator import add
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_user import UserMixin
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 from sqlalchemy.dialects.postgresql.json import JSONB
@@ -48,30 +49,27 @@ class CustomerSubscription(db.Model):
     status = db.Column(Enum(SubscriptionStatus), nullable=False)
     payload = db.Column(JSON)
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     username = db.Column(db.String(128), nullable=False, unique=True)
-    nickname = db.Column(db.String(128))
-    email = db.Column(db.String(256), nullable=False, unique=True)
+    email = db.Column(db.String(256), nullable=True, unique=True)
     password = db.Column(db.String(128), nullable=False)
-    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     is_private = db.Column(db.Boolean, nullable=False, default=False)
-    is_charged = db.Column(db.Boolean, nullable=False, default=False)
+    active = db.Column(db.Boolean, nullable=False, default=False)
+    email_confirmed_at = db.Column(db.DateTime())
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     @classmethod
-    def new(cls, username, email, nickname, password, autocommit=True):
+    def new(cls, username, email, password):
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-        user = cls(username=username, email=email,
-                nickname=nickname, password=password_hash)
-        if autocommit:
-            try:
-                db.session.add(user)
-                db.session.commit()
-                return user
-            except IntegrityError:
-                db.session.rollback()
-                raise ExistingError(username)
-        return user
+        user = cls(username=username, email=email, password=password_hash)
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return user
+        except IntegrityError:
+            db.session.rollback()
+            raise ValueError({'email': email, 'username': username})
 
 class UserSubscription(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)

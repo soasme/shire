@@ -30,3 +30,40 @@
   </fieldset>
 </form>
 {%- endmacro %}
+
+{%- macro register_form(form) -%}
+<form action="{{ url_for('user.register') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+
+    <label for="{{form.username.id}}">{{form.username.label.text}}</label>
+    {{ form.username(tabindex=110, autocomplete='off') }}
+    {% for e in (form.username.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    {% if config.USER_ENABLE_EMAIL %}
+    <label for="{{form.email.id}}">{{form.email.label.text}}</label>
+    {{ form.email(tabindex=110, autocomplete='off') }}
+    {% for e in (form.email.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+    {% endif %}
+
+    <label for="{{form.password.id}}">{{form.password.label.text}}</label>
+    {{ form.password(tabindex=110, autocomplete='off') }}
+    {% for e in (form.password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <p><a href="{{ url_for('user.login') }}" tabindex='0'>
+      {%trans%}Already registered? Sign in.{%endtrans%}</a></p>
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=150>
+      Sign Up
+    </button>
+  </fieldset>
+</form>
+{%- endmacro %}
