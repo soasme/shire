@@ -1,13 +1,15 @@
 <div class="header">
   <div class="home-menu pure-menu pure-menu-horizontal">
     <a class="pure-menu-heading" href="{{ url_for('index') }}">{{ config.SITE_NAME }}</a>
-    {% if session.get('uid') %}
-    <a class="pure-menu-heading" href="{{ url_for('profile', username=session['uid']) }}">Home</a>
+    {% if not current_user.is_anonymous %}
+    <a class="pure-menu-heading" href="{{ url_for('profile', username=current_user.username) }}">Home</a>
     {% endif %}
     <a class="pure-menu-heading" href="{{ url_for('explore') }}">Explore</a>
     <a class="pure-menu-heading" href="{{ url_for('guide') }}">Guide</a>
-    {% if session.get('uid') %}
-    <a href="{{ url_for('logout') }}" class="pure-menu-heading">Logout</a>
+    {% if not current_user.is_anonymous %}
+    <a href="{{ url_for('user.logout') }}" class="pure-menu-heading">Logout</a>
+    {% else %}
+    <a href="{{ url_for('user.login') }}" class="pure-menu-heading">Login</a>
     {% endif %}
   </div>
 </div>
