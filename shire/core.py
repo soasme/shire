@@ -105,7 +105,6 @@ def create_app():
     app.teardown_request(views.auto_rollback)
 
     app.add_url_rule('/', 'index', views.index)
-    app.add_url_rule('/logout/', 'logout', views.logout)
     app.add_url_rule('/explore/', 'explore', views.explore)
     app.add_url_rule('/guide/', 'guide', views.guide)
     app.add_url_rule('/about/', 'about', views.about)

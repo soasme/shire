@@ -6,7 +6,7 @@ import stripe
 from flask import (session, render_template, redirect,
                    current_app, jsonify, abort, request, g,
                    url_for, )
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from shire.core import db, bcrypt, __DIR__
 from shire.models import Thing, ThingNote, User, Category
@@ -47,10 +47,6 @@ def about(): return render_template('about.html')
 def privacy(): return render_template('privacy.html')
 def terms_of_service(): return render_template('tos.html')
 def faq(): return render_template('faq.html')
-
-def logout():
-    session.pop('uid', None)
-    return redirect('/')
 
 def explore():
     things = Thing.get_recent_all_things()
@@ -94,11 +90,9 @@ def profile(username):
             things_cnt=things_cnt, things=things, is_me=is_me,
             mark_error=mark_error, tags=tags)
 
+@login_required
 def mark():
     """Mark a new thing."""
-    if current_user.is_anonymous:
-        session['error.login'] = "You're not authorized. Please login."
-        return redirect('/')
     user_id = current_user.id
     category_name = request.form.get('category')
     if not hasattr(Category, category_name):
@@ -141,30 +135,26 @@ def thing_page(id):
     if not thing.shared and current_user != owner: abort(403)
     return render_template('thing.html', thing=thing)
 
+@login_required
 def update_thing_page(id):
-    if current_user.is_anonymous:
-        return jsonify({'code': 'not authenticated'}), 401
-
     thing = Thing.query.get(id)
     if not thing:
         return jsonify({'code': 'not_found'}), 404
 
-    if thincurrent_user_id != current_user.id:
+    if thing.user_id != current_user.id:
         return jsonify({'code': 'not authorized'}), 403
 
     error = session.pop('error.mark', '')
 
     return render_template('update_thing.html', thing=thing, error=error)
 
+@login_required
 def update_thing(id):
-    if current_user.is_anonymous:
-        return redirect('/')
-
     thing = Thing.query.get(id)
     if not thing:
         return 'not found', 404
 
-    if thincurrent_user_id != current_user.id:
+    if thing.user_id != current_user.id:
         return 'not authorized', 403
 
     category_name = request.form.get('category')
@@ -199,7 +189,7 @@ def update_thing(id):
     thing_note = ThingNote.query.get(thing.id)
     note_text = request.form.get('note')
     if not thing_note:
-        thing_note = ThingNote(thing_id=thing.id, user_id=thincurrent_user_id,
+        thing_note = ThingNote(thing_id=thing.id, user_id=thing.user_id,
                 text=note_text)
     else:
         thing_note.text = note_text
@@ -215,25 +205,25 @@ def update_thing(id):
 
     return redirect(url_for('thing_page', id=thing.id))
 
+@login_required
 def download_thing(id):
-    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
-    if thincurrent_user_id != current_user.id: abort(403)
+    if thing.user_id != current_user.id: abort(403)
     return jsonify(thing.to_simplejson())
 
+@login_required
 def delete_thing_page(id):
-    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
-    if thincurrent_user_id != current_user.id: abort(403)
+    if thing.user_id != current_user.id: abort(403)
     return render_template('delete_thing.html', thing=thing)
 
+@login_required
 def delete_thing(id):
     """Delete a thing
     """
-    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
     if not thing: abort(404)
-    if thincurrent_user_id != current_user.id: abort(403)
+    if thing.user_id != current_user.id: abort(403)
 
     db.session.delete(thing)
     thing_note = ThingNote.query.get(id)
@@ -289,13 +279,13 @@ def filter_user_things_by_category(username, category):
             things_cnt=None, things=things, is_me=is_me,
             mark_error='', tags=tags)
 
+@login_required
 def account():
-    if current_user.is_anonymous: abort(403)
     error = session.pop('error.update_account', '')
     return render_template('profile.html', error=error)
 
+@login_required
 def update_account():
-    if current_user.is_anonymous: abort(403)
     is_private = request.form.get('is_private') == 'on'
 
     current_user.is_private = is_private
