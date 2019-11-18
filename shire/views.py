@@ -130,9 +130,7 @@ def mark():
 def thing_page(id):
     thing = Thing.query.get(id)
     if not thing: abort(404)
-    owner = thincurrent_user
     if not thing.is_visible_by(current_user): abort(403)
-    if not thing.shared and current_user != owner: abort(403)
     return render_template('thing.html', thing=thing)
 
 @login_required
