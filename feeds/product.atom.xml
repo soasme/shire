@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>MarkSthFun Engineering Blog - Product</title><link href="https://blog.marksth.fun/" rel="alternate"></link><link href="https://blog.marksth.fun/feeds/product.atom.xml" rel="self"></link><id>https://blog.marksth.fun/</id><updated>2019-12-01T00:00:00+13:00</updated><entry><title>Mark Something Fun!</title><link href="https://blog.marksth.fun/docs/introduction.html" rel="alternate"></link><published>2019-12-01T00:00:00+13:00</published><updated>2019-12-01T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-12-01:/docs/introduction.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Make pie, or invent universe. &lt;a href="https://www.douban.com/people/soasme/"&gt;@soasme&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (&lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;).
+You can pronounce it as "Mark Something Fun".&lt;/p&gt;
+&lt;h2&gt;Motivate&lt;/h2&gt;
+&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, movies I have …&lt;/p&gt;</summary><content type="html">&lt;blockquote&gt;
+&lt;p&gt;Make pie, or invent universe. &lt;a href="https://www.douban.com/people/soasme/"&gt;@soasme&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (&lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;).
+You can pronounce it as "Mark Something Fun".&lt;/p&gt;
+&lt;h2&gt;Motivate&lt;/h2&gt;
+&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, movies I have watched, and albums I have listened. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cyber security law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. But I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough, really. Enough.&lt;/p&gt;
+&lt;p&gt;I could have marked my book on goodreads, marked my traces on google maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)&lt;/p&gt;
+&lt;p&gt;Since there is no tool / service in the market that fits me well, as an engineer, I started building my own.&lt;/p&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;So, this is it. In MarkSthFun, you can mark the books you have read, the movies you have watched,
+the albums you have listened, the games you have played, the places you have visited, the software you have used, the papers you have read, the concepts you have learned, etc.
+You can write notes for your marks and manage things by tags.
+You can decide whether to share your things publicly or not.
+You can discover fun things marked by fun people, of course, if they're willing to share.
+You can search marks by types, tags and keywords.&lt;/p&gt;
+&lt;h2&gt;Principles&lt;/h2&gt;
+&lt;p&gt;Below are the principles that I keep in mind when building this new website.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Marking is way more important than socializing.&lt;/li&gt;
+&lt;li&gt;Keep your data safe over the long term.&lt;/li&gt;
+&lt;li&gt;If you want to know more about a person, read his RSS feed.&lt;/li&gt;
+&lt;li&gt;You deserve a private account if you're an introverted person.&lt;/li&gt;
+&lt;li&gt;Unshare your mark if you don't to expose too much of your life traces.&lt;/li&gt;
+&lt;li&gt;No ads.&lt;/li&gt;
+&lt;li&gt;No third-party tracking.&lt;/li&gt;
+&lt;li&gt;No like, no vote, no comment, no retweet.&lt;/li&gt;
+&lt;li&gt;The fewer images displaying on the site the better.&lt;/li&gt;
+&lt;li&gt;Encrypt your requests when browsing.&lt;/li&gt;
+&lt;li&gt;Use boring technology stack for sane people.&lt;/li&gt;
+&lt;li&gt;Don't overkill.&lt;/li&gt;
+&lt;li&gt;Be alone. Develop and operate this site by a single-person team.&lt;/li&gt;
+&lt;li&gt;Be conservative on adding new features.&lt;/li&gt;
+&lt;li&gt;Pay for what you get. You'll need to pay me $1 per month.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible are used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
+&lt;p&gt;Here is a &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; of technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;If you like what I'm building, do not hesitated signing up.
+It only cost you a cup of coffee ☕ per quarter.
+If you can invite a friend to join, you don't need to pay for the next year subscription fee.&lt;/p&gt;
+&lt;p&gt;Enjoy your marking from today! &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;&lt;/p&gt;</content><category term="Product"></category></entry><entry><title>A Tour Of MarkSthFun</title><link href="https://blog.marksth.fun/docs/tour.html" rel="alternate"></link><published>2019-11-01T00:00:00+13:00</published><updated>2019-11-01T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-01:/docs/tour.html</id><summary type="html">&lt;p&gt;This is a tour guide of MarkSthFun &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Why MarkSthFun?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;It's fast, even when you have over tens of thousands of marks and tags.&lt;/li&gt;
+&lt;li&gt;It's highly available; the SLA level is subject to 99.9% availability.&lt;/li&gt;
+&lt;li&gt;You can mark things in over dozens of categories. Most other websites …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;This is a tour guide of MarkSthFun &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Why MarkSthFun?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;It's fast, even when you have over tens of thousands of marks and tags.&lt;/li&gt;
+&lt;li&gt;It's highly available; the SLA level is subject to 99.9% availability.&lt;/li&gt;
+&lt;li&gt;You can mark things in over dozens of categories. Most other websites only supports one or two per site.&lt;/li&gt;
+&lt;li&gt;You can add up to 100 tags per mark.&lt;/li&gt;
+&lt;li&gt;You can discover fun people and their tags by subscribing their RSS feeds!&lt;/li&gt;
+&lt;li&gt;You can find those people who are of the same interest quickly.&lt;/li&gt;
+&lt;li&gt;You can import and export your data instantly.
+&lt;!-- TODO * You can delete your account if you don't want to stay. All your data will be erased completely. --&gt;
+&lt;!-- TODO * The site provides multiple levels of privacy control, such as private account, private mark, private tag, and private note. --&gt;
+&lt;!-- TODO * The site offers RESTful APIs and encourages third-party extensions. --&gt;&lt;/li&gt;
+&lt;li&gt;The site follows a minimalist design. Marking is way more important than socializing.&lt;/li&gt;
+&lt;li&gt;There is always a dedicated maintainer (me) who is striving to answer your questions.&lt;/li&gt;
+&lt;li&gt;The price is reasonable, $1 per month.&lt;/li&gt;
+&lt;li&gt;You can use the site for free for the next year if you invite a new user.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Why Not MarkSthFun?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You prefer marking different types of things in different websites.&lt;/li&gt;
+&lt;li&gt;You don't worry your browsing history and personal information being sold/shared by &lt;a href="https://www.bbc.com/news/technology-45976300"&gt;some companies&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You don't want to host your data in anybody's server. (In that case, you can choose not using &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt; but instead deploying a instance of MarkSthFun from source code.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Marks&lt;/h2&gt;
+&lt;p&gt;A mark has a category, a title, an optional url, and some optional tags.
+You can also add some notes to your marks.&lt;/p&gt;
+&lt;p&gt;When no url is provided, a duckduckgo searching link will be attached. (We trust duckduckgo, because it won't sell your data to third-parties.)&lt;/p&gt;
+&lt;h2&gt;Privacy&lt;/h2&gt;
+&lt;p&gt;We recommend you setting up your privacy properly.&lt;/p&gt;
+&lt;!-- TODO In your account settings page, you can convert your account to *private* at any time. No marks within a privacy account will be shared publicly, even when the mark is shared. --&gt;
+
+&lt;p&gt;The marks that are unshared are invisible to other users. Private marks have a lock icon displayed. The browser will remember your share setting for marks in your local. Note that when switching device or cleaning cookies will reset your share setting for marks.&lt;/p&gt;
+&lt;p&gt;MarkSthFun doesn't show any images or run scripts from the mark url and your notes. This strategy is effective in avoiding privacy leaks and being stalked by analytics trackers.&lt;/p&gt;
+&lt;p&gt;MarkSthFun requires no additional personal information except a working email address for sending invoice and lost-password emails.&lt;/p&gt;
+&lt;h2&gt;Read Later&lt;/h2&gt;
+&lt;p&gt;Sometimes, you discover an interesting person, or an interesting thing, or an interesting tag. You can connect your ReadItLater/Pocket account to save it.&lt;/p&gt;
+&lt;h2&gt;Tags&lt;/h2&gt;
+&lt;p&gt;You can organize your marks by adding tags.
+You can filter your marks by tags.
+You can add a period to the tag to make it private, such as ".private", ".OnlyMeCanSeeIt".&lt;/p&gt;
+&lt;p&gt;For example, this &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; contains technology stack that MarkSthFun uses.&lt;/p&gt;
+&lt;h2&gt;Feeds&lt;/h2&gt;
+&lt;p&gt;MarkSthFun provides RSS feeds on some pages. Search "RSS" on the page if there is one.
+You can add the feed to your RSS readers.&lt;/p&gt;
+&lt;h2&gt;Responsive&lt;/h2&gt;
+&lt;p&gt;The site is optimized on mobile devices so that it looks good on small screens.&lt;/p&gt;
+&lt;h2&gt;Discover&lt;/h2&gt;
+&lt;p&gt;Despite of the less importance of socializing, some people shares their marks.&lt;/p&gt;
+&lt;p&gt;You can find the most &lt;a href="https://markth.fun/recent/"&gt;recent&lt;/a&gt; marks on the site.&lt;/p&gt;
+&lt;p&gt;You can also click the "similar marks" on each mark.&lt;/p&gt;
+&lt;p&gt;The global tag pages provide you all public bookmarks for each public tag.&lt;/p&gt;</content><category term="Product"></category></entry></feed>
