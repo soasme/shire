@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% import "widget_thing.html"  as wgtThing %}
+{% from "widget_thing.html"  import render_thing %}
 
 {% block title %}{{ thing.title }}{% endblock %}
 
 {% block content %}
 <h3>Happy Marking !</h3>
-{{ wgtThing.render_thing(thing) }}
+{{ render_thing(thing, current_user) }}
 {% endblock %}

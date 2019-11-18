@@ -10,8 +10,8 @@
     {% for thing in things %}
     <div class="thing">
     {% with %}
-    {% set is_me = thing.user.username == session.get('uid') %}
-    {{ wgtThing.render_thing(thing) }}
+    {% set is_me = thing.user_id == current_user.id %}
+    {{ render_thing(thing, current_user) }}
     {% endwith %}
     </div>
     {% endfor %}

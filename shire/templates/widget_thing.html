@@ -1,4 +1,4 @@
-{%- macro render_thing(thing) -%}
+{%- macro render_thing(thing, current_user) -%}
 <div>
   <div class="thing-content">
 
@@ -54,7 +54,7 @@
   {% endwith %}
   <div class="thing-time">
     <a href="{{ url_for('thing_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
-    {% if session.get('uid') == thing.user.username %}
+    {% if current_user.id == thing.user_id %}
     <span class="thing-mgmt">
       |
       <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>

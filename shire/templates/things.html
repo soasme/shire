@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "widget_thing.html"  as wgtThing %}
+{% from "widget_thing.html"  import render_thing %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -39,7 +39,7 @@
 
     {% for thing in things if thing.is_visible_by(current_user) %}
     <div class="pure-u-1 thing">
-      {{ wgtThing.render_thing(thing) }}
+      {{ render_thing(thing, current_user) }}
     </div>
     {% endfor %}
 
