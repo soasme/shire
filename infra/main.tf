@@ -46,7 +46,7 @@ resource "digitalocean_droplet" "server" {
   private_networking = true
 }
 
-# Note: by default vip 0001 is bound to the load blancer host.
+# Note: by default vip 0001 is bound to the load balancer host.
 # In the future, we might introduce a secondary load balancer,
 # and use a script to attach ip dynamically to fail over.
 resource "digitalocean_floating_ip_assignment" "vip" {

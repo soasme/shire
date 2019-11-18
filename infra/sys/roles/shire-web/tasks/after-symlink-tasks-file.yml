@@ -1,12 +1,4 @@
 ---
-- name: Shire owns /var/www/shire
-  file:
-    src: '{{ ansistrano_deploy_to }}'
-    owner: '{{ shire_process_user }}'
-    group: '{{ shire_process_group }}'
-    state: directory
-    recurse: true
-
 - name: Setup supervisor conf
   template:
     src: web.supervisor.j2
