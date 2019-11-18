@@ -3,24 +3,24 @@
 &lt;p&gt;Make pie, or invent universe. &lt;a href="https://www.douban.com/people/soasme/"&gt;@soasme&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (&lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;).
-You can pronounce it as "Mark Something Fun".&lt;/p&gt;
+You can pronounce it as "Mark Something Fun."&lt;/p&gt;
 &lt;h2&gt;Motivate&lt;/h2&gt;
-&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, movies I have …&lt;/p&gt;</summary><content type="html">&lt;blockquote&gt;
+&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, the movies I …&lt;/p&gt;</summary><content type="html">&lt;blockquote&gt;
 &lt;p&gt;Make pie, or invent universe. &lt;a href="https://www.douban.com/people/soasme/"&gt;@soasme&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (&lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;).
-You can pronounce it as "Mark Something Fun".&lt;/p&gt;
+You can pronounce it as "Mark Something Fun."&lt;/p&gt;
 &lt;h2&gt;Motivate&lt;/h2&gt;
-&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, movies I have watched, and albums I have listened. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cyber security law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. But I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough, really. Enough.&lt;/p&gt;
-&lt;p&gt;I could have marked my book on goodreads, marked my traces on google maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)&lt;/p&gt;
-&lt;p&gt;Since there is no tool / service in the market that fits me well, as an engineer, I started building my own.&lt;/p&gt;
+&lt;p&gt;I was a &lt;a href="https://www.douban.com"&gt;douban&lt;/a&gt; user, in which I can mark the books I have read, the movies I have watched, and the albums I have listened to. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cybersecurity law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. But I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough.&lt;/p&gt;
+&lt;p&gt;I could have marked my book on Goodreads, marked my traces on Google Maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)&lt;/p&gt;
+&lt;p&gt;Since there is no tool/service in the market that fits me well, as an engineer, I started building my own.&lt;/p&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;So, this is it. In MarkSthFun, you can mark the books you have read, the movies you have watched,
 the albums you have listened, the games you have played, the places you have visited, the software you have used, the papers you have read, the concepts you have learned, etc.
 You can write notes for your marks and manage things by tags.
-You can decide whether to share your things publicly or not.
+You can decide whether to share your marks publicly or not.
 You can discover fun things marked by fun people, of course, if they're willing to share.
-You can search marks by types, tags and keywords.&lt;/p&gt;
+You can search for marks by types, tags, and keywords.&lt;/p&gt;
 &lt;h2&gt;Principles&lt;/h2&gt;
 &lt;p&gt;Below are the principles that I keep in mind when building this new website.&lt;/p&gt;
 &lt;ul&gt;
@@ -28,25 +28,24 @@ You can search marks by types, tags and keywords.&lt;/p&gt;
 &lt;li&gt;Keep your data safe over the long term.&lt;/li&gt;
 &lt;li&gt;If you want to know more about a person, read his RSS feed.&lt;/li&gt;
 &lt;li&gt;You deserve a private account if you're an introverted person.&lt;/li&gt;
-&lt;li&gt;Unshare your mark if you don't to expose too much of your life traces.&lt;/li&gt;
+&lt;li&gt;Unshare your mark if you don't expose too much of your life traces.&lt;/li&gt;
 &lt;li&gt;No ads.&lt;/li&gt;
 &lt;li&gt;No third-party tracking.&lt;/li&gt;
 &lt;li&gt;No like, no vote, no comment, no retweet.&lt;/li&gt;
-&lt;li&gt;The fewer images displaying on the site the better.&lt;/li&gt;
+&lt;li&gt;Display as less images as possible.&lt;/li&gt;
 &lt;li&gt;Encrypt your requests when browsing.&lt;/li&gt;
-&lt;li&gt;Use boring technology stack for sane people.&lt;/li&gt;
 &lt;li&gt;Don't overkill.&lt;/li&gt;
-&lt;li&gt;Be alone. Develop and operate this site by a single-person team.&lt;/li&gt;
-&lt;li&gt;Be conservative on adding new features.&lt;/li&gt;
-&lt;li&gt;Pay for what you get. You'll need to pay me $1 per month.&lt;/li&gt;
+&lt;li&gt;Be conservative about adding new features.&lt;/li&gt;
+&lt;li&gt;Pay for what you get.&lt;/li&gt;
+&lt;li&gt;Use boring technology stack for sane people.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;Implementation&lt;/h2&gt;
-&lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as database. Redis is used as cache and message queue. It uses prometheus and grafana for monitoring. The site runs servers provisioned as digitalocean droplets with 1cpu-1gb to save the cost. Terraform and ansible are used for provisioning cloud resources and deploying code. Heroku is used for staging. You'll be bored for the most part of the implementation, no kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
-&lt;p&gt;Here is a &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; of technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)&lt;/p&gt;
+&lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs servers provisioned as Digitalocean droplets with 1cpu-1gb to save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
+&lt;p&gt;Here is a &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; of the technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;If you like what I'm building, do not hesitated signing up.
+&lt;p&gt;If you like what I'm building, do not hesitate to sign up.
 It only cost you a cup of coffee ☕ per quarter.
-If you can invite a friend to join, you don't need to pay for the next year subscription fee.&lt;/p&gt;
+If you can invite a friend to join, you don't need to pay for the next year's subscription fee.&lt;/p&gt;
 &lt;p&gt;Enjoy your marking from today! &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;&lt;/p&gt;</content><category term="Product"></category></entry><entry><title>MarkSthFun Uses Monolithic Repository!</title><link href="https://blog.marksth.fun/docs/monolithic-repo.html" rel="alternate"></link><published>2019-12-01T00:00:00+13:00</published><updated>2019-12-01T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-12-01:/docs/monolithic-repo.html</id><summary type="html">&lt;p&gt;In software engineering, you have two typical choices managing your code:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;A single repo that includes all of your code.&lt;/li&gt;
