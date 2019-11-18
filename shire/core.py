@@ -42,8 +42,8 @@ def create_app():
         # REQUIRED
         'SECRET_KEY': config('SECRET_KEY'),
         'SQLALCHEMY_DATABASE_URI': config('DATABASE_URL'),
-        'BROKER_URL': config('BROKER_URL'),
-        'CELERY_RESULT_BACKEND': config('CELERY_RESULT_BACKEND'),
+        'BROKER_URL': config('REDIS_URL'),
+        'CELERY_RESULT_BACKEND': config('REDIS_URL'),
         # OPTIONAL
         'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
         'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
