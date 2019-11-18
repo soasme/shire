@@ -4,6 +4,7 @@
     - role: roles/lb
   vars:
     site_domain: "{{ lookup('env', 'SITE_DOMAIN') }}"
+    firewall_allowed_tcp_ports: ["22", "80", "443"]
     letsencrypt_state_dir: "{{ lookup('env', 'LETSENCRYPT_STATE_DIR') }}"
     letsencrypt_backup_dir: "{{ lookup('env', 'LETSENCRYPT_BACKUP_DIR') }}"
     certbot_admin_email: "{{ lookup('env', 'CERTBOT_ADMIN_EMAIL') }}"
