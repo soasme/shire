@@ -37,7 +37,7 @@
     </div>
     {% endif %}
 
-    {% for thing in things if thing.is_visible_by(g.user) %}
+    {% for thing in things if thing.is_visible_by(current_user) %}
     <div class="pure-u-1 thing">
       {{ wgtThing.render_thing(thing) }}
     </div>

@@ -102,7 +102,6 @@ def create_app():
     app.template_filter('autoversion')(views.autoversion_filter)
     app.template_filter('from_now')(views.from_now)
 
-    app.before_request(views.setup_globals)
     app.teardown_request(views.auto_rollback)
 
     app.add_url_rule('/', 'index', views.index)
@@ -117,8 +116,6 @@ def create_app():
     app.add_url_rule('/signup/', 'signup', views.signup, methods=['POST'])
     app.add_url_rule('/subscription/success/', 'subscription_success_page', views.subscription_success_page)
     app.add_url_rule('/subscription/cancel/', 'subscription_cancel_page', views.subscription_cancel_page)
-    app.add_url_rule('/signup/success/', 'signup_success', views.signup_success_page, methods=['POST'])
-    app.add_url_rule('/signup/canceled/', 'signup_canceled_page', views.signup_canceled_page)
     app.add_url_rule('/u/<username>/', 'profile', views.profile)
     app.add_url_rule('/u/<username>/t/<tag>/', 'tagged_things', views.filter_user_things_by_tag)
     app.add_url_rule('/u/<username>/c/<category>/', 'categorized_things',
@@ -131,10 +128,8 @@ def create_app():
     app.add_url_rule('/things/<int:id>/download/', 'download_thing', views.download_thing)
     app.add_url_rule('/things/<int:id>/delete/', 'delete_thing_page', views.delete_thing_page)
     app.add_url_rule('/things/<int:id>/delete/', 'delete_thing', views.delete_thing, methods=['POST'])
-    app.add_url_rule('/login/', 'login', views.login, methods=['POST'])
     app.add_url_rule('/account/', 'account', views.account)
     app.add_url_rule('/account/', 'update_account', views.update_account, methods=['POST'])
-    app.add_url_rule('/v1/things/<int:id>/share/', 'share_thing', views.share_thing, methods=['POST'])
 
     checkout_session_completed.connect(tasks.sync_stripe_session.delay)
 

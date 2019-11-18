@@ -147,10 +147,9 @@ class Thing(db.Model):
                 note=(self.note and self.note.text or ''))
 
     def is_visible_by(self, user):
-        if user and user.is_private:
+        if self.user.is_private:
             return self.user_id == user.id
-        else:
-            return self.shared
+        return self.shared
 
     @classmethod
     def get_public_tagset(cls, things):

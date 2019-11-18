@@ -6,6 +6,7 @@ import stripe
 from flask import (session, render_template, redirect,
                    current_app, jsonify, abort, request, g,
                    url_for, )
+from flask_login import current_user
 
 from shire.core import db, bcrypt, __DIR__
 from shire.models import Thing, ThingNote, User, Category
@@ -31,9 +32,6 @@ def from_now(dt):
         return f'{minutes} minutes ago'
     seconds = int(diff.total_seconds()%60)
     return f'{seconds} seconds ago'
-
-def setup_globals():
-    g.user = session.get('uid') and User.query.filter_by(username=session['uid']).first()
 
 def auto_rollback(exception):
     if exception:
@@ -83,8 +81,8 @@ def signup_canceled_page():
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
-    if user.is_private and (not g.user or user.id != g.user.id): abort(403)
-    is_me = user.username == session.get('uid')
+    if user.is_private and (not current_user or user.id != current_user.id): abort(403)
+    is_me = user.username == current_user.username
     things_cnt = Thing.get_user_things_cnt(user.id)
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
@@ -98,19 +96,19 @@ def profile(username):
 
 def mark():
     """Mark a new thing."""
-    if not g.user:
+    if current_user.is_anonymous:
         session['error.login'] = "You're not authorized. Please login."
         return redirect('/')
-    user_id = g.user.id
+    user_id = current_user.id
     category_name = request.form.get('category')
     if not hasattr(Category, category_name):
         session['error.mark'] = "invalid category."
-        return redirect(f'/u/{g.user.username}')
+        return redirect(f'/u/{current_user.username}')
     category = getattr(Category, category_name)
     title = request.form.get('title')
     if not title:
         session['error.mark'] = "please provide a title."
-        return redirect(f'/u/{g.user.username}')
+        return redirect(f'/u/{current_user.username}')
     raw_tags = request.form.get('tags')
     if raw_tags:
         tags = [t.strip() for t in raw_tags.strip().split() if t.strip()]
@@ -131,27 +129,27 @@ def mark():
         app.logger.error("error: %s", e)
         db.session.rollback()
         session['error.mark'] = 'database error. please try later.'
-        return redirect(f'/u/{g.user.username}')
+        return redirect(f'/u/{current_user.username}')
 
-    return redirect(f'/u/{g.user.username}')
+    return redirect(f'/u/{current_user.username}')
 
 def thing_page(id):
     thing = Thing.query.get(id)
     if not thing: abort(404)
-    owner = thing.user
-    if not thing.is_visible_by(g.user): abort(403)
-    if not thing.shared and g.user != owner: abort(403)
+    owner = thincurrent_user
+    if not thing.is_visible_by(current_user): abort(403)
+    if not thing.shared and current_user != owner: abort(403)
     return render_template('thing.html', thing=thing)
 
 def update_thing_page(id):
-    if not g.user:
+    if current_user.is_anonymous:
         return jsonify({'code': 'not authenticated'}), 401
 
     thing = Thing.query.get(id)
     if not thing:
         return jsonify({'code': 'not_found'}), 404
 
-    if thing.user_id != g.user.id:
+    if thincurrent_user_id != current_user.id:
         return jsonify({'code': 'not authorized'}), 403
 
     error = session.pop('error.mark', '')
@@ -159,14 +157,14 @@ def update_thing_page(id):
     return render_template('update_thing.html', thing=thing, error=error)
 
 def update_thing(id):
-    if not g.user:
+    if current_user.is_anonymous:
         return redirect('/')
 
     thing = Thing.query.get(id)
     if not thing:
         return 'not found', 404
 
-    if thing.user_id != g.user.id:
+    if thincurrent_user_id != current_user.id:
         return 'not authorized', 403
 
     category_name = request.form.get('category')
@@ -201,7 +199,7 @@ def update_thing(id):
     thing_note = ThingNote.query.get(thing.id)
     note_text = request.form.get('note')
     if not thing_note:
-        thing_note = ThingNote(thing_id=thing.id, user_id=thing.user_id,
+        thing_note = ThingNote(thing_id=thing.id, user_id=thincurrent_user_id,
                 text=note_text)
     else:
         thing_note.text = note_text
@@ -217,70 +215,25 @@ def update_thing(id):
 
     return redirect(url_for('thing_page', id=thing.id))
 
-def login():
-    """Login"""
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username:
-        session['error.login'] = 'missing username.'
-        return redirect('/')
-    if not password:
-        session['error.login'] = 'missing password.'
-        return redirect('/')
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        session['error.login'] = "user doesn't exist."
-        return redirect('/')
-    if not bcrypt.check_password_hash(user.password, password):
-        session['error.login'] = "wrong password."
-        return redirect('/')
-    session['uid'] = user.username
-    return redirect(f'/u/{username}/')
-
-
-def share_thing(id):
-    """Share a thing"""
-    if not g.user:
-        return jsonify({'code': 'not authenticated'}), 401
-
-    thing = Thing.query.get(id)
-    if not thing:
-        return jsonify({'code': 'not_found'}), 404
-
-    if thing.user_id != g.user.id:
-        return jsonify({'code': 'not authorized'}), 403
-
-    thing.shared = not thing.shared
-    db.session.add(thing)
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        app.logger.error("error: %s", e)
-        db.session.rollback()
-        return jsonify({'code': 'db_error'}), 500
-
-    return jsonify({'code': 'ok'}), 200
-
 def download_thing(id):
-    if not g.user: return redirect('/')
+    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
-    if thing.user_id != g.user.id: abort(403)
+    if thincurrent_user_id != current_user.id: abort(403)
     return jsonify(thing.to_simplejson())
 
 def delete_thing_page(id):
-    if not g.user: return redirect('/')
+    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
-    if thing.user_id != g.user.id: abort(403)
+    if thincurrent_user_id != current_user.id: abort(403)
     return render_template('delete_thing.html', thing=thing)
 
 def delete_thing(id):
     """Delete a thing
     """
-    if not g.user: return redirect('/')
+    if current_user.is_anonymous: return redirect('/')
     thing = Thing.query.get(id)
     if not thing: abort(404)
-    if thing.user_id != g.user.id: abort(403)
+    if thincurrent_user_id != current_user.id: abort(403)
 
     db.session.delete(thing)
     thing_note = ThingNote.query.get(id)
@@ -294,12 +247,12 @@ def delete_thing(id):
         db.session.rollback()
         abort(500)
 
-    return redirect(url_for('profile', username=g.user.username))
+    return redirect(url_for('profile', username=current_user.username))
 
 def filter_user_things_by_tag(username, tag):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
-    is_me = g.user == user
+    is_me = current_user == user
     if tag.startswith('.') and not is_me: abort(403)
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
@@ -323,7 +276,7 @@ def filter_global_things_by_tag(tag):
 def filter_user_things_by_category(username, category):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
-    is_me = g.user == user
+    is_me = current_user == user
     if not hasattr(Category, category): abort(404)
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
@@ -337,18 +290,18 @@ def filter_user_things_by_category(username, category):
             mark_error='', tags=tags)
 
 def account():
-    if not g.user: abort(403)
+    if current_user.is_anonymous: abort(403)
     error = session.pop('error.update_account', '')
     return render_template('profile.html', error=error)
 
 def update_account():
-    if not g.user: abort(403)
+    if current_user.is_anonymous: abort(403)
     is_private = request.form.get('is_private') == 'on'
 
-    g.user.is_private = is_private
+    current_user.is_private = is_private
 
     try:
-        db.session.add(g.user)
+        db.session.add(current_user)
         db.session.commit()
         session['error.update_account'] = 'updated successfully!'
         return redirect(url_for('account'))
