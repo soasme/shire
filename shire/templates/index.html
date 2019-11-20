@@ -19,10 +19,10 @@
     It has as few images as possible to avoid you from being tracked by other websites. It secures your connections via HTTPS to avoid you from being tampered by malicious parties.
     </p>
     <p>
-      You pay ${{ config.ANNUAL_FEE }} per year to get rid of data being harvested by big companies. You can use the site for free the next year if you invite a user.
       {% if current_user.is_anonymous and config.SIGNUP_ENABLED %}
       <a href="{{ url_for('user.register') }}">Sign up for free</a>.
       {% endif %}
+      You pay ${{ config.ANNUAL_FEE }} per year to access the site for full features.
     </p>
     <p>
     The site is <a href="{{ config.GITHUB_URL }}">open/libre software</a> under GNU Affero GPL license.
