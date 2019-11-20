@@ -68,6 +68,7 @@ def create_app():
         'USER_ENABLE_FORGOT_PASSWORD': config('USER_ENABLE_FORGOT_PASSWORD', default=True),
         'USER_LOGIN_TEMPLATE': 'login.html',
         'USER_REGISTER_TEMPLATE': 'register.html',
+        'USER_RESET_PASSWORD_TEMPLATE': 'reset_password.html',
         'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
     })

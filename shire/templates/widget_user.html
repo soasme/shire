@@ -67,3 +67,21 @@
   </fieldset>
 </form>
 {%- endmacro %}
+
+
+{%- macro reset_password_form(form) -%}
+<form action="{{ url_for('user.reset_password') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+    {{ render_field(form.new_password, tabindex=10) }}
+    {% if config.USER_REQUIRE_RETYPE_PASSWORD %}
+    {{ render_field(form.retype_password, tabindex=20) }}
+    {% endif %}
+    <button type="submit" class="pure-button pure-button-primary" tabindex=150>
+      Reset Password
+    </button>
+  </fieldset>
+</form>
+{%- endmacro %}
