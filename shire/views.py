@@ -77,8 +77,8 @@ def signup_canceled_page():
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
-    if user.is_private and (not current_user or user.id != current_user.id): abort(403)
-    is_me = user.username == current_user.username
+    if user.is_private and (current_user.is_anonymous or user.id != current_user.id): abort(403)
+    is_me = (not current_user.is_anonymous) and user.username == current_user.username
     things_cnt = Thing.get_user_things_cnt(user.id)
     offset = request.args.get('offset', type=int, default=0)
     limit = max(100, request.args.get('limit', type=int, default=100))
