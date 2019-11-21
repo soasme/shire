@@ -147,13 +147,18 @@ class Thing(db.Model):
                 note=(self.note and self.note.text or ''))
 
     def is_visible_by(self, user):
+        is_anonymous = bool(hasattr(user, 'is_anonymous') and user.is_anonymous)
+        if is_anonymous:
+            return self.shared
         if self.user.is_private or not self.shared:
-            return hasattr(user, 'id') and self.user_id == user.id
+            return self.user_id == user.id or f'.@{user.username}' in self.tags
         return True
 
     @classmethod
     def get_public_tagset(cls, things):
-        return set(reduce(add, [([tag for tag in t.tags if not tag.startswith('.')] or []) for t in things]))
+        tags = [([tag for tag in t.tags if not tag.startswith('.')] or []) for t in things]
+        if not tags: return set()
+        return set(reduce(add, tags))
 
 class ThingNote(db.Model):
     thing_id = db.Column(db.Integer, primary_key=True)

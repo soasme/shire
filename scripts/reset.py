@@ -6,9 +6,12 @@ from shire.models import User, Thing, ThingNote, Category
 def _populate_db():
     """Populate testing data into database. """
 
-    user = User.new('soasme', 'soasme@gmail.com', '111111')
+    user = User.new('test1', 'test1@marksth.fun', '111111')
     user.active = True
     db.session.add(user)
+    privuser = User.new('privuser', 'privuser@marksth.fun', '111111')
+    privuser.active = True
+    db.session.add(privuser)
     db.session.commit()
 
     thing_annihilation = Thing(user_id=user.id, category=Category.movie,
