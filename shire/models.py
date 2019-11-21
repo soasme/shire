@@ -148,7 +148,7 @@ class Thing(db.Model):
 
     def is_visible_by(self, user):
         if self.user.is_private or not self.shared:
-            return self.user_id == user.id
+            return hasattr(user, 'id') and self.user_id == user.id
         return True
 
     @classmethod
