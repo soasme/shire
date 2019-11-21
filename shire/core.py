@@ -112,8 +112,6 @@ def create_app():
     app.add_url_rule('/privacy/', 'privacy', views.privacy)
     app.add_url_rule('/tos/', 'terms_of_service', views.terms_of_service)
     app.add_url_rule('/faq/', 'faq', views.faq)
-    app.add_url_rule('/signup/', 'signup_page', views.signup_page)
-    app.add_url_rule('/signup/', 'signup', views.signup, methods=['POST'])
     app.add_url_rule('/subscription/success/', 'subscription_success_page', views.subscription_success_page)
     app.add_url_rule('/subscription/cancel/', 'subscription_cancel_page', views.subscription_cancel_page)
     app.add_url_rule('/u/<username>/', 'profile', views.profile)

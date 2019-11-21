@@ -59,21 +59,6 @@ def subscription_success_page():
 def subscription_cancel_page():
     return render_template('subscription_cancel.html')
 
-def signup_page():
-    return 'coming soon'
-
-def signup():
-    return 'coming soon'
-
-def signup_success_page():
-    return 'coming soon'
-
-def signup_success():
-    return 'coming soon'
-
-def signup_canceled_page():
-    return 'coming soon'
-
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)

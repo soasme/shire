@@ -8,10 +8,6 @@
 
     <span>:&nbsp;&nbsp;</span>
 
-    {% if not thing.shared %}
-    <span>(<i class="fas fa-lock"></i>)</span>
-    {% endif %}
-
     <span>
       <a href="{{ url_for('categorized_things', username=thing.user.username, category=thing.category.name) }}">
       {% if thing.category == Category.book %}
@@ -43,6 +39,10 @@
         {{ thing.title }}
       </a>
     </span>
+
+    {% if not thing.shared %}
+    <span>(<i class="fas fa-lock"></i>)</span>
+    {% endif %}
 
   </div>
   {% with note = thing.note %}
