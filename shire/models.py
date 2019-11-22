@@ -29,26 +29,6 @@ class Category(enum.Enum):
         if self.name == 'tvshow': return 'TV show'
         else: return self.name
 
-class SubscriptionStatus(enum.Enum):
-    incomplete = 1
-    incomplete_expired = 2
-    trialing = 3
-    active = 4
-    past_due = 5
-    canceled = 6
-    unpaid = 7
-
-class Customer(db.Model):
-    id = db.Column(db.String(64), nullable=False, primary_key=True)
-    email = db.Column(db.String(256), nullable=False)
-    payload = db.Column(JSON)
-
-class CustomerSubscription(db.Model):
-    id = db.Column(db.String(64), nullable=False, primary_key=True)
-    customer_id = db.Column(db.String(64), nullable=False)
-    status = db.Column(Enum(SubscriptionStatus), nullable=False)
-    payload = db.Column(JSON)
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     username = db.Column(db.String(128), nullable=False, unique=True)

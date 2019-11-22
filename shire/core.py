@@ -129,9 +129,6 @@ def create_app():
     app.add_url_rule('/account/', 'account', views.account)
     app.add_url_rule('/account/', 'update_account', views.update_account, methods=['POST'])
 
-    checkout_session_completed.connect(tasks.sync_stripe_session.delay)
-
     celery.add_periodic_task(30.0, tasks.ping, expires=10.0)
-    celery.add_periodic_task(300.0, tasks.poll_payments, expires=60.0)
 
     return app
