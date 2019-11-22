@@ -53,13 +53,13 @@
   {% endif %}
   {% endwith %}
   <div class="thing-time">
-    <a href="{{ url_for('thing_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
+    <a href="{{ url_for('mark_page', id=thing.id) }}">{{ thing.time | from_now }}</a>
     {% if current_user.id == thing.user_id %}
     <span class="thing-mgmt">
       |
-      <a href="{{ url_for('update_thing_page', id=thing.id) }}">update</a>
+      <a href="{{ url_for('update_mark_page', id=thing.id) }}">update</a>
       |
-      <a href="{{ url_for('delete_thing_page', id=thing.id) }}">delete</a>
+      <a href="{{ url_for('delete_mark_page', id=thing.id) }}">delete</a>
       <span id="thing-mgmt-error-{{ thing.id }}"></span>
     </span>
     {% endif %}

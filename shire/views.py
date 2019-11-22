@@ -53,12 +53,6 @@ def explore():
     tags = Thing.get_public_tagset(things)
     return render_template('explore.html', things=things, tags=tags)
 
-def subscription_success_page():
-    return render_template('subscription_success.html')
-
-def subscription_cancel_page():
-    return render_template('subscription_cancel.html')
-
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if not user: abort(404)
@@ -112,14 +106,14 @@ def mark():
 
     return redirect(f'/u/{current_user.username}')
 
-def thing_page(id):
+def mark_page(id):
     thing = Thing.query.get(id)
     if not thing: abort(404)
     if not thing.is_visible_by(current_user): abort(403)
     return render_template('thing.html', thing=thing)
 
 @login_required
-def update_thing_page(id):
+def update_mark_page(id):
     thing = Thing.query.get(id)
     if not thing:
         return jsonify({'code': 'not_found'}), 404
@@ -129,10 +123,10 @@ def update_thing_page(id):
 
     error = session.pop('error.mark', '')
 
-    return render_template('update_thing.html', thing=thing, error=error)
+    return render_template('update_mark.html', thing=thing, error=error)
 
 @login_required
-def update_thing(id):
+def update_mark(id):
     thing = Thing.query.get(id)
     if not thing:
         return 'not found', 404
@@ -186,22 +180,22 @@ def update_thing(id):
         session['error.mark'] = 'database error. please try later.'
         return redirect(request.referrer or '/')
 
-    return redirect(url_for('thing_page', id=thing.id))
+    return redirect(url_for('mark_page', id=thing.id))
 
 @login_required
-def download_thing(id):
+def download_mark(id):
     thing = Thing.query.get(id)
     if thing.user_id != current_user.id: abort(403)
     return jsonify(thing.to_simplejson())
 
 @login_required
-def delete_thing_page(id):
+def delete_mark_page(id):
     thing = Thing.query.get(id)
     if thing.user_id != current_user.id: abort(403)
-    return render_template('delete_thing.html', thing=thing)
+    return render_template('delete_mark.html', thing=thing)
 
 @login_required
-def delete_thing(id):
+def delete_mark(id):
     """Delete a thing
     """
     thing = Thing.query.get(id)
