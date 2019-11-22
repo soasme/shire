@@ -66,6 +66,7 @@ def create_app():
         'USER_ENABLE_USERNAME': config('USER_ENABLE_USERNAME', default=True),
         'USER_REQUIRE_RETYPE_PASSWORD': config('USER_REQUIRE_RETYPE_PASSWORD', default=False),
         'USER_ENABLE_FORGOT_PASSWORD': config('USER_ENABLE_FORGOT_PASSWORD', default=True),
+        'USER_ENABLE_REMEMBER_ME': config('USER_ENABLE_REMEMBER_ME', default=True),
         'USER_LOGIN_TEMPLATE': 'login.html',
         'USER_REGISTER_TEMPLATE': 'register.html',
         'USER_RESET_PASSWORD_TEMPLATE': 'reset_password.html',

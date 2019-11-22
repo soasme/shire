@@ -20,7 +20,7 @@
     {% endfor %}
 
     {% if config.USER_ENABLE_REMEMBER_ME %}
-    {{ render_checkbox_field(login_form.remember_me, tabindex=130) }}
+    {{ render_checkbox_field(form.remember_me, tabindex=130) }}
     {% endif %}
 
     <p><a href="{{ url_for('user.forgot_password') }}" tabindex='0'>
