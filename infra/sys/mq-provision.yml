@@ -1,0 +1,19 @@
+---
+- hosts: mq
+  roles:
+    - role: geerlingguy.redis
+  vars:
+    redis_enablerepo: epel
+    redis_bind_interface: 0.0.0.0
+    redis_port: 6379
+    redis_databases: 16
+    redis_timeout: 300
+    redis_loglevel: "notice"
+    redis_logfile: /var/log/redis/redis-server.log
+    redis_rdbcompression: "yes"
+    redis_dbfilename: dump.rdb
+    redis_dbdir: /var/lib/redis
+    redis_maxmemory: 500000000 # 50MB
+    redis_appendonly: "no"
+    redis_appendfsync: "everysec"
+    redis_disabled_commands: ["FLUSHDB", "FLUSHALL", "KEYS", "CONFIG", "SHUTDOWN"]

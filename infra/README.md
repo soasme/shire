@@ -169,6 +169,12 @@ $ ssh -L 3000:127.0.0.1:3000 root@${YOUR_PROM_HOST_IP}
 $ ansible-playbook sys/dns-provision.yml
 ```
 
+## Provision MQ
+
+```bash
+$ ansible-playbook sys/mq-provision.yml
+```
+
 ## Provision Web
 
 Run the website.
@@ -181,4 +187,11 @@ If you only want to update the code, leaving all system dependencies as-is, mark
 
 ```
 $ ansible-playbook sys/web-provision.yml --tags deploy
+```
+
+## Tail Recent Errors
+
+```bash
+$ ansible-console web
+# tail -10 /var/log/supervisor/shire_web-stderr.log
 ```
