@@ -29,7 +29,8 @@ It will cover the cost of web servers, database backup, domains fee,
 email delivery, CDN, cloud services, and last but not least, my time.
 You payment will help keeping the site run as long as possible.
 You'll see no ads at all because this site is fully supported by all
-users' payments. You'll see where the money goes [here].
+users' payments.
+You'll see the cost of this site [here](https://marksth.fun/u/soasme/t/marksthfun-cost/).
 
 Honestly speaking, you can mark books, movies, albums, games in different websites
 for free. However, some of them belongs to big companies and harvest your
