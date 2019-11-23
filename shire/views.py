@@ -8,7 +8,7 @@ from flask import (session, render_template, redirect,
                    url_for, )
 from flask_login import current_user, login_required
 
-from shire.core import db, bcrypt, __DIR__
+from shire.core import db, bcrypt, cache, __DIR__
 from shire.models import Thing, ThingNote, User, Category
 from shire.errors import ShireError, ExistingError
 
@@ -48,6 +48,7 @@ def privacy(): return render_template('privacy.html')
 def terms_of_service(): return render_template('tos.html')
 def faq(): return render_template('faq.html')
 
+@cache.cached(timeout=60)
 def explore():
     things = Thing.get_recent_all_things()
     tags = Thing.get_public_tagset(things)

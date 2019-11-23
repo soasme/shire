@@ -7,6 +7,7 @@ from whitenoise import WhiteNoise
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_user import UserManager
+from flask_caching import Cache
 from decouple import config
 
 from shire.exts.sub import Subscription, checkout_session_completed
@@ -21,6 +22,7 @@ bcrypt = Bcrypt()
 celery = Celery(__name__)
 sub = Subscription()
 mail = Mail()
+cache = Cache()
 user_manager = UserManager()
 
 def init_celery(app, celery):
@@ -53,6 +55,8 @@ def create_app():
         'GITHUB_URL': config('GITHUB_URL', default='https://github.com/soasme/shire'),
         'SUPPORT_EMAIL': config('SUPPORT_EMAIL', default='support@marksth.fun'),
         'SQLALCHEMY_TRACK_MODIFICATIONS': config('SQLALCHEMY_TRACK_MODIFICATIONS', cast=bool, default=False),
+        'CACHE_TYPE': config('CACHE_TYPE', default='simple'),
+        'CACHE_DEFAULT_TIMEOUT': config('CACHE_DEFAULT_TIMEOUT', cast=int, default=300),
         'SIGNUP_ENABLED': config('SIGNUP_ENABLED', cast=bool, default=False),
         'STRIPE_ENABLED': config('STRIPE_ENABLED', cast=bool, default=False),
         'STRIPE_PUBLIC_KEY': config('STRIPE_PUBLIC_KEY', default=''),
@@ -81,6 +85,8 @@ def create_app():
     sub.init_app(app)
 
     mail.init_app(app)
+
+    cache.init_app(app)
 
     user_manager.init_app(app, db)
 
