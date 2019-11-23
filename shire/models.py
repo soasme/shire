@@ -5,6 +5,7 @@ from operator import add
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 from sqlalchemy.dialects.postgresql.json import JSONB
@@ -28,7 +29,7 @@ class Category(enum.Enum):
         if self.name == 'tvshow': return 'TV show'
         else: return self.name
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     username = db.Column(db.String(128), nullable=False, unique=True)
     email = db.Column(db.String(256), nullable=True, unique=True)
@@ -37,11 +38,6 @@ class User(db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     email_confirmed_at = db.Column(db.DateTime())
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    # flask-login required fields.
-    @property
-    def is_active(self): return self.active
-    def get_id(self): return str(self.id)
 
     @classmethod
     def new(cls, username, email, password):
