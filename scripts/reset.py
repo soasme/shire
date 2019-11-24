@@ -1,17 +1,27 @@
 from datetime import datetime
 from shire.app import app
-from shire.core import db
+from shire.core import db, user_manager
 from shire.models import User, Thing, ThingNote, Category
 
 def _populate_db():
     """Populate testing data into database. """
 
-    user = User.new('test1', 'test1@marksth.fun', '111111')
-    user.active = True
+    user = User(
+        username='test1',
+        email='test1@marksth.fun',
+        password=user_manager.hash_password('111111'),
+        active=True,
+    )
     db.session.add(user)
-    privuser = User.new('privuser', 'privuser@marksth.fun', '111111')
-    privuser.active = True
+
+    privuser = User(
+        username='privuser1',
+        email='privuser1@marksth.fun',
+        password=user_manager.hash_password('111111'),
+        active=True,
+    )
     db.session.add(privuser)
+
     db.session.commit()
 
     thing_annihilation = Thing(user_id=user.id, category=Category.movie,

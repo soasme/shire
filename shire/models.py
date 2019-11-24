@@ -39,18 +39,6 @@ class User(db.Model, UserMixin):
     email_confirmed_at = db.Column(db.DateTime())
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    @classmethod
-    def new(cls, username, email, password):
-        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-        user = cls(username=username, email=email, password=password_hash)
-        try:
-            db.session.add(user)
-            db.session.commit()
-            return user
-        except IntegrityError:
-            db.session.rollback()
-            raise ValueError({'email': email, 'username': username})
-
 class UserSubscription(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
