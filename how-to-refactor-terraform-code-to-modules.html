@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>How to Refactor Terraform Code To Modules?</title>
+        <link rel="stylesheet" href="https://blog.marksth.fun/theme/css/main.css" />
+        <link href="https://blog.marksth.fun/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="MarkSthFun Engineering Blog Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://blog.marksth.fun/">MarkSthFun Engineering Blog </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="https://blog.marksth.fun/category/engineering.html">Engineering</a></li>
+                    <li><a href="https://blog.marksth.fun/category/product.html">Product</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="bookmark"
+           title="Permalink to How to Refactor Terraform Code To Modules?">How to Refactor Terraform Code To Modules?</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2019-11-25T00:00:00+13:00">
+                Published: Mon 25 November 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://blog.marksth.fun/author/ju-lin.html">Ju Lin</a>
+        </address>
+<p>In <a href="https://blog.marksth.fun/category/engineering.html">Engineering</a>.</p>
+
+</footer><!-- /.post-info -->      <h2>What are Terraform Modules?</h2>
+<p>Terraform Modules are re-usable package of multiple Terraform resources, and outputs.</p>
+<p>Pretty much like a package or module in any programming language, pratically, we simply define some code at one place.</p>
+<h2>Why do we need Terraform Modules?</h2>
+<p>We could squash all Terraform code in a single <code>main.tf</code> file, but wouldn't it be a messy hell?</p>
+<p>Instead, organizing highly-related Terraform code into a Terraform Module keeps the code base tidy.
+In particular, the timing of moving Terraform code into a Terraform Module is when we need a higher-level concept. For example, I want a module that "manages DNS of marksth.fun", instead of having a bunch of <code>digitalocean_record</code> resources.</p>
+<div class="highlight"><pre><span></span><span class="kr">module</span> <span class="s">&quot;dns&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">  source</span> <span class="o">=</span> <span class="s2">&quot;./modules/dns&quot;</span>
+<span class="na">  site_domain</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain</span>
+<span class="na">  site_domain_txt</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain_txt</span>
+<span class="na">  site_domain_mx</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain_mx</span>
+<span class="na">  site_domain_vip</span> <span class="o">=</span> <span class="err">digitalocean_floating_ip</span><span class="p">.</span><span class="err">site_domain_vip</span><span class="p">.</span><span class="err">ip_address</span>
+<span class=" -Punctuation">}</span>
+</pre></div>
+
+
+<h2>How to Organize Terraform Modules?</h2>
+<p>It depends on how you manage your codebase. The <code>source</code> configures where to read Terraform Module code. In the above example, it reads for a relative directory <code>./modules/dns</code>. The other option is by specifying it to a remote Git repo, but MarkSthFun prefers monolithic repo, so this is no needed.</p>
+<p>An easy way to gather modules in by putting them to a <code>modules</code> directory.</p>
+<div class="highlight"><pre><span></span>$ ls -R .
+main.tf
+
+modules/dns:
+main.tf      outputs.tf   variables.tf
+</pre></div>
+
+
+<p>All codes in <code>modules/dns/*.tf</code> were originally in <code>./main.tf</code>, but now they're separately defined. See <a href="https://github.com/soasme/shire/commit/9f9b503b3c68f7b7fe576df4eed4b603b7cd2368">commit</a>.</p>
+<p>After moving the code, we need to <strong>move states</strong>. This is because Terraform isn't smart enough to guess your code has changed place. It will destroy resources, and re-create resources, despite you haven't changed anything.</p>
+<p>We can achieve it by using <code>terraform state mv [SRC] [DEST]</code>. Below are commands I executed right after the commit.</p>
+<div class="highlight"><pre><span></span>$ terraform state mv digitalocean_record.at_txt module.dns.digitalocean_record.at_txt
+$ terraform state mv digitalocean_record.at_mx module.dns.digitalocean_record.at_mx
+$ terraform state mv digitalocean_record.at_A module.dns.digitalocean_record.at_A
+$ terraform state mv digitalocean_domain.site_domain module.dns.digitalocean_domain.site_domain
+$ terraform plan
+No changes. Infrastructure is up-to-date.
+</pre></div>
+
+
+<h2>Side Notes</h2>
+<p>Just as refactoring code in any programming language, it's a good habit not to introduce new code. By doing this, we can assure after the change, most things remains the same.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://marksth.fun">MarkSthFun</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="https://blog.marksth.fun/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="https://twitter.com/marksthfun">Twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
