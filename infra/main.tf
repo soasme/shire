@@ -56,36 +56,10 @@ resource "digitalocean_floating_ip_assignment" "vip" {
 
 # Provision Site Domain and Name Records
 
-resource "digitalocean_domain" "site_domain" {
-  name      = "${var.site_domain}"
-}
-
-resource "digitalocean_record" "at_A" {
-  domain    = "${digitalocean_domain.site_domain.name}"
-  type      = "A"
-  name      = "@"
-  ttl       = 300 # 5m
-  value     = "${digitalocean_floating_ip.site_domain_vip.ip_address}"
-}
-
-resource "digitalocean_record" "at_txt" {
-  domain    = "${digitalocean_domain.site_domain.name}"
-  type      = "TXT"
-  name      = "@"
-  ttl       = 300 # 5m
-  value     = "${var.site_domain_txt}"
-}
-
-resource "digitalocean_record" "at_mx" {
-  count     = "${length(var.site_domain_mx)}"
-  domain    = "${digitalocean_domain.site_domain.name}"
-  type      = "MX"
-  name      = "@"
-  ttl       = 3600 # 1h
-  priority  = var.site_domain_mx[count.index]["priority"]
-  value     = var.site_domain_mx[count.index]["value"]
-}
-
-output "site_domain_fqdn" {
-  value = "${digitalocean_record.at_A.fqdn}"
+module "dns" {
+  source = "./modules/dns"
+  site_domain = var.site_domain
+  site_domain_txt = var.site_domain_txt
+  site_domain_mx = var.site_domain_mx
+  site_domain_vip = digitalocean_floating_ip.site_domain_vip.ip_address
 }
