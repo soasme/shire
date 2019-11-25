@@ -47,29 +47,29 @@ You can search for marks by types, tags, and keywords.&lt;/p&gt;
 It only cost you a cup of coffee ☕ per quarter.
 If you can invite a friend to join, you don't need to pay for the next year's subscription fee.&lt;/p&gt;
 &lt;p&gt;Enjoy your marking from today! &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;&lt;/p&gt;</content><category term="Product"></category></entry><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
-&lt;p&gt;Terraform Modules are re-usable package of multiple Terraform resources, and outputs.&lt;/p&gt;
-&lt;p&gt;Pretty much like a package or module in any programming language, pratically, we simply define some code at one place.&lt;/p&gt;
+&lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
+&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some code in one place.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;
-&lt;p&gt;We could squash all Terraform code in a single …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
-&lt;p&gt;Terraform Modules are re-usable package of multiple Terraform resources, and outputs.&lt;/p&gt;
-&lt;p&gt;Pretty much like a package or module in any programming language, pratically, we simply define some code at one place.&lt;/p&gt;
+&lt;p&gt;We could squash all Terraform code in a single &lt;code&gt;main …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
+&lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
+&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some code in one place.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;We could squash all Terraform code in a single &lt;code&gt;main.tf&lt;/code&gt; file, but wouldn't it be a messy hell?&lt;/p&gt;
 &lt;p&gt;Instead, organizing highly-related Terraform code into a Terraform Module keeps the code base tidy.
-In particular, the timing of moving Terraform code into a Terraform Module is when we need a higher-level concept. For example, I want a module that "manages DNS of marksth.fun", instead of having a bunch of &lt;code&gt;digitalocean_record&lt;/code&gt; resources.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;module&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;dns&amp;quot;&lt;/span&gt; &lt;span class=" -Punctuation"&gt;{&lt;/span&gt;
-&lt;span class="na"&gt;  source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;./modules/dns&amp;quot;&lt;/span&gt;
-&lt;span class="na"&gt;  site_domain&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;var&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="err"&gt;site_domain&lt;/span&gt;
-&lt;span class="na"&gt;  site_domain_txt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;var&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="err"&gt;site_domain_txt&lt;/span&gt;
-&lt;span class="na"&gt;  site_domain_mx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;var&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="err"&gt;site_domain_mx&lt;/span&gt;
-&lt;span class="na"&gt;  site_domain_vip&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;digitalocean_floating_ip&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="err"&gt;site_domain_vip&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="err"&gt;ip_address&lt;/span&gt;
-&lt;span class=" -Punctuation"&gt;}&lt;/span&gt;
+In particular, the timing of moving Terraform code into a Terraform Module is when we need a higher-level concept. For example, I want a module that "manages DNS of the site," instead of having a bunch of &lt;code&gt;digitalocean_record&lt;/code&gt; resources.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;dns&amp;quot;&lt;/span&gt; {
+  &lt;span class="n"&gt;source&lt;/span&gt; = &lt;span class="s"&gt;&amp;quot;./modules/dns&amp;quot;&lt;/span&gt;
+  &lt;span class="n"&gt;site_domain&lt;/span&gt; = &lt;span class="n"&gt;var&lt;/span&gt;.&lt;span class="n"&gt;site_domain&lt;/span&gt;
+  &lt;span class="n"&gt;site_domain_txt&lt;/span&gt; = &lt;span class="n"&gt;var&lt;/span&gt;.&lt;span class="n"&gt;site_domain_txt&lt;/span&gt;
+  &lt;span class="n"&gt;site_domain_mx&lt;/span&gt; = &lt;span class="n"&gt;var&lt;/span&gt;.&lt;span class="n"&gt;site_domain_mx&lt;/span&gt;
+  &lt;span class="n"&gt;site_domain_vip&lt;/span&gt; = &lt;span class="n"&gt;digitalocean_floating_ip&lt;/span&gt;.&lt;span class="n"&gt;site_domain_vip&lt;/span&gt;.&lt;span class="n"&gt;ip_address&lt;/span&gt;
+}
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;How to Organize Terraform Modules?&lt;/h2&gt;
-&lt;p&gt;It depends on how you manage your codebase. The &lt;code&gt;source&lt;/code&gt; configures where to read Terraform Module code. In the above example, it reads for a relative directory &lt;code&gt;./modules/dns&lt;/code&gt;. The other option is by specifying it to a remote Git repo, but MarkSthFun prefers monolithic repo, so this is no needed.&lt;/p&gt;
-&lt;p&gt;An easy way to gather modules in by putting them to a &lt;code&gt;modules&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;It depends on how you manage your codebase. The &lt;code&gt;source&lt;/code&gt; configures the path to read Terraform Module code. In the above example, it loads the module from a relative directory &lt;code&gt;./modules/dns&lt;/code&gt;. The other option is by specifying it to a remote Git repo, but MarkSthFun prefers monolithic repo, so this is no needed.&lt;/p&gt;
+&lt;p&gt;An easy way to gather modules is by putting them to a &lt;code&gt;modules&lt;/code&gt; directory.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ls -R .
 main.tf
 
@@ -79,8 +79,8 @@ main.tf      outputs.tf   variables.tf
 
 
 &lt;p&gt;All codes in &lt;code&gt;modules/dns/*.tf&lt;/code&gt; were originally in &lt;code&gt;./main.tf&lt;/code&gt;, but now they're separately defined. See &lt;a href="https://github.com/soasme/shire/commit/9f9b503b3c68f7b7fe576df4eed4b603b7cd2368"&gt;commit&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;After moving the code, we need to &lt;strong&gt;move states&lt;/strong&gt;. This is because Terraform isn't smart enough to guess your code has changed place. It will destroy resources, and re-create resources, despite you haven't changed anything.&lt;/p&gt;
-&lt;p&gt;We can achieve it by using &lt;code&gt;terraform state mv [SRC] [DEST]&lt;/code&gt;. Below are commands I executed right after the commit.&lt;/p&gt;
+&lt;p&gt;After moving the code, we need to &lt;strong&gt;move states&lt;/strong&gt;. Terraform isn't smart enough to guess your code has changed place. It will destroy resources and re-create resources, although you haven't changed anything.&lt;/p&gt;
+&lt;p&gt;We can achieve it by using &lt;code&gt;terraform state mv [SRC] [DEST]&lt;/code&gt;. Below are commands I executed right after committing the code.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ terraform state mv digitalocean_record.at_txt module.dns.digitalocean_record.at_txt
 $ terraform state mv digitalocean_record.at_mx module.dns.digitalocean_record.at_mx
 $ terraform state mv digitalocean_record.at_A module.dns.digitalocean_record.at_A
@@ -91,4 +91,4 @@ No changes. Infrastructure is up-to-date.
 
 
 &lt;h2&gt;Side Notes&lt;/h2&gt;
-&lt;p&gt;Just as refactoring code in any programming language, it's a good habit not to introduce new code. By doing this, we can assure after the change, most things remains the same.&lt;/p&gt;</content><category term="Engineering"></category></entry></feed>
+&lt;p&gt;Just as refactoring code in any programming language, it's a good habit not to introduce new code. By doing this, we can assure the functions remains the same after the change.&lt;/p&gt;</content><category term="Engineering"></category></entry></feed>

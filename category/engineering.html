@@ -30,25 +30,25 @@
 <p>In <a href="https://blog.marksth.fun/category/engineering.html">Engineering</a>.</p>
 
 </footer><!-- /.post-info --><h2>What are Terraform Modules?</h2>
-<p>Terraform Modules are re-usable package of multiple Terraform resources, and outputs.</p>
-<p>Pretty much like a package or module in any programming language, pratically, we simply define some code at one place.</p>
+<p>Terraform Modules are re-usable packages of multiple Terraform resources and outputs.</p>
+<p>Pretty much like a package or module in any programming language, practically, we define some code in one place.</p>
 <h2>Why do we need Terraform Modules?</h2>
 <p>We could squash all Terraform code in a single <code>main.tf</code> file, but wouldn't it be a messy hell?</p>
 <p>Instead, organizing highly-related Terraform code into a Terraform Module keeps the code base tidy.
-In particular, the timing of moving Terraform code into a Terraform Module is when we need a higher-level concept. For example, I want a module that "manages DNS of marksth.fun", instead of having a bunch of <code>digitalocean_record</code> resources.</p>
-<div class="highlight"><pre><span></span><span class="kr">module</span> <span class="s">&quot;dns&quot;</span> <span class=" -Punctuation">{</span>
-<span class="na">  source</span> <span class="o">=</span> <span class="s2">&quot;./modules/dns&quot;</span>
-<span class="na">  site_domain</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain</span>
-<span class="na">  site_domain_txt</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain_txt</span>
-<span class="na">  site_domain_mx</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">site_domain_mx</span>
-<span class="na">  site_domain_vip</span> <span class="o">=</span> <span class="err">digitalocean_floating_ip</span><span class="p">.</span><span class="err">site_domain_vip</span><span class="p">.</span><span class="err">ip_address</span>
-<span class=" -Punctuation">}</span>
+In particular, the timing of moving Terraform code into a Terraform Module is when we need a higher-level concept. For example, I want a module that "manages DNS of the site," instead of having a bunch of <code>digitalocean_record</code> resources.</p>
+<div class="highlight"><pre><span></span><span class="k">module</span> <span class="s">&quot;dns&quot;</span> {
+  <span class="n">source</span> = <span class="s">&quot;./modules/dns&quot;</span>
+  <span class="n">site_domain</span> = <span class="n">var</span>.<span class="n">site_domain</span>
+  <span class="n">site_domain_txt</span> = <span class="n">var</span>.<span class="n">site_domain_txt</span>
+  <span class="n">site_domain_mx</span> = <span class="n">var</span>.<span class="n">site_domain_mx</span>
+  <span class="n">site_domain_vip</span> = <span class="n">digitalocean_floating_ip</span>.<span class="n">site_domain_vip</span>.<span class="n">ip_address</span>
+}
 </pre></div>
 
 
 <h2>How to Organize Terraform Modules?</h2>
-<p>It depends on how you manage your codebase. The <code>source</code> configures where to read Terraform Module code. In the above example, it reads for a relative directory <code>./modules/dns</code>. The other option is by specifying it to a remote Git repo, but MarkSthFun prefers monolithic repo, so this is no needed.</p>
-<p>An easy way to gather modules in by putting them to a <code>modules</code> directory.</p>
+<p>It depends on how you manage your codebase. The <code>source</code> configures the path to read Terraform Module code. In the above example, it loads the module from a relative directory <code>./modules/dns</code>. The other option is by specifying it to a remote Git repo, but MarkSthFun prefers monolithic repo, so this is no needed.</p>
+<p>An easy way to gather modules is by putting them to a <code>modules</code> directory.</p>
 <div class="highlight"><pre><span></span>$ ls -R .
 main.tf
 
@@ -58,8 +58,8 @@ main.tf      outputs.tf   variables.tf
 
 
 <p>All codes in <code>modules/dns/*.tf</code> were originally in <code>./main.tf</code>, but now they're separately defined. See <a href="https://github.com/soasme/shire/commit/9f9b503b3c68f7b7fe576df4eed4b603b7cd2368">commit</a>.</p>
-<p>After moving the code, we need to <strong>move states</strong>. This is because Terraform isn't smart enough to guess your code has changed place. It will destroy resources, and re-create resources, despite you haven't changed anything.</p>
-<p>We can achieve it by using <code>terraform state mv [SRC] [DEST]</code>. Below are commands I executed right after the commit.</p>
+<p>After moving the code, we need to <strong>move states</strong>. Terraform isn't smart enough to guess your code has changed place. It will destroy resources and re-create resources, although you haven't changed anything.</p>
+<p>We can achieve it by using <code>terraform state mv [SRC] [DEST]</code>. Below are commands I executed right after committing the code.</p>
 <div class="highlight"><pre><span></span>$ terraform state mv digitalocean_record.at_txt module.dns.digitalocean_record.at_txt
 $ terraform state mv digitalocean_record.at_mx module.dns.digitalocean_record.at_mx
 $ terraform state mv digitalocean_record.at_A module.dns.digitalocean_record.at_A
@@ -70,7 +70,7 @@ No changes. Infrastructure is up-to-date.
 
 
 <h2>Side Notes</h2>
-<p>Just as refactoring code in any programming language, it's a good habit not to introduce new code. By doing this, we can assure after the change, most things remains the same.</p>                </article>
+<p>Just as refactoring code in any programming language, it's a good habit not to introduce new code. By doing this, we can assure the functions remains the same after the change.</p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
