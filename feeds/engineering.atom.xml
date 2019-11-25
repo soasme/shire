@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>MarkSthFun Engineering Blog - Engineering</title><link href="https://blog.marksth.fun/" rel="alternate"></link><link href="https://blog.marksth.fun/feeds/engineering.atom.xml" rel="self"></link><id>https://blog.marksth.fun/</id><updated>2019-11-25T00:00:00+13:00</updated><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
-&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some code in one place.&lt;/p&gt;
+&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;
-&lt;p&gt;We could squash all Terraform code in a single &lt;code&gt;main …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
+&lt;p&gt;We could squash all …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
-&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some code in one place.&lt;/p&gt;
+&lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;We could squash all Terraform code in a single &lt;code&gt;main.tf&lt;/code&gt; file, but wouldn't it be a messy hell?&lt;/p&gt;
 &lt;p&gt;Instead, organizing highly-related Terraform code into a Terraform Module keeps the code base tidy.
