@@ -25,8 +25,8 @@ provider "digitalocean" {
 # Provision IP addresses (for lb)
 # Provision Computational Resources
 
-module "vm" {
-  source = "./modules/vm"
+module "servers" {
+  source = "./modules/servers"
   ssh_keys = var.do_ssh_keys
   site_region = var.site_region
   site_domain = var.site_domain
@@ -40,5 +40,5 @@ module "dns" {
   site_domain = var.site_domain
   site_domain_txt = var.site_domain_txt
   site_domain_mx = var.site_domain_mx
-  site_domain_vip = module.vm.site_vip
+  site_domain_vip = module.servers.site_vip
 }
