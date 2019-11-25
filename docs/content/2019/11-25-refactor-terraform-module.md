@@ -8,7 +8,7 @@ category: Engineering
 
 Terraform Modules are re-usable packages of multiple Terraform resources and outputs.
 
-Pretty much like a package or module in any programming language, practically, we define some code in one place.
+Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.
 
 ## Why do we need Terraform Modules?
 
