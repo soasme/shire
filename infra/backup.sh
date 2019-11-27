@@ -16,7 +16,7 @@ cp ./terraform.tfstate ${BACKUP_DIR}/terraform.tfstate
 echo "Done. Recover by copying back to ./terraform.tfstate"
 
 # backup certificates
-LBHOST=`terraform output server_00001_ipv4_address`
+LBHOST=`terraform output site_vip`
 
 echo "Backup certificates"
 scp -r root@$LBHOST:/etc/letsencrypt ${BACKUP_DIR}/etc

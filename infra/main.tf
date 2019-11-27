@@ -52,3 +52,4 @@ module "dns" {
   site_domain_vip = module.servers.site_vip
   blog_domain_cname = var.blog_domain_cname
 }
+
