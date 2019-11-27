@@ -27,3 +27,11 @@ resource "digitalocean_record" "at_mx" {
   priority  = var.site_domain_mx[count.index]["priority"]
   value     = var.site_domain_mx[count.index]["value"]
 }
+
+resource "digitalocean_record" "blog_cname" {
+  domain    = digitalocean_domain.site_domain.name
+  type      = "CNAME"
+  name      = "blog"
+  ttl       = 300 # 5m
+  value     = var.blog_domain_cname
+}
