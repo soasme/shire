@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<h1>Sign Up</h1>
+<form action="{{ url_for('user.register') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ register_form.hidden_tag() }}
+
+    <label for="{{register_form.username.id}}">{{register_form.username.label.text}}</label>
+    {{ register_form.username(tabindex=10, autocomplete='off') }}
+    {% for e in (register_form.username.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{register_form.email.id}}">{{register_form.email.label.text}}</label>
+    {{ register_form.email(tabindex=20, autocomplete='off') }}
+    {% for e in (register_form.email.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{register_form.password.id}}">{{register_form.password.label.text}}</label>
+    {{ register_form.password(tabindex=20, autocomplete='off') }}
+    {% for e in (register_form.password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=40>
+      Sign Up
+    </button>
+  </fieldset>
+</form>
+{% endblock %}
+

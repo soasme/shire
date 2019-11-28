@@ -2,12 +2,11 @@ import string
 
 from werkzeug import import_string
 from passlib.context import CryptContext
-from flask import Blueprint, current_app, request, render_template, url_for, redirect
+from flask import Blueprint, current_app, request, render_template, url_for, redirect, flash
 from flask_login import LoginManager, current_user, login_user, logout_user
-from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
 
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -34,9 +33,19 @@ def logout():
     logout_user()
     return redirect('/')
 
-@bp.route('/register/')
+@bp.route('/register/', methods=['GET', 'POST'])
 def register():
-    return 'Sorry, the registration has open.'
+    register_form = RegisterForm(request.form)
+    user_manager = current_app.user_manager
+    if request.method == 'POST' and register_form.validate():
+        user = user_manager.new_user()
+        register_form.populate_obj(user)
+        user.password = user_manager.hash_password(user.password)
+        user_manager.db.session.add(user)
+        user_manager.db.session.commit()
+        flash('Register successfully. Before login, please check your email and confirm your email address', 'info')
+        return redirect('/')
+    return render_template('register.html', register_form=register_form)
 
 @bp.route('/confirm/resend/')
 def reconfirm():
@@ -70,7 +79,7 @@ class UserManager:
         self.app = app
         self.db = db
         app.user_manager = self
-        self.app.register_blueprint(bp, prefix='/user/')
+        self.app.register_blueprint(bp, url_prefix='/user/')
         self.__user_class = app.config['USER_CLASS']
         app.login_manager = LoginManager(app)
         app.login_manager.user_loader(self.load_user)
@@ -84,6 +93,9 @@ class UserManager:
 
     def load_user(self, id):
         return self.user_class.query.get(id)
+
+    def new_user(self):
+        return self.user_class()
 
     def find_user_by_username(self, username):
         return self.user_class.query.filter_by(username=username).first()
