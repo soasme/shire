@@ -6,35 +6,8 @@ from flask import Blueprint, current_app, request, render_template, url_for, red
 from flask_login import LoginManager, current_user, login_user, logout_user
 from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
-from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
-from wtforms import validators, ValidationError
 
-class LoginForm(FlaskForm):
-    next = HiddenField()
-    reg_next = HiddenField()
-    username = StringField('Username', validators=[
-        validators.DataRequired('Username is required'),
-    ])
-    password = PasswordField('Password', validators=[
-        validators.DataRequired('Password is required'),
-    ])
-    remember_me = BooleanField('Remember me')
-
-    @property
-    def user(self):
-        if hasattr(self, '_user'): return self._user
-        ext = current_app.user_manager
-        self._user = ext.find_user_by_username(self.username.data)
-        if self._user and ext.verify_password(self.password.data, self._user.password):
-            return self._user
-
-    def validate(self):
-        if not super().validate():
-            return False
-        if self.user:
-            return True
-        self.password.errors.append('Incorrect username/password')
-        return False
+from .forms import LoginForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -114,6 +87,9 @@ class UserManager:
 
     def find_user_by_username(self, username):
         return self.user_class.query.filter_by(username=username).first()
+
+    def find_user_by_email(self, email):
+        return self.user_class.query.filter_by(email=email).first()
 
     def hash_password(self, raw_password):
         return self.bcrypt.generate_password_hash(raw_password).decode('utf-8')
