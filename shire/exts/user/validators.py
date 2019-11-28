@@ -13,6 +13,13 @@ def validate_username_chars(form, field):
             raise ValidationError(
                 'Username may only contain letters, digits, -, _, and .')
 
+def validate_username_available(form, field):
+    username = field.data
+    user_manager = current_app.user_manager
+    user = user_manager.find_user_by_username(username)
+    if user:
+        raise ValidationError('The username is already in use. Please try another one')
+
 def validate_email_available(form, field):
     email = field.data
     user_manager = current_app.user_manager

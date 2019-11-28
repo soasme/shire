@@ -3,6 +3,9 @@ from flask_wtf import FlaskForm
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 
+from .validators import (validate_username_chars, validate_email_available,
+        validate_password, validate_username_available, )
+
 class LoginForm(FlaskForm):
     next = HiddenField()
     reg_next = HiddenField()
@@ -30,3 +33,20 @@ class LoginForm(FlaskForm):
         self.password.errors.append('Incorrect username/password')
         return False
 
+class RegisterForm(FlaskForm):
+    next = HiddenField()
+    reg_next = HiddenField()
+    username = StringField('Username', validators=[
+        validators.DataRequired('Username is required'),
+        validate_username_chars,
+        validate_username_available,
+    ])
+    email = StringField('Email', validators=[
+        validators.DataRequired('Email is required'),
+        validators.Email('Invalid Email'),
+        validate_email_available,
+    ])
+    password = PasswordField('Password', validators=[
+        validators.DataRequired('Password is required'),
+        validate_password,
+    ])
