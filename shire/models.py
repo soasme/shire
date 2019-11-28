@@ -102,7 +102,7 @@ class Thing(db.Model):
 
     @classmethod
     def get_recent_tagged_things(cls, tags, offset, limit):
-        return Thing.query.filter_by(shared=True).filter(Thing.tags.contains(tags)).all()
+        return Thing.query.filter_by(shared=True).filter(Thing.tags.contains(tags)).order_by(cls.time.desc()).all()
 
     @classmethod
     def get_user_things_cnt(cls, user_id):
