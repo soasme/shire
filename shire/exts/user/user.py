@@ -69,15 +69,16 @@ def resetpass():
 
 class UserManager:
 
-    def __init__(self, app=None, db=None):
+    def __init__(self, app=None, db=None, celery=None):
         if app is not None:
-            self.init_app(app, db)
+            self.init_app(app, db, celery)
 
-    def init_app(self, app, db):
+    def init_app(self, app, db, celery):
         assert db is not None
 
         self.app = app
         self.db = db
+        self.celery = celery
         app.user_manager = self
         self.app.register_blueprint(bp, url_prefix='/user/')
         self.__user_class = app.config['USER_CLASS']

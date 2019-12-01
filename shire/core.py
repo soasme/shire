@@ -88,7 +88,7 @@ def create_app():
 
     cache.init_app(app)
 
-    user_manager.init_app(app, db)
+    user_manager.init_app(app, db, celery)
 
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,
