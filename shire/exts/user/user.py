@@ -1,9 +1,15 @@
+import json
+from time import time
+from random import choice
 import string
 
 from werkzeug import import_string
 from passlib.context import CryptContext
+from authlib.jose import JsonWebSignature
+from authlib.jose import JWS_ALGORITHMS
 from flask import Blueprint, current_app, request, render_template, url_for, redirect, flash
 from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_mail import Message
 from flask_bcrypt import Bcrypt
 
 from .forms import LoginForm, RegisterForm
@@ -43,16 +49,20 @@ def register():
         user.password = user_manager.hash_password(user.password)
         user_manager.db.session.add(user)
         user_manager.db.session.commit()
-        flash('Register successfully. Before login, please check your email and confirm your email address', 'info')
+        flash(('Register successfully. Before login, '
+               'please check your email and confirm your email address'),
+               'info')
+        message = user_manager.get_registration_message(user)
+        user_manager.send_mail(message)
         return redirect('/')
     return render_template('register.html', register_form=register_form)
 
-@bp.route('/confirm/resend/')
-def reconfirm():
+@bp.route('/confirm/<token>/')
+def confirm(token):
     return 'Sorry, the registration has open.'
 
-@bp.route('/confirm/<token>/')
-def confirmuser(token):
+@bp.route('/reconfirm/')
+def reconfirm():
     return 'Sorry, the registration has open.'
 
 @bp.route('/forgotpass/')
@@ -69,16 +79,16 @@ def resetpass():
 
 class UserManager:
 
-    def __init__(self, app=None, db=None, celery=None):
+    def __init__(self, app=None, db=None, mail=None):
         if app is not None:
-            self.init_app(app, db, celery)
+            self.init_app(app, db, mail)
 
-    def init_app(self, app, db, celery):
+    def init_app(self, app, db, mail):
         assert db is not None
 
         self.app = app
         self.db = db
-        self.celery = celery
+        self.mail = mail
         app.user_manager = self
         self.app.register_blueprint(bp, url_prefix='/user/')
         self.__user_class = app.config['USER_CLASS']
@@ -109,3 +119,37 @@ class UserManager:
 
     def verify_password(self, password, hash_password):
         return self.bcrypt.check_password_hash(hash_password, password)
+
+
+    def send_mail(self, message):
+        return self.mail.send_mail(message.sender, message.recipients, message.subject, message.html)
+
+    def get_registration_token(self, user):
+        now = int(time())
+        rand = ''.join([choice(string.ascii_letters) for _ in range(10)])
+        rands = f'{rand}.{now}'
+        jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
+        headers = {'alg': 'HS256'}
+        payload = json.dumps({'email': user.email})
+        secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
+        return jws.serialize_compact(headers, payload, secret)
+
+    def validate_registration_token(self, token):
+        jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
+        secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
+        data = jws.deserialize_compact(token, secret)
+        print(data)
+
+    def get_registration_link(self, user):
+        token = self.get_registration_token(user)
+        return url_for('user.confirm', token=token, _external=True)
+
+    def get_registration_message(self, user):
+        return Message('''
+<p>Welcome to {app_name}.</p>
+<p>If you did not register {app_name}, please ignore this email.</p>
+<p>You will need to confirm your email.</p>
+<p>Please click on this link: <a href="{link}">{link}</a> <p>'''.format(
+            app_name=self.app.config.get('SITE_NAME'),
+            link=self.get_registration_link(user),
+        ))

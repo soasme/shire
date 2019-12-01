@@ -26,6 +26,7 @@ celery-redbeat = "^0.13.0"
 loguru = "^0.3.2"
 flask-user = "^1.0"
 flask-caching = "^1.7"
+authlib = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

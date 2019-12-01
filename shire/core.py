@@ -51,6 +51,7 @@ def create_app():
         # OPTIONAL
         'SITE_NAME': config('SITE_NAME', default='MarkSthFun'),
         'SITE_DOMAIN': config('SITE_DOMAIN', default='127.0.0.1:5000'),
+        'SERVER_NAME': config('SITE_DOMAIN', default='127.0.0.1:5000'),
         'BLOG_URL': config('BLOG_URL', default='https://blog.marksth.fun'),
         'GITHUB_URL': config('GITHUB_URL', default='https://github.com/soasme/shire'),
         'SUPPORT_EMAIL': config('SUPPORT_EMAIL', default='support@marksth.fun'),
@@ -88,7 +89,7 @@ def create_app():
 
     cache.init_app(app)
 
-    user_manager.init_app(app, db, celery)
+    user_manager.init_app(app, db, mail)
 
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,

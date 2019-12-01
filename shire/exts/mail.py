@@ -36,7 +36,7 @@ class Mail:
     def init_app(self, app):
         self.app = app
         app.extensions['mail'] = self
-        self.default_mailer = Shell()
+        self.default_mailer = self.default_sender = Shell()
 
         if app.config.get('MAILGUN_API_KEY'):
             self.mailer = Mailgun(
