@@ -16,6 +16,12 @@ from .forms import LoginForm, RegisterForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
+@bp.teardown_request
+def auto_rollback(exc):
+    if exc:
+        current_app.user_manager.db.session.rollback()
+    current_app.user_manager.db.session.remove()
+
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():
     next_url = request.args.get('next') or '/'
@@ -161,7 +167,7 @@ class UserManager:
         return url_for('user.confirm', token=token, _external=True)
 
     def get_registration_message(self, user):
-        return Message('''
+        html = '''
 <p>Hi {username},</p>
 <p>Welcome to {app_name}.</p>
 <p>If you did not register {app_name}, please ignore this email.</p>
@@ -171,4 +177,11 @@ class UserManager:
             app_name=self.app.config.get('SITE_NAME'),
             username=user.username,
             link=self.get_registration_link(user),
-        ))
+        )
+        recipient = user.email
+        sender = self.app.config['MAIL_DEFAULT_SENDER']
+        subject = 'Confirm your registration'
+        return Message(recipients=[recipient],
+                subject=subject,
+                sender=sender,
+                html=html)
