@@ -59,7 +59,18 @@ def register():
 
 @bp.route('/confirm/<token>/')
 def confirm(token):
-    return 'Sorry, the registration has open.'
+    user_manager = current_app.user_manager
+    try:
+        data = user_manager.validate_registration_token(token)
+    except Exception:
+        return 'Sorry, the link is invalid.'
+    email = data['email']
+    user = user_manager.find_user_by_email(email)
+    if not user:
+        return 'Sorry, this email is invalid.'
+    user_manager.activate_user(user)
+    flash('Your account is active now. Try signing in.', 'info')
+    return redirect('/')
 
 @bp.route('/reconfirm/')
 def reconfirm():
@@ -138,7 +149,12 @@ class UserManager:
         jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
         secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
         data = jws.deserialize_compact(token, secret)
-        print(data)
+        return json.loads(data['payload'])
+
+    def activate_user(self, user):
+        user.active = True
+        self.db.session.add(user)
+        self.db.session.commit()
 
     def get_registration_link(self, user):
         token = self.get_registration_token(user)
@@ -146,10 +162,13 @@ class UserManager:
 
     def get_registration_message(self, user):
         return Message('''
+<p>Hi {username},</p>
 <p>Welcome to {app_name}.</p>
 <p>If you did not register {app_name}, please ignore this email.</p>
+<hr>
 <p>You will need to confirm your email.</p>
-<p>Please click on this link: <a href="{link}">{link}</a> <p>'''.format(
+<p>Please click on this link: <a href="{link}">{link}</a>.<p>'''.format(
             app_name=self.app.config.get('SITE_NAME'),
+            username=user.username,
             link=self.get_registration_link(user),
         ))
