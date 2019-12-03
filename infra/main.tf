@@ -15,6 +15,12 @@ variable "site_domain_mx" { type = list(object({
   priority = number
   value = string
 })) }
+variable "mail_domain_cname" {
+  type = list(object({
+    name = string
+    value = string
+  }))
+}
 variable "site_inventory_spec" { type = list(object({
   name = string
   size = string
@@ -51,5 +57,6 @@ module "dns" {
   site_domain_mx = var.site_domain_mx
   site_domain_vip = module.servers.site_vip
   blog_domain_cname = var.blog_domain_cname
+  mail_domain_cname = var.mail_domain_cname
 }
 

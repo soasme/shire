@@ -35,3 +35,11 @@ resource "digitalocean_record" "blog_cname" {
   ttl       = 300 # 5m
   value     = var.blog_domain_cname
 }
+
+resource "digitalocean_record" "mail_cname" {
+  count     = length(var.mail_domain_cname)
+  domain    = digitalocean_domain.site_domain.name
+  type      = "CNAME"
+  name      = var.mail_domain_cname[count.index]["name"]
+  value     = var.mail_domain_cname[count.index]["value"]
+}

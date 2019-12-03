@@ -96,7 +96,7 @@ You should also see some stats in [flower dashboard](http://127.0.0.1:5555/dashb
 
 ```bash
 $ docker-compose exec app bash
-$ echo "# updated `date`." >> requirements.txt && poetry show|awk '{print $1 "==" $2}' >> requirements.txt
+$ echo "# updated `date`." > requirements.txt && poetry show|awk '{print $1 "==" $2}' >> requirements.txt
 ```
 
 ## Export Supervisor Conf
