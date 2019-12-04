@@ -27,6 +27,8 @@ variable "site_inventory_spec" { type = list(object({
   image = string
   tags = list(string)
 })) }
+variable "mailgun_api_key" {}
+variable "mail_domain_name" {}
 
 # All digitalocean related resources, outputs will require this provider.
 # So, let's claim it first.
@@ -35,6 +37,10 @@ provider "digitalocean" {
   token = var.do_token
   spaces_access_id = var.do_access_key
   spaces_secret_key = var.do_secret_key
+}
+
+provider "mailgun" {
+  api_key = var.mailgun_api_key
 }
 
 # Provision IP addresses (for lb)
@@ -58,5 +64,5 @@ module "dns" {
   site_domain_vip = module.servers.site_vip
   blog_domain_cname = var.blog_domain_cname
   mail_domain_cname = var.mail_domain_cname
+  mail_domain_name = var.mail_domain_name
 }
-
