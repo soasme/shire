@@ -75,3 +75,11 @@ resource "digitalocean_record" "mailer_txt" {
   ttl       = 3600 # 1h
   value     = local.mailer_txt[count.index].value
 }
+
+resource "digitalocean_record" "mailer_cname" {
+  domain    = digitalocean_domain.site_domain.name
+  type      = "CNAME"
+  name      = "email.mail"
+  ttl       = 3600
+  value     = "mailgun.org."
+}
