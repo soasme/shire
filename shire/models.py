@@ -39,6 +39,11 @@ class User(db.Model, UserMixin):
     email_confirmed_at = db.Column(db.DateTime())
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+class CustomerUser(db.Model):
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    customer_id = db.Column(db.String(64), nullable=False)
+
 class Thing(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
