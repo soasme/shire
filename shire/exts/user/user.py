@@ -59,7 +59,10 @@ def register():
                'please check your email and confirm your email address'),
                'info')
         message = user_manager.get_registration_message(user)
-        user_manager.send_mail(message)
+        try:
+            user_manager.send_mail(message)
+        except requests.Timeout:
+            pass # Will let user go through reconfirm procedure instead.
         return redirect('/')
     return render_template('register.html', register_form=register_form)
 
