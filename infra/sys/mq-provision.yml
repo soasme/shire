@@ -16,4 +16,5 @@
     redis_maxmemory: 500000000 # 50MB
     redis_appendonly: "no"
     redis_appendfsync: "everysec"
+    redis_requirepass: "{{ lookup('env', 'SHIRE_REDIS_PASS') }}"
     redis_disabled_commands: ["FLUSHDB", "FLUSHALL", "KEYS", "CONFIG", "SHUTDOWN"]
