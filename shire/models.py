@@ -39,13 +39,6 @@ class User(db.Model, UserMixin):
     email_confirmed_at = db.Column(db.DateTime())
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-class UserSubscription(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    customer = db.Column(db.String(64))
-    subscription = db.Column(db.String(64))
-    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
 class Thing(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -78,8 +71,11 @@ class Thing(db.Model):
         return self.url
 
     @classmethod
-    def get_recent_all_things(cls, limit=20):
-        return cls.query.filter_by(shared=True).order_by(cls.time.desc()).limit(limit).all()
+    def get_recent_all_things(cls, time=None, limit=20):
+        query = cls.query.filter_by(shared=True)
+        if time:
+            query = query.filter(cls.time < time)
+        return query.order_by(cls.time.desc()).limit(limit).all()
 
     @classmethod
     def get_recent_user_things(cls, user_id, offset, limit):
