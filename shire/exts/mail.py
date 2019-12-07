@@ -11,14 +11,15 @@ Html: {html}""")
 
 class Mailgun:
 
-    def __init__(self, key, base_url, timeout=10):
+    def __init__(self, key, base_url, domain, timeout=10):
         self.key = key
         self.base_url = base_url
+        self.domain = domain
         self.timeout = timeout
         self.session = requests.Session()
 
     def send_mail(self, from_, to, subject, html):
-        return self.session.post(f'{self.base_url}/messages', data={
+        return self.session.post(f'{self.base_url}/{self.domain}/messages', data={
             'from': from_,
             'to': to,
             'subject': subject,
@@ -41,7 +42,8 @@ class Mail:
         if app.config.get('MAILGUN_API_KEY'):
             self.mailer = Mailgun(
                 key=app.config['MAILGUN_API_KEY'],
-                base_url=app.config.get('MAILGUN_BASE_URL', 'https://api.mailgun.net/v3'),
+                base_url=app.config.get('MAILGUN_BASE_URL') or 'https://api.mailgun.net/v3',
+                domain=app.config['MAILGUN_DOMAIN']
             )
         else:
             self.mailer = self.default_mailer
