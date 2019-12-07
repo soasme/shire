@@ -16,3 +16,22 @@ autostart=true
 autorestart=true
 startsecs=2
 startretries=3
+
+[program:shire.worker]
+directory={{ ansistrano_deploy_to }}/{{ ansistrano_current_dir }}
+process_name=%(program_name)s
+command={{ ansistrano_deploy_to }}/{{ ansistrano_current_dir }}/venv3.6/bin/celery worker -A shire.worker:celery -l info --concurrency=2 -n worker@%%h
+user={{ shire_process_user }}
+redirect_stderr=false
+stdout_logfile=/var/log/supervisor/shire_worker-stdout.log
+stderr_logfile=/var/log/supervisor/shire_worker-stderr.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=5
+stdout_capture_maxbytes=10MB
+stderr_logfile_maxbytes=10MB
+stderr_logfile_backups=5
+stderr_capture_maxbytes=10MB
+autostart=true
+autorestart=true
+startsecs=2
+startretries=3
