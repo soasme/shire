@@ -131,7 +131,6 @@ class CustomerManager:
             subscribed=customer['subscriptions']['total_count'] != 0,
         )
 
-
     def handle_customer_subscription_updated(self, subscription):
         subscription = event['data']['object']
         if isinstance(subscription['customer'], dict):

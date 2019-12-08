@@ -119,13 +119,13 @@ When needed, please do yourself by following below procedure.
 $ docker-compose exec app poetry run bash
 [shire@ed3254aa11b6 current]$ stripe login
 
-[shire@ed3254aa11b6 current]$ stripe listen --forward-to http://localhost:5000/subscription/hook/
+[shire@ed3254aa11b6 current]$ stripe listen --forward-to http://127.0.0.1:5000/customer/hook/
 ```
 
 Or, if you have logged in:
 
 ```bash
-$ docker-compose exec app stripe listen --forward-to http://127.0.0.1:5000/subscription/hook/
+$ docker-compose exec app stripe listen --forward-to http://127.0.0.1:5000/customer/hook/
 ```
 
 Note that you don't need this in production, instead, you should configure webhook in Stripe dashboard: <https://dashboard.stripe.com/test/webhooks>.

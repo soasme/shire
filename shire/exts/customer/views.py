@@ -1,5 +1,5 @@
 import stripe
-from flask import abort, request, current_app, jsonify
+from flask import abort, request, current_app, jsonify, flash
 
 from .core import bp
 
@@ -17,6 +17,16 @@ EVENT_TYPES_WHITELIST = {
     'customer.subscription.deleted',
     'customer.subscription.updated',
 }
+
+@bp.route('/success/')
+def success():
+    flash('Subscribed done.')
+    return redirect('/')
+
+@bp.route('/canceled/')
+def canceled():
+    flash('Subscription canceled.')
+    return redirect('/')
 
 @bp.route('/hook/', methods=['POST'])
 def hook():
