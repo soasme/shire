@@ -14,6 +14,8 @@
     {% endif %}
   </div>
   {% if not current_user.is_anonymous %}
+  {% set customer = current_user.customer %}
+  {% if customer and customer.active %}
   <div class="home-menu pure-menu pure-menu-horizontal">
     <p style="border: solid 1px #5469d4; padding: 10px; border-radius: 5px;">
       <button class="pure-button pure-button-primary" id="subscribe">
@@ -42,5 +44,6 @@
       </script>
     </p>
   </div>
+  {% endif %}
   {% endif %}
 </div>

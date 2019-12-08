@@ -39,12 +39,25 @@ class User(db.Model, UserMixin):
     email_confirmed_at = db.Column(db.DateTime())
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+    @property
+    def customer(self):
+        if hasattr(self, '_customer'): return self._customer
+        self._customer = Customer.query.filter_by(email=self.email).first()
+        return self._customer
+
 class Customer(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     customer_id = db.Column(db.String(64), nullable=False, unique=True)
     email = db.Column(db.String(256), nullable=True, unique=True)
     extended = db.Column(JSON, nullable=False)
     subscribed = db.Column(db.Boolean, nullable=False, default=False)
+
+    @property
+    def active(self):
+        metadata = dict(self.extended or {})
+        if metadata['exempt_paid'] == 'true':
+            return True
+        return self.subscribed
 
 class Thing(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
