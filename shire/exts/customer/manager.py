@@ -4,7 +4,9 @@ import stripe
 from flask import abort
 from werkzeug import import_string
 from flask_login import current_user
+from sqlalchemy.exc import IntegrityError
 
+from .core import bp
 
 class CustomerManager:
 
@@ -13,43 +15,56 @@ class CustomerManager:
             self.init_app(app, db, cache)
 
     def init_app(self, app, db, cache):
-        app.extensions['customer'] = self
         self.app = app
+        self.app.customer_manager = self
         self.db = db
         self.cache = cache
         self.__customer_class = app.config['CUSTOMER_CLASS']
 
+        from .views import bp
+        self.app.register_blueprint(bp, url_prefix='/customer/')
+
     @property
     def customer_class(self):
         if hasattr(self, '_customer_class'): return self._customer_class
-        self._customer_class = import_string(self._customer_class)
+        self._customer_class = import_string(self.__customer_class)
         return self._customer_class
 
-    def new_customer(self, customer_id, email, extended):
+    def new_customer(self, customer_id, email, extended, subscribed):
         """Create a customer record.
         """
         customer = self.customer_class(
             customer_id=customer_id,
             email=email,
-            extended=extended
+            extended=extended,
+            subscribed=subscribed,
         )
         self.db.session.add(customer)
-        self.db.session.commit()
+        try:
+            self.db.session.commit()
+        except IntegrityError:
+            self.db.session.rollback()
+            return self.get_customer_by_id(customer_id)
 
-    def update_customer(self, customer_id, email, extended):
+    def update_customer(self, customer_id, email=None, extended=None, subscribed=None):
         """Update a customer record.
         """
-        customer = self.customer_class.query.filter_by(customer_id=customer_id)
-        if not customer: return
-        customer.email = email
-        customer.extended = extended
+        customer = self.customer_class.query.filter_by(customer_id=customer_id).first()
+        if not customer:
+            return
+        if email is not None:
+            customer.email = email
+        if extended is not None:
+            customer.extended = extended
+        if subscribed is not None:
+            customer.subscribed = subscribed
         self.db.session.add(customer)
         self.db.session.commit()
 
     def delete_customer(self, customer_id):
         """Delete a customer record.
         """
-        customer = self.customer_class.query.filter_by(customer_id=customer_id)
+        customer = self.customer_class.query.filter_by(customer_id=customer_id).first()
         if not customer: return
         self.db.session.remove(customer)
         self.db.session.commit()

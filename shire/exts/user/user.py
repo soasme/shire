@@ -19,8 +19,8 @@ bp = Blueprint('user', __name__, template_folder='templates')
 @bp.teardown_request
 def auto_rollback(exc):
     if exc:
-        current_app.user_manager.db.session.rollback()
-    current_app.user_manager.db.session.remove()
+        current_app.db.session.rollback()
+    current_app.db.session.remove()
 
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():

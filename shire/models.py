@@ -41,8 +41,10 @@ class User(db.Model, UserMixin):
 
 class Customer(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False, index=True)
-    customer_id = db.Column(db.String(64), nullable=False, index=True)
+    customer_id = db.Column(db.String(64), nullable=False, unique=True)
+    email = db.Column(db.String(256), nullable=True, unique=True)
+    extended = db.Column(JSON, nullable=False)
+    subscribed = db.Column(db.Boolean, nullable=False, default=False)
 
 class Thing(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
