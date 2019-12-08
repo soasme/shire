@@ -55,7 +55,7 @@ class Customer(db.Model):
     @property
     def active(self):
         metadata = dict(self.extended or {})
-        if metadata['exempt_paid'] == 'true':
+        if metadata.get('exempt_paid') == 'true':
             return True
         return self.subscribed
 

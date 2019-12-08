@@ -32,7 +32,7 @@ def canceled():
 def hook():
     payload = request.data
     signature = request.headers.get('stripe-signature')
-    secret = current_app.config['STRIPE_WEBHOOK_SECRET']
+    secret = current_app.config['STRIPE_WEBHOOK_SECRET_KEY']
 
     try:
         event = stripe.Webhook.construct_event(payload, signature, secret)
