@@ -105,3 +105,44 @@ class CustomerManager:
                 return f(*args, **kwargs)
             return _
         return deco
+
+    def handle_customer_created(self, customer):
+        customer_id = customer['id']
+        customer_ins = self.get_customer_id(customer_id)
+        assert customer_ins is None, f'customer {customer_id} should not exist.'
+        return self.new_customer(
+            customer_id=customer_id,
+            email=customer['email'],
+            extended=customer['metadata'],
+            subscribed=customer['subscriptions']['total_count'] != 0,
+        )
+
+    def handle_customer_deleted(self, customer):
+        self.delete_customer(customer['id'])
+
+    def handle_customer_updated(self, customer):
+        customer_id = customer['id']
+        customer_ins = self.get_customer_id(customer_id)
+        assert customer_ins, f'customer {customer_id} should exist.'
+        return self.update_customer(
+            customer_id=customer['id'],
+            email=customer['email'],
+            extended=customer['metadata'],
+            subscribed=customer['subscriptions']['total_count'] != 0,
+        )
+
+
+    def handle_customer_subscription_updated(self, subscription):
+        subscription = event['data']['object']
+        if isinstance(subscription['customer'], dict):
+            customer_id = subscription['customer']['id']
+        else:
+            customer_id = subscription['customer']
+        customer = stripe.Customer.retrieve(customer_id)
+        self.handle_customer_updated(customer)
+
+    def handle_customer_subscription_created(self, subscription):
+        self.handle_customer_subscription_updated(subscription)
+
+    def handle_customer_subscription_deleted(self, subscription):
+        self.handle_customer_subscription_updated(subscription)

@@ -15,6 +15,7 @@ EVENT_TYPES_WHITELIST = {
     'customer.deleted',
     'customer.subscription.created',
     'customer.subscription.deleted',
+    'customer.subscription.updated',
 }
 
 @bp.route('/hook/', methods=['POST'])
@@ -34,35 +35,21 @@ def hook():
     manager = current_app.customer_manager
 
     if event['type'] == 'customer.created':
-        customer = event['data']['object']
-        manager.new_customer(
-            customer_id=customer['id'],
-            email=customer['email'],
-            extended=customer['metadata'],
-            subscribed=customer['subscriptions']['total_count'] != 0,
-        )
+        manager.handle_customer_created(event['data']['object'])
 
     elif event['type'] == 'customer.deleted':
-        customer = event['data']['object']
-        manager.delete_customer(customer['id'])
+        manager.handle_customer_deleted(event['data']['object'])
 
     elif event['type'] == 'customer.updated':
-        customer = event['data']['object']
-        manager.update_customer(
-            customer_id=customer['id'],
-            email=customer['email'],
-            extended=customer['metadata'],
-            subscribed=customer['subscriptions']['total_count'] != 0,
-        )
+        manager.handle_customer_updated(event['data']['object'])
 
     elif event['type'] == 'customer.subscription.created':
-        subscription = event['data']['object']
-        customer = subscription['customer']
-        manager.update_customer(customer_id=customer, subscribed=True)
+        manager.handle_customer_subscription_created(event['data']['object'])
+
     elif event['type'] == 'customer.subscription.deleted':
-        subscription = event['data']['object']
-        customer = subscription['customer']
-        # TODO: should retrieve a customer and validate if total_count != 0.
-        manager.update_customer(customer_id=customer, subscribed=False)
+        manager.handle_customer_subscription_deleted(event['data']['object'])
+
+    elif event['type'] == 'customer.subscription.updated':
+        manager.handle_customer_subscription_updated(event['data']['object'])
 
     return jsonify({'received': True})
