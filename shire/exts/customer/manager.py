@@ -108,7 +108,7 @@ class CustomerManager:
 
     def handle_customer_created(self, customer):
         customer_id = customer['id']
-        customer_ins = self.get_customer_id(customer_id)
+        customer_ins = self.get_customer_by_id(customer_id)
         assert customer_ins is None, f'customer {customer_id} should not exist.'
         return self.new_customer(
             customer_id=customer_id,
@@ -122,8 +122,14 @@ class CustomerManager:
 
     def handle_customer_updated(self, customer):
         customer_id = customer['id']
-        customer_ins = self.get_customer_id(customer_id)
-        assert customer_ins, f'customer {customer_id} should exist.'
+        customer_ins = self.get_customer_by_id(customer_id)
+        if not customer_ins:
+            return self.new_customer(
+                customer_id=customer['id'],
+                email=customer['email'],
+                extended=customer['metadata'],
+                subscribed=customer['subscriptions']['total_count'] != 0,
+            )
         return self.update_customer(
             customer_id=customer['id'],
             email=customer['email'],
@@ -132,7 +138,6 @@ class CustomerManager:
         )
 
     def handle_customer_subscription_updated(self, subscription):
-        subscription = event['data']['object']
         if isinstance(subscription['customer'], dict):
             customer_id = subscription['customer']['id']
         else:

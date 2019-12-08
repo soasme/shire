@@ -13,4 +13,34 @@
     <a href="{{ url_for('user.login') }}" class="pure-menu-heading">Login</a>
     {% endif %}
   </div>
+  {% if not current_user.is_anonymous %}
+  <div class="home-menu pure-menu pure-menu-horizontal">
+    <p style="border: solid 1px #5469d4; padding: 10px; border-radius: 5px;">
+      <button class="pure-button pure-button-primary" id="subscribe">
+        Subscribe for $12 per year
+      </button>
+      (You're currently in trial mode and can only add up to 24 marks.)
+      <script src="https://js.stripe.com/v3/"></script>
+      <script>
+(function () {
+  var stripe = Stripe('{{ config.STRIPE_PUBLIC_KEY }}');
+  var subscribeButton = document.querySelector("#subscribe");
+  subscribeButton.addEventListener("click", function(e){
+    stripe.redirectToCheckout({
+      items: [{plan: '{{ config.STRIPE_PLAN_ID }}', quantity: 1}],
+      clientReferenceId: '{{ current_user.id }}',
+      customerEmail: '{{ current_user.email }}',
+      successUrl: '{{ url_for("customer.success", _external=True) }}',
+      cancelUrl: '{{ url_for("customer.canceled", _external=True) }}',
+    }).then(function (result) {
+      // If `redirectToCheckout` fails due to a browser or network
+      // error, display the localized error message.
+      alert(result.error.message);
+    });
+  });
+})()
+      </script>
+    </p>
+  </div>
+  {% endif %}
 </div>
