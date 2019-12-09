@@ -122,6 +122,10 @@ class CustomerManager:
 
     def handle_customer_updated(self, customer):
         customer_id = customer['id']
+
+        if customer.get('deleted'):
+            return self.delete_customer(customer_id)
+
         customer_ins = self.get_customer_by_id(customer_id)
         if not customer_ins:
             return self.new_customer(
@@ -130,6 +134,7 @@ class CustomerManager:
                 extended=customer['metadata'],
                 subscribed=customer['subscriptions']['total_count'] != 0,
             )
+
         return self.update_customer(
             customer_id=customer['id'],
             email=customer['email'],
