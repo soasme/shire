@@ -20,16 +20,21 @@ EVENT_TYPES_WHITELIST = {
 
 @bp.route('/success/')
 def success():
+    """After customers being redirected back to the site, we merely flash a message
+    and then redirect them to index page."""
     flash('Subscribed done.')
     return redirect('/')
 
 @bp.route('/canceled/')
 def canceled():
+    """After customers being redirected back to the site, we merely flash a message
+    and then redirect them to index page."""
     flash('Subscription canceled.')
     return redirect('/')
 
 @bp.route('/hook/', methods=['POST'])
 def hook():
+    """The hook is called by Stripe servers when a customer is created, updated, or deleted."""
     payload = request.data
     signature = request.headers.get('stripe-signature')
     secret = current_app.config['STRIPE_WEBHOOK_SECRET_KEY']
