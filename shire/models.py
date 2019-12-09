@@ -53,7 +53,7 @@ class User(db.Model, UserMixin):
     def need_subscribe(self):
         customer = self.customer
         if not customer:
-            return self.total_mark_count <= 24
+            return self.total_mark_count > 24
         return not customer.active
 
 class Customer(db.Model):
