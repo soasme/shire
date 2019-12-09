@@ -31,8 +31,7 @@ class CustomerManager:
         return self._customer_class
 
     def new_customer(self, customer_id, email, extended, subscribed):
-        """Create a customer record.
-        """
+        """Create a customer record. """
         customer = self.customer_class(
             customer_id=customer_id,
             email=email,
@@ -66,7 +65,7 @@ class CustomerManager:
         """
         customer = self.customer_class.query.filter_by(customer_id=customer_id).first()
         if not customer: return
-        self.db.session.remove(customer)
+        self.db.session.delete(customer)
         self.db.session.commit()
 
     def get_customers(self, offset=0, limit=100):
@@ -121,7 +120,7 @@ class CustomerManager:
         self.delete_customer(customer['id'])
 
     def handle_customer_updated(self, customer):
-        customer_id = customer['id']
+        customer_id = self.get_customer_id(customer)
 
         if customer.get('deleted'):
             return self.delete_customer(customer_id)
@@ -142,11 +141,11 @@ class CustomerManager:
             subscribed=customer['subscriptions']['total_count'] != 0,
         )
 
+    def get_customer_id(self, customer):
+        return customer['id'] if isinstance(customer, dict) else customer
+
     def handle_customer_subscription_updated(self, subscription):
-        if isinstance(subscription['customer'], dict):
-            customer_id = subscription['customer']['id']
-        else:
-            customer_id = subscription['customer']
+        customer_id = self.get_customer_id(subscription['customer'])
         customer = stripe.Customer.retrieve(customer_id)
         self.handle_customer_updated(customer)
 

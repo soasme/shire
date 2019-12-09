@@ -13,9 +13,7 @@
     <a href="{{ url_for('user.login') }}" class="pure-menu-heading">Login</a>
     {% endif %}
   </div>
-  {% if not current_user.is_anonymous %}
-  {% set customer = current_user.customer %}
-  {% if not customer or not customer.active %}
+  {% if not current_user.is_anonymous and current_user.need_subscribe %}
   <div class="home-menu pure-menu pure-menu-horizontal">
     <p style="border: solid 1px #5469d4; padding: 10px; border-radius: 5px;">
       <button class="pure-button pure-button-primary" id="subscribe">
@@ -44,6 +42,5 @@
       </script>
     </p>
   </div>
-  {% endif %}
   {% endif %}
 </div>

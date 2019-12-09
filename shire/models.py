@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 from sqlalchemy.dialects.postgresql.json import JSONB
 
-from shire.core import db, bcrypt
+from shire.core import db, cache, bcrypt
 
 class Category(enum.Enum):
     book = 1
@@ -44,6 +44,17 @@ class User(db.Model, UserMixin):
         if hasattr(self, '_customer'): return self._customer
         self._customer = Customer.query.filter_by(email=self.email).first()
         return self._customer
+
+    @property
+    def total_mark_count(self):
+        return Thing.get_user_total_count(self.id)
+
+    @property
+    def need_subscribe(self):
+        customer = self.customer
+        if not customer:
+            return self.total_mark_count <= 24
+        return not customer.active
 
 class Customer(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
@@ -143,6 +154,10 @@ class Thing(db.Model):
         tags = [([tag for tag in t.tags if not tag.startswith('.')] or []) for t in things]
         if not tags: return set()
         return set(reduce(add, tags))
+
+    @classmethod
+    def get_user_total_count(cls, user_id):
+        return Thing.query.filter_by(user_id=user_id).count()
 
 class ThingNote(db.Model):
     thing_id = db.Column(db.Integer, primary_key=True)
