@@ -50,3 +50,25 @@ class RegisterForm(FlaskForm):
         validators.DataRequired('Password is required'),
         validate_password,
     ])
+
+class ChangePasswordForm(FlaskForm):
+    current_password = StringField('Current Password', validators=[
+        validators.DataRequired('Current Password is required'),
+    ])
+    new_password = StringField('New Password', validators=[
+        validators.DataRequired('New Password is required'),
+        validate_password,
+    ])
+    retype_password = StringField('Retype Password', validators=[
+        validators.EqualTo('new_password', "New password and retype password doesn't match")
+    ])
+
+    def validate(self):
+        user_manager =  current_app.user_manager
+        if not super().valudate():
+            return False
+        if current_user.is_anonymous:
+            return False
+        if not user_manager.verify_password(self.current_password.data, current_user.password):
+            self.current_password.errors.append('Current password is incorrect')
+            return False
