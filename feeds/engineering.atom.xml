@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>MarkSthFun Engineering Blog - Engineering</title><link href="https://blog.marksth.fun/" rel="alternate"></link><link href="https://blog.marksth.fun/feeds/engineering.atom.xml" rel="self"></link><id>https://blog.marksth.fun/</id><updated>2019-11-25T00:00:00+13:00</updated><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>MarkSthFun Engineering Blog - Engineering</title><link href="https://blog.marksth.fun/" rel="alternate"></link><link href="https://blog.marksth.fun/feeds/engineering.atom.xml" rel="self"></link><id>https://blog.marksth.fun/</id><updated>2019-12-10T00:00:00+13:00</updated><entry><title>Secure Sockets Layer (SSL) in MarkSthFun</title><link href="https://blog.marksth.fun/docs/ssl.html" rel="alternate"></link><published>2019-12-10T00:00:00+13:00</published><updated>2019-12-10T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-12-10:/docs/ssl.html</id><summary type="html">&lt;p&gt;MarkSthFun needs SSL to secure HTTP connections between user browser and the site.
+In particular, MarkSthFun dispatches requests via Nginx, and manage certificates via Letsencrypt &amp;amp; Certbot.&lt;/p&gt;
+&lt;h2&gt;Generating Certificate&lt;/h2&gt;
+&lt;p&gt;MarkSthFun has a certbot running on a lb host. Every time the command &lt;code&gt;ansible-playbook lb-provision.yml&lt;/code&gt; is run, it will ensure letsencrypt …&lt;/p&gt;</summary><content type="html">&lt;p&gt;MarkSthFun needs SSL to secure HTTP connections between user browser and the site.
+In particular, MarkSthFun dispatches requests via Nginx, and manage certificates via Letsencrypt &amp;amp; Certbot.&lt;/p&gt;
+&lt;h2&gt;Generating Certificate&lt;/h2&gt;
+&lt;p&gt;MarkSthFun has a certbot running on a lb host. Every time the command &lt;code&gt;ansible-playbook lb-provision.yml&lt;/code&gt; is run, it will ensure letsencrypt certificates are presented on the directory of &lt;code&gt;/etc/letsencrypt/live/marksth.fun/&lt;/code&gt; on the lb host.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;root@frodo ~&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="c1"&gt;# ls /etc/letsencrypt/live/marksth.fun/&lt;/span&gt;
+cert.pem  chain.pem  fullchain.pem  privkey.pem  README
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For those who is interested in how letsencrypt works, please refer to &lt;a href="https://letsencrypt.org/how-it-works/"&gt;How It Works?&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Renewing Certificate&lt;/h2&gt;
+&lt;p&gt;Due to the short rotation period of letsencrypt SSL certificates (3 months), MarkSthFun will need renew certificates regularly. Fortunately, certbot with crontab can renew it without any human intervention.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;root@frodo ~&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;crontab&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;#Ansible&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Certbot&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;automatic&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;renewal&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;certbot&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;renew&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;--quiet --no-self-upgrade&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Using Certificate&lt;/h2&gt;
+&lt;p&gt;Whenever an HTTPS request reaches to lb host, Nginx handles the connection and decrypts the HTTP request from the encrypted TCP traffic via the pre-defined SSL private key.&lt;/p&gt;
+&lt;p&gt;Below are all needed to let Nginx consuming the certificate.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;root@frodo ~&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="c1"&gt;# grep ssl /etc/nginx/conf.d/shire-443.conf&lt;/span&gt;
+    listen &lt;span class="m"&gt;443&lt;/span&gt; ssl&lt;span class="p"&gt;;&lt;/span&gt;
+    ssl_protocols TLSv1.2&lt;span class="p"&gt;;&lt;/span&gt;
+    ssl_certificate /etc/letsencrypt/live/marksth.fun/fullchain.pem&lt;span class="p"&gt;;&lt;/span&gt;
+    ssl_certificate_key /etc/letsencrypt/live/marksth.fun/privkey.pem&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that we're using &lt;code&gt;fullchain.pem&lt;/code&gt; as certificate, instead of &lt;code&gt;cert.pem&lt;/code&gt;, since the fullchain.pem includes all the needed chain of certs in a right order as well.&lt;/p&gt;
+&lt;p&gt;MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.&lt;/p&gt;
+&lt;h2&gt;Next Step&lt;/h2&gt;
+&lt;p&gt;As of now, the SSL grade from &lt;ssllabs.com&gt; is B. I'll improve it to A, which will make the site more secure.&lt;/p&gt;</content><category term="Engineering"></category><category term="[security]"></category></entry><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
 &lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;

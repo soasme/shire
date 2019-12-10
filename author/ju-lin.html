@@ -18,7 +18,63 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="https://blog.marksth.fun/docs/introduction.html">Mark Something Fun!</a></h1>
+                    <h1 class="entry-title"><a href="https://blog.marksth.fun/docs/ssl.html">Secure Sockets Layer (SSL) in MarkSthFun</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-12-10T00:00:00+13:00">
+                Published: Tue 10 December 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://blog.marksth.fun/author/ju-lin.html">Ju Lin</a>
+        </address>
+<p>In <a href="https://blog.marksth.fun/category/engineering.html">Engineering</a>.</p>
+<p>tags: <a href="https://blog.marksth.fun/tag/security.html">[security]</a> </p>
+</footer><!-- /.post-info --><p>MarkSthFun needs SSL to secure HTTP connections between user browser and the site.
+In particular, MarkSthFun dispatches requests via Nginx, and manage certificates via Letsencrypt &amp; Certbot.</p>
+<h2>Generating Certificate</h2>
+<p>MarkSthFun has a certbot running on a lb host. Every time the command <code>ansible-playbook lb-provision.yml</code> is run, it will ensure letsencrypt certificates are presented on the directory of <code>/etc/letsencrypt/live/marksth.fun/</code> on the lb host.</p>
+<div class="highlight"><pre><span></span><span class="o">[</span>root@frodo ~<span class="o">]</span><span class="c1"># ls /etc/letsencrypt/live/marksth.fun/</span>
+cert.pem  chain.pem  fullchain.pem  privkey.pem  README
+</pre></div>
+
+
+<p>For those who is interested in how letsencrypt works, please refer to <a href="https://letsencrypt.org/how-it-works/">How It Works?</a>.</p>
+<h2>Renewing Certificate</h2>
+<p>Due to the short rotation period of letsencrypt SSL certificates (3 months), MarkSthFun will need renew certificates regularly. Fortunately, certbot with crontab can renew it without any human intervention.</p>
+<div class="highlight"><pre><span></span><span class="o">[</span><span class="n">root@frodo ~</span><span class="o">]</span><span class="err">#</span><span class="w"> </span><span class="n">crontab</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"></span>
+<span class="n">#Ansible</span><span class="err">:</span><span class="w"> </span><span class="n">Certbot</span><span class="w"> </span><span class="n">automatic</span><span class="w"> </span><span class="n">renewal</span><span class="p">.</span><span class="w"></span>
+<span class="mi">30</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">certbot</span><span class="w"> </span><span class="n">renew</span><span class="w"> </span><span class="c1">--quiet --no-self-upgrade</span>
+</pre></div>
+
+
+<h2>Using Certificate</h2>
+<p>Whenever an HTTPS request reaches to lb host, Nginx handles the connection and decrypts the HTTP request from the encrypted TCP traffic via the pre-defined SSL private key.</p>
+<p>Below are all needed to let Nginx consuming the certificate.</p>
+<div class="highlight"><pre><span></span><span class="o">[</span>root@frodo ~<span class="o">]</span><span class="c1"># grep ssl /etc/nginx/conf.d/shire-443.conf</span>
+    listen <span class="m">443</span> ssl<span class="p">;</span>
+    ssl_protocols TLSv1.2<span class="p">;</span>
+    ssl_certificate /etc/letsencrypt/live/marksth.fun/fullchain.pem<span class="p">;</span>
+    ssl_certificate_key /etc/letsencrypt/live/marksth.fun/privkey.pem<span class="p">;</span>
+</pre></div>
+
+
+<p>Note that we're using <code>fullchain.pem</code> as certificate, instead of <code>cert.pem</code>, since the fullchain.pem includes all the needed chain of certs in a right order as well.</p>
+<p>MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.</p>
+<h2>Next Step</h2>
+<p>As of now, the SSL grade from <ssllabs.com> is B. I'll improve it to A, which will make the site more secure.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://blog.marksth.fun/docs/introduction.html" rel="bookmark"
+                           title="Permalink to Mark Something Fun!">Mark Something Fun!</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2019-12-01T00:00:00+13:00">
                 Published: Sun 01 December 2019
@@ -29,53 +85,16 @@
         </address>
 <p>In <a href="https://blog.marksth.fun/category/product.html">Product</a>.</p>
 
-</footer><!-- /.post-info --><blockquote>
+</footer><!-- /.post-info -->                <blockquote>
 <p>Make pie, or invent universe. <a href="https://www.douban.com/people/soasme/">@soasme</a></p>
 </blockquote>
 <p>Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (<a href="https://marksth.fun">https://marksth.fun</a>).
 You can pronounce it as "Mark Something Fun."</p>
 <h2>Motivate</h2>
-<p>I was a <a href="https://www.douban.com">douban</a> user, in which I can mark the books I have read, the movies I have watched, and the albums I have listened to. I was even a former Douban employee during 2012-2015. It was the best of the moments in my career. I met a lot of the most talented engineers there. It's like a sacred place in my mind. Even today, I still feel Douban's culture has influenced me the most. However, I was no longer able to live with it. Based on the cybersecurity law of the People's Republic of China, a user account without a verified phone number is prohibited from using the website. But I refuse to provide it. Not to mention years' carefulness of avoiding my content being censored. I had enough.</p>
-<p>I could have marked my book on Goodreads, marked my traces on Google Maps. But I do not trust Amazon/Google as well. (Facebook is the worst.)</p>
-<p>Since there is no tool/service in the market that fits me well, as an engineer, I started building my own.</p>
-<h2>Introduction</h2>
-<p>So, this is it. In MarkSthFun, you can mark the books you have read, the movies you have watched,
-the albums you have listened, the games you have played, the places you have visited, the software you have used, the papers you have read, the concepts you have learned, etc.
-You can write notes for your marks and manage things by tags.
-You can decide whether to share your marks publicly or not.
-You can discover fun things marked by fun people, of course, if they're willing to share.
-You can search for marks by types, tags, and keywords.</p>
-<h2>Principles</h2>
-<p>Below are the principles that I keep in mind when building this new website.</p>
-<ul>
-<li>Marking is way more important than socializing.</li>
-<li>Keep your data safe over the long term.</li>
-<li>If you want to know more about a person, read his RSS feed.</li>
-<li>You deserve a private account if you're an introverted person.</li>
-<li>Unshare your mark if you don't expose too much of your life traces.</li>
-<li>No ads.</li>
-<li>No third-party tracking.</li>
-<li>No like, no vote, no comment, no retweet.</li>
-<li>Display as less images as possible.</li>
-<li>Encrypt your requests when browsing.</li>
-<li>Don't overkill.</li>
-<li>Be conservative about adding new features.</li>
-<li>Pay for what you get.</li>
-<li>Use boring technology stack for sane people.</li>
-</ul>
-<h2>Implementation</h2>
-<p>Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs servers provisioned as Digitalocean droplets with 1cpu-1gb to save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.</p>
-<p>Here is a <a href="https://marksth.fun/u/soasme/t/marksthfun-stack/">list</a> of the technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)</p>
-<h2>Conclusion</h2>
-<p>If you like what I'm building, do not hesitate to sign up.
-It only cost you a cup of coffee ☕ per quarter.
-If you can invite a friend to join, you don't need to pay for the next year's subscription fee.</p>
-<p>Enjoy your marking from today! <a href="https://marksth.fun">https://marksth.fun</a></p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>I was a <a href="https://www.douban.com">douban</a> user, in which I can mark the books I have read, the movies I …</p>
+                <a class="readmore" href="https://blog.marksth.fun/docs/introduction.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>

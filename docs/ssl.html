@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>MarkSthFun Engineering Blog</title>
+        <title>Secure Sockets Layer (SSL) in MarkSthFun</title>
         <link rel="stylesheet" href="https://blog.marksth.fun/theme/css/main.css" />
         <link href="https://blog.marksth.fun/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="MarkSthFun Engineering Blog Atom Feed" />
 </head>
@@ -11,14 +11,19 @@
         <header id="banner" class="body">
                 <h1><a href="https://blog.marksth.fun/">MarkSthFun Engineering Blog </a></h1>
                 <nav><ul>
-                    <li><a href="https://blog.marksth.fun/category/engineering.html">Engineering</a></li>
+                    <li class="active"><a href="https://blog.marksth.fun/category/engineering.html">Engineering</a></li>
                     <li><a href="https://blog.marksth.fun/category/product.html">Product</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://blog.marksth.fun/docs/ssl.html" rel="bookmark"
+           title="Permalink to Secure Sockets Layer (SSL) in MarkSthFun">Secure Sockets Layer (SSL) in MarkSthFun</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="https://blog.marksth.fun/docs/ssl.html">Secure Sockets Layer (SSL) in MarkSthFun</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2019-12-10T00:00:00+13:00">
                 Published: Tue 10 December 2019
@@ -29,7 +34,7 @@
         </address>
 <p>In <a href="https://blog.marksth.fun/category/engineering.html">Engineering</a>.</p>
 <p>tags: <a href="https://blog.marksth.fun/tag/security.html">[security]</a> </p>
-</footer><!-- /.post-info --><p>MarkSthFun needs SSL to secure HTTP connections between user browser and the site.
+</footer><!-- /.post-info -->      <p>MarkSthFun needs SSL to secure HTTP connections between user browser and the site.
 In particular, MarkSthFun dispatches requests via Nginx, and manage certificates via Letsencrypt &amp; Certbot.</p>
 <h2>Generating Certificate</h2>
 <p>MarkSthFun has a certbot running on a lb host. Every time the command <code>ansible-playbook lb-provision.yml</code> is run, it will ensure letsencrypt certificates are presented on the directory of <code>/etc/letsencrypt/live/marksth.fun/</code> on the lb host.</p>
@@ -61,68 +66,11 @@ cert.pem  chain.pem  fullchain.pem  privkey.pem  README
 <p>Note that we're using <code>fullchain.pem</code> as certificate, instead of <code>cert.pem</code>, since the fullchain.pem includes all the needed chain of certs in a right order as well.</p>
 <p>MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.</p>
 <h2>Next Step</h2>
-<p>As of now, the SSL grade from <ssllabs.com> is B. I'll improve it to A, which will make the site more secure.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>As of now, the SSL grade from <ssllabs.com> is B. I'll improve it to A, which will make the site more secure.</p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://blog.marksth.fun/docs/introduction.html" rel="bookmark"
-                           title="Permalink to Mark Something Fun!">Mark Something Fun!</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-12-01T00:00:00+13:00">
-                Published: Sun 01 December 2019
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://blog.marksth.fun/author/ju-lin.html">Ju Lin</a>
-        </address>
-<p>In <a href="https://blog.marksth.fun/category/product.html">Product</a>.</p>
-
-</footer><!-- /.post-info -->                <blockquote>
-<p>Make pie, or invent universe. <a href="https://www.douban.com/people/soasme/">@soasme</a></p>
-</blockquote>
-<p>Hi guys, my name is Ju Lin. I'm making a fun website, entitled MarkSthFun (<a href="https://marksth.fun">https://marksth.fun</a>).
-You can pronounce it as "Mark Something Fun."</p>
-<h2>Motivate</h2>
-<p>I was a <a href="https://www.douban.com">douban</a> user, in which I can mark the books I have read, the movies I …</p>
-                <a class="readmore" href="https://blog.marksth.fun/docs/introduction.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="bookmark"
-                           title="Permalink to How to Refactor Terraform Code To Modules?">How to Refactor Terraform Code To Modules?</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-11-25T00:00:00+13:00">
-                Published: Mon 25 November 2019
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://blog.marksth.fun/author/ju-lin.html">Ju Lin</a>
-        </address>
-<p>In <a href="https://blog.marksth.fun/category/engineering.html">Engineering</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>What are Terraform Modules?</h2>
-<p>Terraform Modules are re-usable packages of multiple Terraform resources and outputs.</p>
-<p>Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.</p>
-<h2>Why do we need Terraform Modules?</h2>
-<p>We could squash all …</p>
-                <a class="readmore" href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
