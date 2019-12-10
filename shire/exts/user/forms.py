@@ -1,5 +1,6 @@
 from flask import current_app
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import BooleanField, HiddenField, PasswordField, SubmitField, StringField
 from wtforms import validators, ValidationError
 
@@ -52,23 +53,24 @@ class RegisterForm(FlaskForm):
     ])
 
 class ChangePasswordForm(FlaskForm):
-    current_password = StringField('Current Password', validators=[
+    current_password = PasswordField('Current Password', validators=[
         validators.DataRequired('Current Password is required'),
     ])
-    new_password = StringField('New Password', validators=[
+    new_password = PasswordField('New Password', validators=[
         validators.DataRequired('New Password is required'),
         validate_password,
     ])
-    retype_password = StringField('Retype Password', validators=[
+    retype_password = PasswordField('Retype Password', validators=[
         validators.EqualTo('new_password', "New password and retype password doesn't match")
     ])
 
     def validate(self):
         user_manager =  current_app.user_manager
-        if not super().valudate():
+        if not super().validate():
             return False
         if current_user.is_anonymous:
             return False
         if not user_manager.verify_password(self.current_password.data, current_user.password):
             self.current_password.errors.append('Current password is incorrect')
             return False
+        return True

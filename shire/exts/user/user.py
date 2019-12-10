@@ -8,11 +8,11 @@ from passlib.context import CryptContext
 from authlib.jose import JsonWebSignature
 from authlib.jose import JWS_ALGORITHMS
 from flask import Blueprint, current_app, request, render_template, url_for, redirect, flash
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_mail import Message
 from flask_bcrypt import Bcrypt
 
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -90,9 +90,19 @@ def reconfirm():
 def forgotpass():
     return 'Sorry, this feature is not yet implemented.'
 
-@bp.route('/changepass/')
+@bp.route('/changepass/', methods=['GET', 'POST'])
+@login_required
 def changepass():
-    return 'Sorry, this feature is not yet implemented.'
+    user_manager = current_app.user_manager
+    form = ChangePasswordForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            user_manager.change_password(current_user, form.new_password.data)
+            flash('Your password has changed successfully.', 'success')
+            return redirect(url_for('user.changepass'))
+        else:
+            flash('Your password has not changed due to an error.', 'error')
+    return render_template('changepass.html', form=form)
 
 @bp.route('/resetpass/<token>/')
 def resetpass():
@@ -141,6 +151,10 @@ class UserManager:
     def verify_password(self, password, hash_password):
         return self.bcrypt.check_password_hash(hash_password, password)
 
+    def change_password(self, user, password):
+        user.password = self.hash_password(password)
+        self.db.session.add(user)
+        self.db.session.commit()
 
     def send_mail(self, message):
         return self.mail.send_mail(message.sender, message.recipients, message.subject, message.html)

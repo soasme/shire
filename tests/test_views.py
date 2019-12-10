@@ -36,3 +36,11 @@ def test_signup_fresh_user(client):
     r = r.form.submit()
     r = r.follow()
     assert '/account/' in r.unicode_body
+
+# TODO: test subscribe
+
+# TODO: test mark
+
+# TODO: test delete mark
+
+# TODO: test update mark

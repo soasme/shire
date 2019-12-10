@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Change Password{% endblock %}
+
+{% block content %}
+<h1>Change Password</h1>
+<form action="{{ url_for('user.changepass') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+
+    <label for="{{form.current_password.id}}">{{form.current_password.label.text}}</label>
+    {{ form.current_password(tabindex=10, autocomplete='off') }}
+    {% for e in (form.current_password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{form.new_password.id}}">{{form.new_password.label.text}}</label>
+    {{ form.new_password(tabindex=10, autocomplete='off') }}
+    {% for e in (form.new_password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{form.retype_password.id}}">{{form.retype_password.label.text}}</label>
+    {{ form.retype_password(tabindex=10, autocomplete='off') }}
+    {% for e in (form.retype_password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=40>
+      Change Password
+    </button>
+  </fieldset>
+</form>
+{% endblock %}
