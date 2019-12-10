@@ -37,7 +37,8 @@ def login():
         login_user(login_form.user, login_form.remember_me.data)
         return redirect(next_url)
     else:
-        return 'validate failed.'
+        flash('invalid login.', 'error')
+        return redirect(url_for('user.login'))
     return render_template('login.html', login_form=login_form)
 
 @bp.route('/logout/')
@@ -165,9 +166,9 @@ class UserManager:
         self.db.session.add(user)
         self.db.session.commit()
 
-    def get_registration_link(self, user):
+    def get_registration_link(self, user, external=True):
         token = self.get_registration_token(user)
-        return url_for('user.confirm', token=token, _external=True)
+        return url_for('user.confirm', token=token, _external=external)
 
     def get_registration_message(self, user):
         html = '''
