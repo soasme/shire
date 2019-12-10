@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}About MarkSthFun{% endblock %}
+{% block title %}Delete Mark{% endblock %}
 
 {% block content %}
 <h3>Delete Mark</h3>
@@ -16,6 +16,6 @@
 
 <p>
   You can backup the data before deleting it:
-  <a href="{{ url_for('download_thing', id=thing.id) }}">view json</a>.
+  <a href="{{ url_for('download_mark', id=thing.id) }}">view json</a>.
 </p>
 {% endblock %}
