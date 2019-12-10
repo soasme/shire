@@ -2,7 +2,7 @@ from functools import wraps
 
 import stripe
 from flask import abort
-from werkzeug import import_string
+from werkzeug.utils import import_string
 from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 

@@ -8,6 +8,7 @@ def app():
     from dotenv import find_dotenv, load_dotenv
     load_dotenv(find_dotenv())
     os.environ['TESTING'] = 'True'
+    os.environ['SITE_DOMAIN'] = 'localhost'
     return create_app()
 
 @pytest.fixture
@@ -21,4 +22,3 @@ def client(app):
             yield TestApp(app)
             db.session.rollback()
             db.drop_all()
-

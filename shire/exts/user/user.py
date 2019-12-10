@@ -3,7 +3,7 @@ from time import time
 from random import choice
 import string
 
-from werkzeug import import_string
+from werkzeug.utils import import_string
 from passlib.context import CryptContext
 from authlib.jose import JsonWebSignature
 from authlib.jose import JWS_ALGORITHMS
