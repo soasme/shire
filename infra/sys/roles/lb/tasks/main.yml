@@ -1,8 +1,9 @@
 ---
 
 - name: Open ports for incoming traffic
-  role: geerlingguy.firewall
-  tags: ["firewall"]
+  import_role:
+    name: geerlingguy.firewall
+  tags: [firewall]
 
 - name: Setup digitalocean credentials for certbot
   copy:
