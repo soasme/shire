@@ -12,7 +12,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from flask_mail import Message
 from flask_bcrypt import Bcrypt
 
-from .forms import LoginForm, RegisterForm, ChangePasswordForm, ResendEmailForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm, ResendEmailForm, ForgotPasswordForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -101,11 +101,6 @@ def resendemail():
             return redirect('/')
     return render_template('resendemail.html', form=form)
 
-
-@bp.route('/forgotpass/')
-def forgotpass():
-    return 'Sorry, this feature is not yet implemented.'
-
 @bp.route('/changepass/', methods=['GET', 'POST'])
 @login_required
 def changepass():
@@ -119,6 +114,22 @@ def changepass():
         else:
             flash('Your password has not changed due to an error.', 'error')
     return render_template('changepass.html', form=form)
+
+@bp.route('/forgotpass/', methods=['GET', 'POST'])
+def forgotpass():
+    user_manager = current_app.user_manager
+    form = ForgotPasswordForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            user = form.user
+            message = user_manager.get_resetpass_message(user)
+            try:
+                user_manager.send_mail(message)
+                flash('Resetting password email was sent. Please check your inbox.', 'success')
+            except requests.Timeout:
+                flash('There was something wrong when sending resetting password email. Please retry.', 'error')
+            return redirect(url_for('user.forgotpass'))
+    return render_template('forgotpass.html', form=form)
 
 @bp.route('/resetpass/<token>/')
 def resetpass():
@@ -175,7 +186,7 @@ class UserManager:
     def send_mail(self, message):
         return self.mail.send_mail(message.sender, message.recipients, message.subject, message.html)
 
-    def get_registration_token(self, user):
+    def get_jwt_token(self, user):
         now = int(time())
         rand = ''.join([choice(string.ascii_letters) for _ in range(10)])
         rands = f'{rand}.{now}'
@@ -184,6 +195,12 @@ class UserManager:
         payload = json.dumps({'email': user.email})
         secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
         return jws.serialize_compact(headers, payload, secret)
+
+    def get_registration_token(self, user):
+        return self.get_jwt_token(user)
+
+    def get_resetpass_token(self, user):
+        return self.get_jwt_token(user)
 
     def validate_registration_token(self, token):
         jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
@@ -200,6 +217,10 @@ class UserManager:
         token = self.get_registration_token(user)
         return url_for('user.confirm', token=token, _external=external)
 
+    def get_resetpass_link(self, user, external=True):
+        token = self.get_resetpass_token(user)
+        return url_for('user.resetpass', token=token, _external=external)
+
     def get_registration_message(self, user):
         html = '''
 <p>Hi {username},</p>
@@ -215,6 +236,23 @@ class UserManager:
         recipient = user.email
         sender = self.app.config['MAIL_DEFAULT_SENDER']
         subject = 'Confirm your registration'
+        return Message(recipients=[recipient],
+                subject=subject,
+                sender=sender,
+                html=html)
+
+    def get_forgotpass_message(self, user):
+        html = '''
+<p>Hi {username},</p>
+<p>If you did not ask for changing your password, please ignore this email.</p>
+<p>Click on this link to reset your password: <a href="{link}">{link}</a></p>
+        '''.format(
+            username=user.username,
+            link=self.get_resetpass_link(user),
+        )
+        recipient = user.email
+        sender = self.app.config['MAIL_DEFAULT_SENDER']
+        subject = 'Reset your password'
         return Message(recipients=[recipient],
                 subject=subject,
                 sender=sender,

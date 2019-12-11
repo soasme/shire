@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Resend Email{% endblock %}
+{% block title %}Forgot Password{% endblock %}
 
 {% block content %}
-<h1>Resend Email</h1>
-<form action="{{ url_for('user.resendemail') }}"
+<h1>Forgot Password</h1>
+<form action="{{ url_for('user.forgotpass') }}"
   method="POST"
   class="form pure-form pure-form-stacked" role="form">
   <fieldset>
@@ -16,7 +16,7 @@
     {% endfor %}
 
     <button type="submit" class="pure-button pure-button-primary" tabindex=40>
-      Resend Email
+      Reset Password
     </button>
   </fieldset>
 </form>

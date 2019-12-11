@@ -87,3 +87,16 @@ class ChangePasswordForm(FlaskForm):
             self.current_password.errors.append('Current password is incorrect')
             return False
         return True
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[
+        validators.DataRequired('Email is required'),
+        validators.Email('Invalid Email'),
+    ])
+
+    @property
+    def user(self):
+        if hasattr(self, '_user'): return self._user
+        user_manager = current_app.user_manager
+        self._user = user_manager.find_user_by_email(self.email.data)
+        return self._user
