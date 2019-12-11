@@ -12,7 +12,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from flask_mail import Message
 from flask_bcrypt import Bcrypt
 
-from .forms import LoginForm, RegisterForm, ChangePasswordForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm, ResendEmailForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -63,7 +63,7 @@ def register():
         try:
             user_manager.send_mail(message)
         except requests.Timeout:
-            pass # Will let user go through reconfirm procedure instead.
+            flash('There was something wrong when sending registration email. Please retry sending your registration email.', 'error')
         return redirect('/')
     return render_template('register.html', register_form=register_form)
 
@@ -79,12 +79,28 @@ def confirm(token):
     if not user:
         return 'Sorry, this email is invalid.'
     user_manager.activate_user(user)
-    flash('Your account is active now. Try signing in.', 'info')
+    flash('Your account is active now. Try signing in.', 'success')
     return redirect('/')
 
-@bp.route('/reconfirm/')
-def reconfirm():
-    return 'Sorry, the registration has open.'
+@bp.route('/resendemail/', methods=['GET', 'POST'])
+def resendemail():
+    user_manager = current_app.user_manager
+    form = ResendEmailForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            user = form.user
+            if user.active:
+                flash('Your account is active now. Try signing in.', 'success')
+                return redirect('/')
+            message = user_manager.get_registration_message(user)
+            try:
+                user_manager.send_mail(message)
+                flash('Registration email was sent. Please check your inbox.', 'success')
+            except requests.Timeout:
+                flash('There was something wrong when sending registration email. Please retry.', 'error')
+            return redirect('/')
+    return render_template('resendemail.html', form=form)
+
 
 @bp.route('/forgotpass/')
 def forgotpass():

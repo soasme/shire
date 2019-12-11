@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Resend Email{% endblock %}
+
+{% block content %}
+<h1>Resend Email</h1>
+<form action="{{ url_for('user.resendemail') }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+
+    <label for="{{form.email.id}}">{{form.email.label.text}}</label>
+    {{ form.email(tabindex=20, autocomplete='off') }}
+    {% for e in (form.email.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=40>
+      Resend Email
+    </button>
+  </fieldset>
+</form>
+{% endblock %}
+
+

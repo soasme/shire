@@ -52,6 +52,19 @@ class RegisterForm(FlaskForm):
         validate_password,
     ])
 
+class ResendEmailForm(FlaskForm):
+    email = StringField('Email', validators=[
+        validators.DataRequired('Email is required'),
+        validators.Email('Invalid Email'),
+    ])
+
+    @property
+    def user(self):
+        if hasattr(self, '_user'): return self._user
+        user_manager = current_app.user_manager
+        self._user = user_manager.find_user_by_email(self.email.data)
+        return self._user
+
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField('Current Password', validators=[
         validators.DataRequired('Current Password is required'),
