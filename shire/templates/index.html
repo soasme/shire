@@ -21,14 +21,13 @@
     <p>
       {% if current_user.is_anonymous and config.SIGNUP_ENABLED %}
       <a href="{{ url_for('user.register') }}">Sign up for free</a>.
-      {% endif %}
       You pay ${{ config.ANNUAL_FEE }} per year to access the site for full features.
+      {% else %}
+      The signup is currently unavailable.
+      {% endif %}
     </p>
     <p>
-    The site is <a href="{{ config.GITHUB_URL }}">open/libre software</a> under GNU Affero GPL license.
-    {% if config.BLOG_URL %}
-      Please read our <a href="{{ config.BLOG_URL }}">blog</a> if you want to know more.
-    {% endif %}
+    The site is open/libre software under GNU Affero GPL license.
     </p>
   </div>
 </div>

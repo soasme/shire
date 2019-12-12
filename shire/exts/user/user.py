@@ -132,7 +132,7 @@ def forgotpass():
     return render_template('forgotpass.html', form=form)
 
 @bp.route('/resetpass/<token>/', methods=['GET', 'POST'])
-def resetpass():
+def resetpass(token):
     user_manager = current_app.user_manager
     try:
         data = user_manager.validate_resetpass_token(token)
