@@ -12,7 +12,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from flask_mail import Message
 from flask_bcrypt import Bcrypt
 
-from .forms import LoginForm, RegisterForm, ChangePasswordForm, ResendEmailForm, ForgotPasswordForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm, ResendEmailForm, ForgotPasswordForm, ResetPasswordForm
 
 bp = Blueprint('user', __name__, template_folder='templates')
 
@@ -131,9 +131,26 @@ def forgotpass():
             return redirect(url_for('user.forgotpass'))
     return render_template('forgotpass.html', form=form)
 
-@bp.route('/resetpass/<token>/')
+@bp.route('/resetpass/<token>/', methods=['GET', 'POST'])
 def resetpass():
-    return 'Sorry, this feature is not yet implemented.'
+    user_manager = current_app.user_manager
+    try:
+        data = user_manager.validate_resetpass_token(token)
+    except Exception:
+        return 'Sorry, the link is invalid.'
+    email = data['email']
+    user = user_manager.find_user_by_email(email)
+    if not user:
+        return 'Sorry, this email is invalid.'
+    form = ResetPasswordForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            user_manager.change_password(user, form.new_password.data)
+            flash('Your password has changed successfully.', 'success')
+            return redirect(url_for('user.login'))
+        else:
+            flash('Your password has not changed due to an error.', 'error')
+    return render_template('resetpass.html', form=form, token=token)
 
 class UserManager:
 
@@ -196,6 +213,12 @@ class UserManager:
         secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
         return jws.serialize_compact(headers, payload, secret)
 
+    def validate_jwt_token(self, token):
+        jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
+        secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
+        data = jws.deserialize_compact(token, secret)
+        return json.loads(data['payload'])
+
     def get_registration_token(self, user):
         return self.get_jwt_token(user)
 
@@ -203,10 +226,10 @@ class UserManager:
         return self.get_jwt_token(user)
 
     def validate_registration_token(self, token):
-        jws = JsonWebSignature(algorithms=JWS_ALGORITHMS)
-        secret = bytes(self.app.config['SECRET_KEY'], 'utf-8')
-        data = jws.deserialize_compact(token, secret)
-        return json.loads(data['payload'])
+        return self.validate_jwt_token(token)
+
+    def validate_resetpass_token(self, token):
+        return self.validate_jwt_token(token)
 
     def activate_user(self, user):
         user.active = True

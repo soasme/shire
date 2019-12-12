@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block content %}
+<h1>Reset Password</h1>
+<form action="{{ url_for('user.resetpass', token=token) }}"
+  method="POST"
+  class="form pure-form pure-form-stacked" role="form">
+  <fieldset>
+    {{ form.hidden_tag() }}
+
+    <label for="{{form.new_password.id}}">{{form.new_password.label.text}}</label>
+    {{ form.new_password(tabindex=10, autocomplete='off') }}
+    {% for e in (form.new_password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <label for="{{form.retype_password.id}}">{{form.retype_password.label.text}}</label>
+    {{ form.retype_password(tabindex=10, autocomplete='off') }}
+    {% for e in (form.retype_password.errors or []) %}
+      <span class="pure-form-message">{{ e }}</span>
+    {% endfor %}
+
+    <button type="submit" class="pure-button pure-button-primary" tabindex=40>
+      Change Password
+    </button>
+  </fieldset>
+</form>
+{% endblock %}

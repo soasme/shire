@@ -100,3 +100,12 @@ class ForgotPasswordForm(FlaskForm):
         user_manager = current_app.user_manager
         self._user = user_manager.find_user_by_email(self.email.data)
         return self._user
+
+class ResetPasswordForm(FlaskForm):
+    new_password = PasswordField('New Password', validators=[
+        validators.DataRequired('New Password is required'),
+        validate_password,
+    ])
+    retype_password = PasswordField('Retype Password', validators=[
+        validators.EqualTo('new_password', "New password and retype password doesn't match")
+    ])
