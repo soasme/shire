@@ -34,7 +34,7 @@ Due to the short rotation period of letsencrypt SSL certificates (3 months), Mar
 
 Whenever an HTTPS request reaches to lb host, Nginx handles the connection and decrypts the HTTP request from the encrypted TCP traffic via the pre-defined SSL private key.
 
-Below are all needed to let Nginx consuming the certificate.
+Below are all needed SSL configurations for Nginx.
 
 ```bash
 [root@frodo ~]# grep ssl /etc/nginx/conf.d/shire-443.conf
@@ -44,10 +44,10 @@ Below are all needed to let Nginx consuming the certificate.
     ssl_certificate_key /etc/letsencrypt/live/marksth.fun/privkey.pem;
 ```
 
-Note that we're using `fullchain.pem` as certificate, instead of `cert.pem`, since the fullchain.pem includes all the needed chain of certs in a right order as well.
+Note that we're using `fullchain.pem` as certificate, instead of `cert.pem`, since the fullchain.pem includes all the needed chain of certs.
 
 MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.
 
 ## Next Step
 
-As of now, the SSL grade from <ssllabs.com> is B. I'll improve it to A, which will make the site more secure.
+As of now, the SSL grade from [ssllabs](ssllabs.com) is B. I'll improve it to A, which will make the site more secure.
