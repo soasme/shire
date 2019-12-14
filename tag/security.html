@@ -49,7 +49,7 @@ cert.pem  chain.pem  fullchain.pem  privkey.pem  README
 
 <h2>Using Certificate</h2>
 <p>Whenever an HTTPS request reaches to lb host, Nginx handles the connection and decrypts the HTTP request from the encrypted TCP traffic via the pre-defined SSL private key.</p>
-<p>Below are all needed to let Nginx consuming the certificate.</p>
+<p>Below are all needed SSL configurations for Nginx.</p>
 <div class="highlight"><pre><span></span><span class="o">[</span>root@frodo ~<span class="o">]</span><span class="c1"># grep ssl /etc/nginx/conf.d/shire-443.conf</span>
     listen <span class="m">443</span> ssl<span class="p">;</span>
     ssl_protocols TLSv1.2<span class="p">;</span>
@@ -58,10 +58,10 @@ cert.pem  chain.pem  fullchain.pem  privkey.pem  README
 </pre></div>
 
 
-<p>Note that we're using <code>fullchain.pem</code> as certificate, instead of <code>cert.pem</code>, since the fullchain.pem includes all the needed chain of certs in a right order as well.</p>
+<p>Note that we're using <code>fullchain.pem</code> as certificate, instead of <code>cert.pem</code>, since the fullchain.pem includes all the needed chain of certs.</p>
 <p>MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.</p>
 <h2>Next Step</h2>
-<p>As of now, the SSL grade from <ssllabs.com> is B. I'll improve it to A, which will make the site more secure.</p>                </article>
+<p>As of now, the SSL grade from <a href="ssllabs.com">ssllabs</a> is B. I'll improve it to A, which will make the site more secure.</p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">

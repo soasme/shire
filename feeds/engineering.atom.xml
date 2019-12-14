@@ -22,7 +22,7 @@ cert.pem  chain.pem  fullchain.pem  privkey.pem  README
 
 &lt;h2&gt;Using Certificate&lt;/h2&gt;
 &lt;p&gt;Whenever an HTTPS request reaches to lb host, Nginx handles the connection and decrypts the HTTP request from the encrypted TCP traffic via the pre-defined SSL private key.&lt;/p&gt;
-&lt;p&gt;Below are all needed to let Nginx consuming the certificate.&lt;/p&gt;
+&lt;p&gt;Below are all needed SSL configurations for Nginx.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;root@frodo ~&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="c1"&gt;# grep ssl /etc/nginx/conf.d/shire-443.conf&lt;/span&gt;
     listen &lt;span class="m"&gt;443&lt;/span&gt; ssl&lt;span class="p"&gt;;&lt;/span&gt;
     ssl_protocols TLSv1.2&lt;span class="p"&gt;;&lt;/span&gt;
@@ -31,10 +31,10 @@ cert.pem  chain.pem  fullchain.pem  privkey.pem  README
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Note that we're using &lt;code&gt;fullchain.pem&lt;/code&gt; as certificate, instead of &lt;code&gt;cert.pem&lt;/code&gt;, since the fullchain.pem includes all the needed chain of certs in a right order as well.&lt;/p&gt;
+&lt;p&gt;Note that we're using &lt;code&gt;fullchain.pem&lt;/code&gt; as certificate, instead of &lt;code&gt;cert.pem&lt;/code&gt;, since the fullchain.pem includes all the needed chain of certs.&lt;/p&gt;
 &lt;p&gt;MarkSthFun doesn't support TLS v1.0 and v1.1 since they're insecure.&lt;/p&gt;
 &lt;h2&gt;Next Step&lt;/h2&gt;
-&lt;p&gt;As of now, the SSL grade from &lt;ssllabs.com&gt; is B. I'll improve it to A, which will make the site more secure.&lt;/p&gt;</content><category term="Engineering"></category><category term="[security]"></category></entry><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
+&lt;p&gt;As of now, the SSL grade from &lt;a href="ssllabs.com"&gt;ssllabs&lt;/a&gt; is B. I'll improve it to A, which will make the site more secure.&lt;/p&gt;</content><category term="Engineering"></category><category term="[security]"></category></entry><entry><title>How to Refactor Terraform Code To Modules?</title><link href="https://blog.marksth.fun/how-to-refactor-terraform-code-to-modules.html" rel="alternate"></link><published>2019-11-25T00:00:00+13:00</published><updated>2019-11-25T00:00:00+13:00</updated><author><name>Ju Lin</name></author><id>tag:blog.marksth.fun,2019-11-25:/how-to-refactor-terraform-code-to-modules.html</id><summary type="html">&lt;h2&gt;What are Terraform Modules?&lt;/h2&gt;
 &lt;p&gt;Terraform Modules are re-usable packages of multiple Terraform resources and outputs.&lt;/p&gt;
 &lt;p&gt;Pretty much like a package or module in any programming language, practically, we define some Terraform code serving for the same purpose in one directory.&lt;/p&gt;
 &lt;h2&gt;Why do we need Terraform Modules?&lt;/h2&gt;
