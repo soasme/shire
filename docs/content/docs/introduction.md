@@ -56,6 +56,5 @@ Here is a [list](https://marksth.fun/u/soasme/t/marksthfun-stack/) of the techno
 
 If you like what I'm building, do not hesitate to sign up.
 It only cost you a cup of coffee ☕ per quarter.
-If you can invite a friend to join, you don't need to pay for the next year's subscription fee.
 
 Enjoy your marking from today! [https://marksth.fun](https://marksth.fun)

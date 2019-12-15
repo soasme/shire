@@ -42,14 +42,13 @@ do something evil; and some of them provide just one or two types of things
 ## Technology
 
 MarkSthFun is written in Python.
-The site's data is stored in a MySQL database.
+The site's data is stored in a PostgreSQL database.
 Redis is used as the cache and the queue.
-A few servers run on different US regions for the sake of high availability.
-No kubernetes, no big data, no serverless, no big data, no machine learning, just boring technology for sane people (me).
+The production environment is hosted on DigitalOcean SFO2.
 
 ## Contact
 
-* Email: <support@marksth.fun>.
+* Email: support at marksth.fun
 * Github: <https://github.com/marksthfun/shire/issues>.
 * Blog: <https://blog.marksth.fun>.
 
