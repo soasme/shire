@@ -3,6 +3,12 @@
 MarkSthFun (<https://marksth.fun>) is a marking website for fun and tasty thingies.
 (Pronounce it as "Mark Something Fun".)
 
+![uptime/status](https://badgen.net/uptime-robot/status/m783998716-a95a9b3c379d4c623c84c68c)
+![uptime/24h](https://badgen.net/uptime-robot/day/m783998716-a95a9b3c379d4c623c84c68c)
+![uptime/07d](https://badgen.net/uptime-robot/week/m783998716-a95a9b3c379d4c623c84c68c)
+![uptime/30d](https://badgen.net/uptime-robot/month/m783998716-a95a9b3c379d4c623c84c68c)
+![uptime/response](https://badgen.net/uptime-robot/response/m783998716-a95a9b3c379d4c623c84c68c)
+
 You can mark:
 
 * The books you have read.
