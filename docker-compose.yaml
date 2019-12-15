@@ -9,7 +9,6 @@ services:
       - 5555:5555
     volumes:
       - .:/var/www/shire/current
-    env_file: .env
   cache:
     image: redis:5.0.6-alpine
   db:
