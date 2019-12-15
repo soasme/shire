@@ -8,7 +8,11 @@
   vars:
     prometheus_targets:
       node:
-        targets: "{{ lookup('inventory_hostnames', 'all') | map('regex_replace', '(.*)', 'http://\\1:9100') }}"
+        - targets:
+            # TODO: parse env.SITE_INVENTORY_SPEC and set it dynamically.
+            - frodo.sfo2.svr.marksth.fun:9100
+          labels:
+            env: production
     grafana_security:
       admin_user: "{{ lookup('env', 'GRAFANA_ADMIN_USER') }}"
       admin_password: "{{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') }}"
