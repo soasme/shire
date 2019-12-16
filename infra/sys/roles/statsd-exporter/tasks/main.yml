@@ -1,0 +1,22 @@
+---
+
+- name: check if statsd_exporter is installed
+  stat:
+    path: "/usr/local/bin/statsd_exporter"
+  register: __statsd_exporter_is_installed
+  check_mode: false
+  tags:
+    - statsd_exporter_install
+
+- name: Gather currently installed statsd_exporter version (if any)
+  command: "/usr/local/bin/statsd_exporter --version"
+  args:
+    warn: false
+  changed_when: false
+  register: __statsd_exporter_current_version_output
+  check_mode: false
+  when: __statsd_exporter_is_installed.stat.exists
+  tags:
+    - statsd_exporter_install
+    - skip_ansible_lint
+
