@@ -8,7 +8,7 @@ from flask import (session, render_template, redirect,
                    url_for, )
 from flask_login import current_user, login_required
 
-from shire.core import db, bcrypt, cache, __DIR__
+from shire.core import db, cache, __DIR__
 from shire.models import Thing, ThingNote, User, Category
 from shire.errors import ShireError, ExistingError
 

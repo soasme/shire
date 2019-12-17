@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.types import JSON, Enum
 from sqlalchemy.dialects.postgresql.json import JSONB
 
-from shire.core import db, cache, bcrypt
+from shire.core import db, cache
 
 class Category(enum.Enum):
     book = 1

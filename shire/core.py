@@ -5,7 +5,6 @@ from flask import Flask
 from celery import Celery
 from whitenoise import WhiteNoise
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from flask_user import UserManager
 from flask_caching import Cache
 from decouple import config
@@ -19,7 +18,6 @@ __DIR__ = Path(__file__) / ".."
 __STATIC_DIR__ = __DIR__ / "static"
 
 db = SQLAlchemy()
-bcrypt = Bcrypt()
 celery = Celery(__name__)
 sub = Subscription()
 mail = Mail()
@@ -86,8 +84,6 @@ def create_app():
 
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
-
-    bcrypt.init_app(app)
 
     sub.init_app(app)
 
