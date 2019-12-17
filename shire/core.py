@@ -9,7 +9,6 @@ from flask_user import UserManager
 from flask_caching import Cache
 from decouple import config
 
-from shire.exts.sub import Subscription, checkout_session_completed
 from shire.exts.mail import Mail
 from shire.exts.user.user import UserManager
 from shire.exts.customer import CustomerManager
@@ -19,7 +18,6 @@ __STATIC_DIR__ = __DIR__ / "static"
 
 db = SQLAlchemy()
 celery = Celery(__name__)
-sub = Subscription()
 mail = Mail()
 cache = Cache()
 user_manager = UserManager()
@@ -84,8 +82,6 @@ def create_app():
 
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
     stripe.api_version = app.config.get('STRIPE_API_VERSION')
-
-    sub.init_app(app)
 
     mail.init_app(app)
 
