@@ -41,6 +41,6 @@ You can search for marks by types, tags, and keywords.&lt;/p&gt;
 &lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs a single Digitalocean droplet with 1cpu-1gb for save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
 &lt;p&gt;Here is a &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; of the technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;If you like what I'm building, do not hesitate to sign up.
-It only cost you a cup of coffee ☕ per quarter.&lt;/p&gt;
+&lt;p&gt;The current solution is just an MVP, but it is good enough for me to continuously track my digital life.
+If you like what I'm building, do not hesitate to sign up. It's free!&lt;/p&gt;
 &lt;p&gt;Enjoy your marking from today! &lt;a href="https://marksth.fun"&gt;https://marksth.fun&lt;/a&gt;&lt;/p&gt;</content><category term="Product"></category></entry></feed>
