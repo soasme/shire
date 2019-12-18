@@ -32,15 +32,13 @@ You can search for marks by types, tags, and keywords.&lt;/p&gt;
 &lt;li&gt;No ads.&lt;/li&gt;
 &lt;li&gt;No third-party tracking.&lt;/li&gt;
 &lt;li&gt;No like, no vote, no comment, no retweet.&lt;/li&gt;
-&lt;li&gt;Display as less images as possible.&lt;/li&gt;
 &lt;li&gt;Encrypt your requests when browsing.&lt;/li&gt;
-&lt;li&gt;Don't overkill.&lt;/li&gt;
 &lt;li&gt;Be conservative about adding new features.&lt;/li&gt;
 &lt;li&gt;Pay for what you get.&lt;/li&gt;
 &lt;li&gt;Use boring technology stack for sane people.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;Implementation&lt;/h2&gt;
-&lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs servers provisioned as Digitalocean droplets with 1cpu-1gb to save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
+&lt;p&gt;Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs a single Digitalocean droplet with 1cpu-1gb for save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.&lt;/p&gt;
 &lt;p&gt;Here is a &lt;a href="https://marksth.fun/u/soasme/t/marksthfun-stack/"&gt;list&lt;/a&gt; of the technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;If you like what I'm building, do not hesitate to sign up.
