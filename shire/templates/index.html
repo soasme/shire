@@ -22,7 +22,7 @@
       {% if current_user.is_anonymous and config.SIGNUP_ENABLED %}
       <a href="{{ url_for('user.register') }}">Sign up for free</a>.
       You pay ${{ config.ANNUAL_FEE }} per year to access the site for full features.
-      {% else %}
+      {% elif not config.SIGNUP_ENABLED %}
       The signup is currently unavailable.
       {% endif %}
     </p>
