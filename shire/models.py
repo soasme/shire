@@ -58,6 +58,7 @@ class User(db.Model, UserMixin):
 
     @classmethod
     def get_total_count(cls):
+        """Get the total number of all users."""
         return cls.query.count()
 
 class Customer(db.Model):

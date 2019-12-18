@@ -39,16 +39,14 @@ Below are the principles that I keep in mind when building this new website.
 * No ads.
 * No third-party tracking.
 * No like, no vote, no comment, no retweet.
-* Display as less images as possible.
 * Encrypt your requests when browsing.
-* Don't overkill.
 * Be conservative about adding new features.
 * Pay for what you get.
 * Use boring technology stack for sane people.
 
 ## Implementation
 
-Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs servers provisioned as Digitalocean droplets with 1cpu-1gb to save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.
+Currently, MarkSthFun is written in Python, Flask, SQLAlchemy. The site uses PostgreSQL as the database. Redis is used as the cache and the message queue. It uses Prometheus and Grafana for monitoring. The site runs a single Digitalocean droplet with 1cpu-1gb for save the cost. Terraform, and ansible are used for provisioning cloud resources and deploying code. I use Heroku for staging. You'll be bored for the most part of the implementation, no Kubernetes, no container, no serverless, no big data, no machine learning.
 
 Here is a [list](https://marksth.fun/u/soasme/t/marksthfun-stack/) of the technology stack that MarkSthFun is using, and of course, it's being listed in a MarkSthFun-style list. ;)
 
