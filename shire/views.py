@@ -40,7 +40,8 @@ def auto_rollback(exception):
 
 def index():
     error = session.pop('error.login', '')
-    return render_template('index.html', error=error)
+    users_total_count = User.get_total_count()
+    return render_template('index.html', error=error, users_total_count=users_total_count)
 
 def guide(): return render_template('guide.html')
 def about(): return render_template('about.html')

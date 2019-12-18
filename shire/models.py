@@ -56,6 +56,10 @@ class User(db.Model, UserMixin):
             return self.total_mark_count > 24
         return not customer.active
 
+    @classmethod
+    def get_total_count(cls):
+        return cls.query.count()
+
 class Customer(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     customer_id = db.Column(db.String(64), nullable=False, unique=True)
