@@ -19,7 +19,7 @@ If they're modified, also load them.
 
 ```bash
 $ source venv/bin/activate
-$ export `dotenv list`
+$ dotenv run bash
 ```
 
 ## Playbooks
