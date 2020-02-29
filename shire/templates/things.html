@@ -43,6 +43,12 @@
     </div>
     {% endfor %}
 
+    <div class="pagination">
+      <a href="?offset={{ [0, offset-limit] | max }}">&lt;&lt;&lt; Prev</a>
+      |
+      <a href="?offset={{ offset+limit }}">Next &gt;&gt;&gt;</a>
+    </div>
+
   </div>
 
   {# Right (Sidebar) #}

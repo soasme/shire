@@ -61,13 +61,14 @@ def profile(username):
     is_me = (not current_user.is_anonymous) and user.username == current_user.username
     things_cnt = Thing.get_user_things_cnt(user.id)
     offset = request.args.get('offset', type=int, default=0)
-    limit = max(100, request.args.get('limit', type=int, default=100))
+    limit = max(20, request.args.get('limit', type=int, default=20))
     things = Thing.get_recent_user_things(user.id, offset, limit)
     tags = Thing.get_public_tagset(things)
     mark_error = session.pop('error.mark', '')
     return render_template('things.html',
             title=f'@{username}',
             things_cnt=things_cnt, things=things, is_me=is_me,
+            offset=offset, limit=limit,
             mark_error=mark_error, tags=tags)
 
 @login_required
@@ -223,21 +224,23 @@ def filter_user_things_by_tag(username, tag):
     is_me = current_user == user
     if tag.startswith('.') and not is_me: abort(403)
     offset = request.args.get('offset', type=int, default=0)
-    limit = max(100, request.args.get('limit', type=int, default=100))
+    limit = max(20, request.args.get('limit', type=int, default=20))
     things = Thing.get_recent_user_tagged_things(user.id, [tag], offset, limit, include_private=is_me)
     tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'@{username}',
             things_cnt=None, things=things, is_me=is_me,
+            offset=offset, limit=limit,
             mark_error='', tags=tags)
 
 def filter_global_things_by_tag(tag):
     offset = request.args.get('offset', type=int, default=0)
-    limit = max(100, request.args.get('limit', type=int, default=100))
+    limit = max(20, request.args.get('limit', type=int, default=20))
     things =  Thing.get_recent_tagged_things([tag], offset, limit)
     tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'#{tag}',
+            offset=offset, limit=limit,
             things_cnt=None, things=things, is_me=None,
             mark_error='', tags=tags)
 
@@ -247,13 +250,14 @@ def filter_user_things_by_category(username, category):
     is_me = current_user == user
     if not hasattr(Category, category): abort(404)
     offset = request.args.get('offset', type=int, default=0)
-    limit = max(100, request.args.get('limit', type=int, default=100))
+    limit = max(20, request.args.get('limit', type=int, default=20))
     category = getattr(Category, category)
     things = Thing.get_recent_user_categorized_things(user.id,
             category, offset, limit, include_private=is_me)
     tags = Thing.get_public_tagset(things)
     return render_template('things.html',
             title=f'@{username} ({category.name})',
+            offset=offset, limit=limit,
             things_cnt=None, things=things, is_me=is_me,
             mark_error='', tags=tags)
 
