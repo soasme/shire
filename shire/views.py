@@ -48,6 +48,9 @@ def about(): return render_template('about.html')
 def privacy(): return render_template('privacy.html')
 def terms_of_service(): return render_template('tos.html')
 def faq(): return render_template('faq.html')
+def robots():
+    return """User-agent: *
+Disallow: /"""
 
 def explore():
     things = Thing.get_recent_all_things()
