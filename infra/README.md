@@ -124,6 +124,18 @@ Relatively, you can recover the state before provisioning lb to avoid re-issuing
 $ scp -r /path/to/backup/dir/etc/letsencrypt root@$LBHOST:/etc
 ```
 
+## Shell
+
+```bash
+$ sudo su - shire
+$ cd /var/www/shire/current
+$ source venv3.6/bin/activate
+$ export FLASK_APP=/var/www/shire/current/shire/app.py
+$ export PYTHONPATH=/var/www/shire/current
+$ flask shell
+>>> from flask import current_app
+```
+
 ## Provision Database
 
 Provision postgres database.
