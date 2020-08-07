@@ -25,25 +25,7 @@ You can write notes for your marks and manage things by tags.
 You can decide whether to share your things publicly or not.
 You can discover fun things marked by fun people, of course, if they're willing to share.
 
-The site is developed and operated by a one-person team.
-
-## Fees
-
-You'll need to pay $1 per month.
-
-It will cover the cost of web servers, database backup, domains fee,
-email delivery, CDN, cloud services, and last but not least, my time.
-You payment will help keeping the site run as long as possible.
-You'll see no ads at all because this site is fully supported by all
-users' payments.
-You'll see the cost of this site [here](https://marksth.fun/u/soasme/t/marksthfun-cost/).
-
-Honestly speaking, you can mark books, movies, albums, games in different websites
-for free. However, some of them belongs to big companies and harvest your
-data; some of them have too many other fancy features;
-some of them send your information to third-parties for displaying ads or
-do something evil; and some of them provide just one or two types of things
-[marksth.fun](https://marksth.fun) supports.
+The site is developed and operated by [@soasme](https://github.com/soasme).
 
 ## Technology
 
