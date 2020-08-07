@@ -112,7 +112,7 @@ def create_app():
     app.add_url_rule('/guide/', 'guide', views.guide)
     app.add_url_rule('/about/', 'about', views.about)
     app.add_url_rule('/privacy/', 'privacy', views.privacy)
-    app.add_url_rule('/robots.txt', 'privacy', views.robots)
+    app.add_url_rule('/robots.txt', 'robots', views.robots)
     app.add_url_rule('/tos/', 'terms_of_service', views.terms_of_service)
     app.add_url_rule('/faq/', 'faq', views.faq)
     app.add_url_rule('/u/<username>/', 'profile', views.profile)
