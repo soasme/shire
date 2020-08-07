@@ -51,10 +51,7 @@ class User(db.Model, UserMixin):
 
     @property
     def need_subscribe(self):
-        customer = self.customer
-        if not customer:
-            return self.total_mark_count > 24
-        return not customer.active
+        return False # TODO
 
     @classmethod
     def get_total_count(cls):
