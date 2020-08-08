@@ -11,7 +11,6 @@ from decouple import config
 
 from shire.exts.mail import Mail
 from shire.exts.user.user import UserManager
-from shire.exts.customer import CustomerManager
 
 __DIR__ = Path(__file__) / ".."
 __STATIC_DIR__ = __DIR__ / "static"
@@ -21,7 +20,6 @@ celery = Celery(__name__)
 mail = Mail()
 cache = Cache()
 user_manager = UserManager()
-customer_manager = CustomerManager()
 
 def init_celery(app, celery):
     TaskBase = celery.Task
@@ -67,7 +65,6 @@ def create_app():
         'SUBSCRIPTION_WEBHOOK_URL': config('SUBSCRIPTION_WEBHOOK_URL', default='/subscription/hook/'),
         'SUBSCRIPTION_CLI_ENABLED': config('SUBSCRIPTION_CLI_ENABLED', cast=bool, default=True),
         'USER_CLASS': config('USER_CLASS', 'shire.models:User'),
-        'CUSTOMER_CLASS': config('CUSTOMER_CLASS', 'shire.models:Customer'),
         'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'MAILGUN_DOMAIN': config('MAILGUN_DOMAIN', default=''),
         'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
@@ -88,8 +85,6 @@ def create_app():
     cache.init_app(app)
 
     user_manager.init_app(app, db, mail)
-
-    customer_manager.init_app(app, db, cache)
 
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,

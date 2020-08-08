@@ -40,12 +40,6 @@ class User(db.Model, UserMixin):
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     @property
-    def customer(self):
-        if hasattr(self, '_customer'): return self._customer
-        self._customer = Customer.query.filter_by(email=self.email).first()
-        return self._customer
-
-    @property
     def total_mark_count(self):
         return Thing.get_user_total_count(self.id)
 
@@ -58,6 +52,7 @@ class User(db.Model, UserMixin):
         """Get the total number of all users."""
         return cls.query.count()
 
+# TODO: Deprecated
 class Customer(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     customer_id = db.Column(db.String(64), nullable=False, unique=True)
