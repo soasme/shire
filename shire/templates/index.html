@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "widget_signup.html" as widget_signup %}
 
 {% block title %}Welcome to {{ config.SITE_NAME }}{% endblock %}
 
@@ -21,7 +20,6 @@
     <p>
       {% if current_user.is_anonymous and config.SIGNUP_ENABLED %}
       <a href="{{ url_for('user.register') }}">Sign up for free</a>.
-      You pay ${{ config.ANNUAL_FEE }} per year to access the site for full features.
       {% elif not config.SIGNUP_ENABLED %}
       The signup is currently unavailable.
       {% endif %}

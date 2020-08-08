@@ -67,7 +67,6 @@ def create_app():
         'USER_CLASS': config('USER_CLASS', 'shire.models:User'),
         'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
         'MAILGUN_DOMAIN': config('MAILGUN_DOMAIN', default=''),
-        'ANNUAL_FEE': config('ANNUAL_FEE', cast=int, default=12),
         'MAIL_DEFAULT_SENDER': config('MAIL_DEFAULT_SENDER', default='noreply@mg.marksth.fun'),
     })
 
