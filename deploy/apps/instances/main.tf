@@ -13,7 +13,9 @@ resource "digitalocean_droplet" "app" {
   tags               = var.app_instances_tags
   region             = data.digitalocean_vpc.this.region
   ssh_keys           = var.ssh_keys
+  vpc_uuid           = var.vpc_id
   private_networking = true
+  monitoring         = true
 }
 
 resource "digitalocean_droplet" "db" {
@@ -25,5 +27,24 @@ resource "digitalocean_droplet" "db" {
   tags               = var.db_instances_tags
   region             = data.digitalocean_vpc.this.region
   ssh_keys           = var.ssh_keys
+  vpc_uuid           = var.vpc_id
   private_networking = true
+  monitoring         = true
+}
+
+resource "digitalocean_volume" "db" {
+  count                   = var.db_instances_count
+
+  region                  = data.digitalocean_vpc.this.region
+  name                    = join("-", [var.db_instances_prefix, format("%04d", count.index)])
+  size                    = var.db_volumes_size
+  initial_filesystem_type = var.db_volumes_fstype
+  description             = "The volume for instance ${digitalocean_droplet.db.name}"
+}
+
+resource "digitalocean_volume_attachment" "db" {
+  count       = var.db_instances_count
+
+  droplet_id  = digitalocean_droplet.db[count.index].id
+  volume_id   = digitalocean_volume.db[count.index].id
 }

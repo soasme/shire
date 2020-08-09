@@ -69,3 +69,9 @@ variable "db_instances_tags" {
   default     = ["db"]
   description = "The tags of db instances."
 }
+
+variable "db_volumes_size" {
+  type        = number
+  default     = 125
+  description = "The size of db volumes."
+}
