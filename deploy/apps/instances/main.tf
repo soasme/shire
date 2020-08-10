@@ -4,54 +4,43 @@ data "digitalocean_vpc" "this" {
   id = var.vpc_id
 }
 
-data "cloudinit_config" "app" {
-  gzip = false
-  base64_encode = false
-
-  part {
-    content_type = "text/x-shellscript"
-    filename = "bootstrap.sh"
-    content = <<EOT
-      yum update -y \
-        && yum install -y ansible \
-        && ansible-galaxy install ${join(" ", var.app_ansible_galaxy_requirements)}
-    EOT
-  }
-
-  part {
-    content_type = "text/x-shellscript"
-    filename = "update-server.sh"
-    content = <<EOT
-      crontab <<EOF
-      */30 * * * * /usr/local/bin/ansible-pull \
-        -U https://github.com/soasme/shire  \
-        -i 127.0.0.1, \
-        deploy/apps/instances/app.yml \
-        2>&1 > /var/log/ansible-pull.log
-      EOF
-    EOT
-  }
+locals {
+  ansible_pull="ansible-galaxy install ${join(" ", var.app_ansible_galaxy_requirements)}; ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 /usr/local/bin/ansible-pull -U https://github.com/soasme/shire -i 127.0.0.1, deploy/apps/instances/app.yml 2>&1 > /var/log/ansible-pull.log"
 }
 
 resource "digitalocean_droplet" "app" {
   count              = var.app_instances_count
 
-  name               = join("-", [var.app_instances_prefix, format("%04d", count.index)])
+  name               = join("-", [var.app_instances_prefix, format("%04d", count.index+1)])
   size               = var.app_instances_size
   image              = var.app_instances_image
   tags               = var.app_instances_tags
-  user_data          = local.app_user_data
-  region             = data.cloudinit_config.app.rendered
+  region             = data.digitalocean_vpc.this.region
   ssh_keys           = var.ssh_keys
   vpc_uuid           = var.vpc_id
   private_networking = true
   monitoring         = true
+
+  provisioner "remote-exec" {
+    connection {
+      type     = "ssh"
+      user     = "root"
+      host     = self.ipv4_address
+    }
+    inline = [
+      "yum update -y",
+      "yum install -y python3 git",
+      "python3 -mpip install -U pip ansible",
+      local.ansible_pull,
+      "echo */30 * * * * ${local.ansible_pull} | crontab",
+    ]
+  }
 }
 
 resource "digitalocean_droplet" "db" {
   count              = var.db_instances_count
 
-  name               = join("-", [var.db_instances_prefix, format("%04d", count.index)])
+  name               = join("-", [var.db_instances_prefix, format("%04d", count.index+1)])
   size               = var.db_instances_size
   image              = var.db_instances_image
   tags               = var.db_instances_tags
@@ -66,10 +55,10 @@ resource "digitalocean_volume" "db" {
   count                   = var.db_instances_count
 
   region                  = data.digitalocean_vpc.this.region
-  name                    = join("-", [var.db_instances_prefix, format("%04d", count.index)])
+  name                    = join("-", [var.db_instances_prefix, format("%04d", count.index+1)])
   size                    = var.db_volumes_size
-  initial_filesystem_type = var.db_volumes_fstype
-  description             = "The volume for instance ${digitalocean_droplet.db.name}"
+  initial_filesystem_type = "ext4"
+  description             = "The volume for instance ${digitalocean_droplet.db[count.index].name}"
 }
 
 resource "digitalocean_volume_attachment" "db" {
