@@ -14,7 +14,7 @@ data "cloudinit_config" "app" {
     content = <<EOT
       yum update -y \
         && yum install -y ansible \
-        && ansible-galaxy install geerlingguy.ntp cloudalchemy.node-exporter
+        && ansible-galaxy install ${join(" ", var.app_ansible_galaxy_requirements)}
     EOT
   }
 
@@ -27,7 +27,6 @@ data "cloudinit_config" "app" {
         deploy/apps/instances/app.yml
     EOT
   }
-
 }
 
 resource "digitalocean_droplet" "app" {

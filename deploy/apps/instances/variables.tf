@@ -75,3 +75,11 @@ variable "db_volumes_size" {
   default     = 125
   description = "The size of db volumes."
 }
+
+variable "app_ansible_galaxy_requirements" {
+  type        = list(string)
+  default     = [
+    "geerlingguy.ntp",
+    "cloudalchemy.node-exporter",
+  ]
+}
