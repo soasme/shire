@@ -1,7 +1,0 @@
----
-- hosts: all
-  roles:
-    - role: geerlingguy.ntp
-      tags: ["ntp"]
-    - role: cloudalchemy.node-exporter
-      tags: ["node-exporter"]
