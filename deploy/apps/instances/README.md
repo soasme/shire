@@ -32,3 +32,5 @@ Plan and execute.
 $ terraform plan
 $ terraform apply
 ```
+
+Wait for a few minutes, the instances need some time to bootstrap.
