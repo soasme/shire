@@ -4,15 +4,24 @@ data "digitalocean_vpc" "this" {
   id = var.vpc_id
 }
 
-locals {
-  ansible_pull="ansible-galaxy install ${join(" ", var.app_ansible_galaxy_requirements)}; /usr/local/bin/ansible-pull -U https://github.com/soasme/shire -i localhost, deploy/apps/instances/app.yml 2>&1 > /var/log/ansible-pull.log"
-  user_data = <<EOT
-#!/bin/sh
-yum update -y
-yum install -y epel-release ansible git
-${local.ansible_pull}
-echo "*/30 * * * * ${local.ansible_pull}" | crontab
-EOT
+data "cloudinit_config" "app" {
+  gzip          = false
+  base64_encode = false
+
+  part {
+    filename = "init-config.cfg"
+    content_type = "text/cloud-config"
+    content = yamlencode({
+      write_files = [
+        {
+          content     = jsonencode(var.app_instances_config)
+          owner       = "root:root"
+          path        = "/etc/shire/config.json"
+          permissions = "0640"
+        }
+      ]
+    })
+  }
 }
 
 resource "digitalocean_droplet" "app" {

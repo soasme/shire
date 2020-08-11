@@ -4,6 +4,12 @@ variable "vpc_id" {
   description = "The id of digitalocean VPC."
 }
 
+variable "app_instances_config" {
+  type          = map
+  default       = {}
+  description   = "A of files to write in bootstrap step."
+}
+
 variable "app_instances_count" {
   type        = number
   default     = 0
@@ -74,12 +80,4 @@ variable "db_volumes_size" {
   type        = number
   default     = 125
   description = "The size of db volumes."
-}
-
-variable "app_ansible_galaxy_requirements" {
-  type        = list(string)
-  default     = [
-    "geerlingguy.ntp",
-    "cloudalchemy.node-exporter",
-  ]
 }
