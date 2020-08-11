@@ -14,9 +14,13 @@ data "cloudinit_config" "app" {
     content = yamlencode({
       write_files = [
         {
-          content     = jsonencode(var.app_instances_config)
+          encoding    = "b64"
+          content     = base64encode(join("\n", [
+            for k, v in var.app_instances_config:
+            "${upper(k)}=${v}"
+          ]))
           owner       = "root:root"
-          path        = "/etc/shire/config.json"
+          path        = "/etc/shire/shire.conf"
           permissions = "0640"
         }
       ]
@@ -32,7 +36,7 @@ resource "digitalocean_droplet" "app" {
   image              = var.app_instances_image
   tags               = var.app_instances_tags
   region             = data.digitalocean_vpc.this.region
-  user_data          = local.user_data
+  user_data          = data.cloudinit_config.app.rendered
   ssh_keys           = var.ssh_keys
   vpc_uuid           = var.vpc_id
   private_networking = true
