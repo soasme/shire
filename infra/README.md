@@ -2,7 +2,7 @@
 
 ## Setup
 
-To setup controller machine, you need setup the environment first.
+Setup local development environment before going further.
 
 ```bash
 $ brew install terraform
