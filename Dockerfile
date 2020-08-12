@@ -1,11 +1,9 @@
 FROM centos:7
 RUN cd /tmp && \
-  curl -o bintray-stripe-stripe-cli-rpm.repo https://bintray.com/stripe/stripe-cli-rpm/rpm  && \
-  mv bintray-stripe-stripe-cli-rpm.repo /etc/yum.repos.d/ && \
   yum install -y https://repo.ius.io/ius-release-el7.rpm \
     https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
   yum update -y
-RUN yum install -y gcc python36u python36u-devel postgresql-devel openssl-devel stripe
+RUN yum install -y gcc python36u python36u-devel postgresql-devel openssl-devel
 RUN groupadd -r shire && useradd -m --no-log-init -r -g shire shire
 USER shire
 RUN chown -R shire:shire /home/shire && pip3.6 install --user --upgrade pip poetry
