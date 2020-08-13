@@ -7,3 +7,4 @@ variable "site_inventory_spec" { type = list(object({
   image = string
   tags = list(string)
 })) }
+variable "db_volume_size" { default = 10 }

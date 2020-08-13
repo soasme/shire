@@ -2,6 +2,14 @@ resource "digitalocean_floating_ip" "site_domain_vip" {
   region            = var.site_region
 }
 
+resource "digitalocean_volume" "db" {
+  region                  = var.site_region
+  name                    = "db"
+  size                    = var.db_volume_size
+  initial_filesystem_type = "ext4"
+  description             = "Persist database data"
+}
+
 resource "digitalocean_droplet" "server" {
   count     = length(var.site_inventory_spec)
   name      = format(
@@ -24,4 +32,9 @@ resource "digitalocean_droplet" "server" {
 resource "digitalocean_floating_ip_assignment" "vip" {
   ip_address = digitalocean_floating_ip.site_domain_vip.ip_address
   droplet_id = digitalocean_droplet.server[0].id
+}
+
+resource "digitalocean_volume_attachment" "db" {
+  droplet_id = digitalocean_droplet.server[0].id
+  volume_id  = digitalocean_volume.db.id
 }
