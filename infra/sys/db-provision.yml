@@ -20,14 +20,26 @@
           - yum-utils
         state: latest
 
+    - name: Overwrite pg12 service
+      copy:
+        dest: /etc/systemd/system/postgresql-12.service
+        content: |
+          .include /usr/lib/systemd/system/postgresql-12.service
+          [Service]
+          Environment=PGDATA=/mnt/db/var/lib/pgsql/12/data/
+          ExecStartPre=
+          ExecStartPre=/usr/pgsql-12/bin/postgresql-12-check-db-dir /mnt/db/var/lib/pgsql/12/data/
+          ExecStart=
+          ExecStart=/usr/pgsql-12/bin/postmaster -D /mnt/db/var/lib/pgsql/12/data/
+
   roles:
     - role: geerlingguy.postgresql
       become: yes
       postgresql_enablerepo: pgdg12
       postgresql_version: 12
-      postgresql_data_dir: /var/lib/pgsql/12/data
+      postgresql_data_dir: /mnt/db/var/lib/pgsql/12/data
       postgresql_bin_path: /usr/pgsql-12/bin
-      postgresql_config_path: /var/lib/pgsql/12/data
+      postgresql_config_path: /mnt/db/var/lib/pgsql/12/data
       postgresql_daemon: postgresql-12.service
       postgresql_packages:
         - postgresql12-server
