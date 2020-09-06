@@ -36,7 +36,6 @@ The production environment is hosted on DigitalOcean SFO2.
 
 ## Contact
 
-* Email: support at marksth.fun
 * Github: <https://github.com/marksthfun/shire/issues>.
 * Blog: <https://blog.marksth.fun>.
 
