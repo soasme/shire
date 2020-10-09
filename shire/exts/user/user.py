@@ -48,6 +48,10 @@ def logout():
 
 @bp.route('/register/', methods=['GET', 'POST'])
 def register():
+    if not current_app.config.get('USER_REGISTER_ENABLED'):
+        flash('Registration is disabled.', 'err')
+        return redirect('/')
+
     register_form = RegisterForm(request.form)
     user_manager = current_app.user_manager
     if request.method == 'POST' and register_form.validate():
