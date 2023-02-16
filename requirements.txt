@@ -61,7 +61,7 @@ waitress==2.1.2
 wcwidth==0.1.8
 webob==1.8.6
 webtest==2.0.34
-werkzeug==1.0.0
+werkzeug==2.2.3
 whitenoise==4.1.4
 wtforms==2.2.1
 zipp==3.0.0
